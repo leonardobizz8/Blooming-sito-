@@ -244,11 +244,26 @@
             font-weight: 600;
         }
 
-        /* La riga di sottolineatura NON appare sulle voci standard (né hover né active) */
-        .nav-btn::after,
-        .nav-btn.active::after,
-        .nav-btn:hover::after {
-            display: none !important;
+        /* Sottolineatura animata elegante su tutte le voci standard di Blooming (Terracotta #D96B27) */
+        .nav-btn::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent); /* #D96B27 Arancione Terracotta Blooming */
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s ease;
+            opacity: 0;
+        }
+
+        .nav-btn:hover::after,
+        .nav-btn.active::after {
+            transform: scaleX(1);
+            opacity: 1;
         }
 
         .nav-right {
@@ -2419,7 +2434,7 @@
             --eq-border: #C8D8CB;
         }
 
-        /* V11.2: Sottolineatura verde dedicata ESCLUSIVA per la voce EQUORA */
+        /* Voce EQUORA: colore verde salvia dedicato e sottolineatura verde */
         .nav-btn-equora {
             color: var(--text-muted);
             transition: color 0.2s ease;
@@ -2430,16 +2445,14 @@
             color: #3F5E42 !important;
             font-weight: 600;
         }
+        .nav-btn-equora::after {
+            background: #7B9E7E !important; /* Verde dedicato Equora */
+        }
         .nav-btn-equora:hover::after,
         .nav-btn-equora.active::after {
-            content: '' !important;
-            display: block !important;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
             background: #7B9E7E !important;
+            transform: scaleX(1);
+            opacity: 1;
         }
         .mob-link-equora {
             color: var(--text);
@@ -2501,25 +2514,29 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 28px rgba(123, 158, 126, 0.16);
         }
-        /* Sede speculare per i loghi ufficiali reali nelle due card */
+        /* Sede speculare perfettamente bilanciata per i loghi ufficiali nelle due card */
         .eq-brand-card-header {
             display: flex;
             align-items: center;
-            height: 42px;
-            margin-bottom: 20px;
+            height: 48px;
+            margin-bottom: 22px;
         }
         .eq-brand-logo-real {
-            max-height: 28px;
-            width: auto;
-            max-width: 170px;
-            object-fit: contain;
             display: block;
+            object-fit: contain;
         }
         .eq-blooming-logo {
+            height: 24px;
+            max-height: 24px;
+            width: auto;
+            max-width: 155px;
             mix-blend-mode: multiply;
         }
         .eq-equora-logo {
-            height: 28px;
+            height: 33px;
+            max-height: 33px;
+            width: auto;
+            max-width: 155px;
         }
         .eq-card-title {
             font-family: 'Cinzel', serif;
@@ -3327,7 +3344,7 @@
                     <!-- SCATOLA 1: BLOOMING (Accenti Terracotta #D96B27) -->
                     <div class="equora-brand-card blooming-side">
                         <div class="eq-brand-card-header">
-                            <img src="blooming_logo.jpg" alt="BLOOMING" width="160" height="27" loading="lazy" decoding="async" class="eq-brand-logo-real eq-blooming-logo">
+                            <img src="blooming_logo.jpg" alt="BLOOMING" width="142" height="24" loading="lazy" decoding="async" class="eq-brand-logo-real eq-blooming-logo">
                         </div>
                         <h3 class="eq-card-title">La Massima Visione Creativa</h3>
                         <p class="eq-card-p">
@@ -3344,7 +3361,7 @@
                     <!-- SCATOLA 2: EQUORA (Toni Verdi #7B9E7E) -->
                     <div class="equora-brand-card equora-side">
                         <div class="eq-brand-card-header">
-                            <img src="equora_logo_green.png" alt="ÉQUORA" width="120" height="32" loading="lazy" decoding="async" class="eq-brand-logo-real eq-equora-logo">
+                            <img src="equora_logo_green.png" alt="ÉQUORA" width="124" height="33" loading="lazy" decoding="async" class="eq-brand-logo-real eq-equora-logo">
                         </div>
                         <h3 class="eq-card-title">La Solida Radice Quotidiana</h3>
                         <p class="eq-card-p">
