@@ -2223,46 +2223,6 @@
             margin-left: 2px;
         }
 
-        /* Bottone Tirella veloce sulle card */
-        .fisch-card-tirella-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(20, 20, 20, 0.86);
-            color: #FFFFFF;
-            border: none;
-            border-radius: 20px;
-            padding: 5px 11px;
-            font-family: var(--font);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            opacity: 0;
-            transform: translateY(-4px);
-            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
-            z-index: 5;
-            backdrop-filter: blur(4px);
-        }
-
-        .fisch-card:hover .fisch-card-tirella-btn {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .fisch-card-tirella-btn:hover {
-            background: var(--accent);
-        }
-
-        .fisch-card-tirella-btn.added {
-            background: #2E7D32 !important;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
         /* Micro-interazioni complementi & destinazioni */
         .comp-mini-card {
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2292,229 +2252,21 @@
         }
 
         /* =========================================================
-           V11: CARRELLO / RICHIESTA CAMPIONI (TIRELLE) B2B
+           HEADER INSTAGRAM & SOCIAL LINKS
            ========================================================= */
-        #sample-cart-fab {
-            position: fixed;
-            bottom: 84px;
-            right: 28px;
-            z-index: 1050;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #141414;
-            color: #FFFFFF;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 40px;
-            padding: 12px 20px 12px 16px;
-            font-family: var(--font);
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            box-shadow: 0 8px 30px rgba(20, 20, 20, 0.28);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        #sample-cart-fab:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            box-shadow: 0 10px 32px rgba(217, 107, 39, 0.35);
-            transform: translateY(-2px);
-        }
-
-        .cart-fab-icon {
-            font-size: 16px;
-            line-height: 1;
-        }
-
-        #cart-count-badge {
-            background: var(--accent);
-            color: #FFFFFF;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            display: flex;
+        .header-instagram-link {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            min-width: 22px;
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.25s ease, transform 0.25s ease;
+            padding: 4px;
         }
 
-        #sample-cart-fab:hover #cart-count-badge {
-            background: #FFFFFF;
+        .header-instagram-link:hover {
             color: var(--accent);
-        }
-
-        #sample-cart-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 1200;
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        #sample-cart-modal.open {
-            pointer-events: all;
-            opacity: 1;
-        }
-
-        .cart-modal-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(20, 20, 20, 0.45);
-            backdrop-filter: blur(4px);
-        }
-
-        .cart-modal-panel {
-            position: relative;
-            z-index: 1;
-            width: 440px;
-            max-width: 96vw;
-            height: 100vh;
-            background: #FFFFFF;
-            display: flex;
-            flex-direction: column;
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: -10px 0 45px rgba(20, 20, 20, 0.2);
-        }
-
-        #sample-cart-modal.open .cart-modal-panel {
-            transform: translateX(0);
-        }
-
-        .cart-panel-head {
-            padding: 28px 24px 20px;
-            border-bottom: 1px solid var(--line);
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-        }
-
-        .cart-panel-head h3 {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .cart-panel-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .cart-panel-close {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            color: var(--text-muted);
-            line-height: 1;
-            padding: 4px;
-            transition: color 0.2s;
-        }
-
-        .cart-panel-close:hover { color: var(--text); }
-
-        .cart-panel-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 24px;
-        }
-
-        .cart-item-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .cart-item-thumb {
-            width: 56px;
-            height: 56px;
-            border-radius: 4px;
-            background: var(--bg-soft);
-            border: 1px solid var(--line);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .cart-item-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .cart-item-info { flex: 1; }
-
-        .cart-item-name {
-            font-size: 13.5px;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .cart-item-code {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .cart-item-remove {
-            background: none;
-            border: none;
-            font-size: 16px;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px;
-            transition: color 0.2s;
-            flex-shrink: 0;
-        }
-
-        .cart-item-remove:hover { color: #C0392B; }
-
-        .cart-empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .cart-empty-state .empty-icon {
-            font-size: 44px;
-            margin-bottom: 16px;
-        }
-
-        .cart-panel-foot {
-            padding: 20px 24px;
-            border-top: 1px solid var(--line);
-            background: var(--bg-soft);
-        }
-
-        .cart-panel-foot .btn-accent {
-            width: 100%;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .cart-clear-link {
-            background: none;
-            border: none;
-            font-size: 12px;
-            color: var(--text-muted);
-            cursor: pointer;
-            text-decoration: underline;
-            font-family: var(--font);
-            display: block;
-            text-align: center;
-            margin-top: 8px;
+            transform: translateY(-1px);
         }
 
         /* =========================================================
@@ -2563,25 +2315,7 @@
             margin-top: 8px;
         }
 
-        @media (max-width: 768px) {
-            #sample-cart-fab {
-                right: 16px;
-                bottom: 74px;
-                padding: 11px 16px 11px 14px;
-                font-size: 12px;
-            }
 
-            .cart-modal-panel {
-                width: 100%;
-                height: 85vh;
-                border-radius: 16px 16px 0 0;
-                transform: translateY(100%);
-            }
-
-            #sample-cart-modal.open .cart-modal-panel {
-                transform: translateY(0);
-            }
-        }
 
     </style>
 </head>
@@ -2627,6 +2361,11 @@
                     Via delle Mimose, 5 — Castelfranco Veneto (TV)<br>
                     <a href="mailto:info@bloomingfabrics.it" style="color:var(--accent); font-weight:500; text-decoration:underline;">info@bloomingfabrics.it</a>
                 </div>
+                <div style="margin-top: 14px;">
+                    <a href="https://www.instagram.com/blooming_fabrics/" target="_blank" rel="noopener" class="social-pill-link" style="display:inline-flex; width:auto; padding: 7px 14px; font-size:12px;">
+                        <span>Instagram @blooming_fabrics</span> <span style="font-size:11px;">↗</span>
+                    </a>
+                </div>
             </div>
         </div>
     </aside>
@@ -2641,7 +2380,7 @@
                     <li><button class="nav-btn" data-page="prodotti" onclick="switchPage('prodotti')" data-i18n="nav_prod">Prodotti</button></li>
                     <li><button class="nav-btn" data-page="complementi" onclick="switchPage('complementi')" data-i18n="nav_comp">Complementi</button></li>
                     <li><button class="nav-btn" data-page="azienda" onclick="switchPage('azienda')" data-i18n="nav_company">L'Azienda</button></li>
-                    <li><button class="nav-btn" data-page="appuntamento" onclick="switchPage('appuntamento')" data-i18n="nav_appt">Appuntamento</button></li>
+                    <li><button class="nav-btn" data-page="appuntamento" onclick="switchPage('appuntamento')" data-i18n="nav_appt">Incontra un Funzionario</button></li>
                     <li><button class="nav-btn" data-page="contatti" onclick="switchPage('contatti')" data-i18n="nav_contacts">Contatti</button></li>
                 </ul>
             </nav>
@@ -2658,12 +2397,16 @@
                 <img src="blooming_logo.jpg" alt="BLOOMING">
             </div>
 
-            <!-- Destra: Ricerca globale e Lingua -->
+            <!-- Destra: Ricerca globale, Instagram e Lingua -->
             <div class="nav-right">
                 <div class="header-search-wrap">
                     <input type="text" id="global-search" placeholder="Cerca nel sito..." oninput="handleGlobalSearch(this.value)">
                     <span class="search-icon">⌕</span>
                 </div>
+
+                <a href="https://www.instagram.com/blooming_fabrics/" target="_blank" rel="noopener" class="header-instagram-link" title="Seguici su Instagram (@blooming_fabrics)" aria-label="Profilo Instagram Blooming">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </a>
 
                 <div class="lang-switch">
                     <button class="active" id="lang-it" onclick="setSiteLang('it')">IT</button>
@@ -2696,9 +2439,9 @@
                     </div>
                 </div>
 
-                <!-- Slide 2: Complementi d'Arredo (Armchair & Curtain) -->
+                <!-- Slide 2: Complementi d'Arredo (hero_slide_complementi.jpg) -->
                 <div class="hero-slide" id="h-slide-1">
-                    <img src="Armchair & Curtain — Parisian Living Corner Hero (4-5).jpg" alt="Complementi d'Arredo">
+                    <img src="hero_slide_complementi.jpg" alt="Complementi d'Arredo">
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content">
                             <div class="hero-slide-kicker" data-i18n="s3_kicker">Produzione Sartoriale</div>
@@ -3091,7 +2834,7 @@
                 <div class="appt-page-right">
                     <div class="form-container-card">
                         <div class="form-card-title">Modulo Richiesta Visita Commerciale</div>
-                        <p class="form-card-sub">Compila i campi per richiedere la visita di un agente in studio o la spedizione di campionari tirelle. Sarai ricontattato entro 24 ore lavorative.</p>
+                        <p class="form-card-sub">Compila i campi per concordare la visita di un nostro funzionario commerciale presso il tuo studio o negozio. La richiesta verrà inoltrata direttamente a <strong>info@bloomingfabrics.it</strong>.</p>
 
                         <form id="form-prenotazione-appuntamento" class="dedicated-form-grid" onsubmit="handleDedicatedAppointmentSubmit(event)">
                             <div>
@@ -3099,8 +2842,8 @@
                                 <input type="text" class="clean-input" name="fullname" required placeholder="Arch. Mario Rossi">
                             </div>
                             <div>
-                                <label class="form-label">Studio / Azienda *</label>
-                                <input type="text" class="clean-input" name="company" required placeholder="Studio Rossi Design">
+                                <label class="form-label">Studio / Negozio / Azienda *</label>
+                                <input type="text" class="clean-input" name="company" required placeholder="Studio Rossi Design / Negozio Arredi">
                             </div>
                             <div>
                                 <label class="form-label">Email *</label>
@@ -3115,12 +2858,13 @@
                                 <input type="text" class="clean-input" name="city" required placeholder="Treviso (TV)">
                             </div>
                             <div>
-                                <label class="form-label">Tipologia di Incontro *</label>
+                                <label class="form-label">Tipologia di Visita *</label>
                                 <select class="clean-input" name="appt_type" required>
-                                    <option value="" disabled selected>Seleziona opzione...</option>
-                                    <option value="Visita Agente presso mio Studio" selected>Visita Agente commerciale presso il mio Studio/Azienda</option>
-                                    <option value="Richiesta Tirelle e Campionari">Invio Tirelle & Campionari + Contatto Commerciale</option>
-                                    <option value="Video Call Consulenza Progetto">Video Consulenza Online di Progetto</option>
+                                    <option value="" disabled>Seleziona opzione...</option>
+                                    <option value="Visita Commerciale presso Studio di Architettura / Interior" selected>Visita Commerciale presso Studio di Architettura / Interior</option>
+                                    <option value="Visita Commerciale presso Negozio / Showroom Partner">Visita Commerciale presso Negozio / Showroom d'Arredamento</option>
+                                    <option value="Presentazione Nuova Collezione Tessuti & Complementi">Presentazione Nuova Collezione Tessuti & Complementi</option>
+                                    <option value="Consulenza Tecnica per Progetto Residenziale / Contract">Consulenza Tecnica per Progetto Residenziale / Contract</option>
                                 </select>
                             </div>
                             <div>
@@ -3230,7 +2974,7 @@
                                 <select class="clean-input" name="subject" required>
                                     <option value="" disabled selected>Seleziona motivo...</option>
                                     <option value="Informazioni Tecniche Tessuti">Informazioni Tecniche sui Tessuti</option>
-                                    <option value="Richiesta Campionatura / Tirelle">Richiesta Campionatura / Tirelle</option>
+                                    <option value="Richiesta Visita Commerciale (Studio / Negozio)">Richiesta Incontro con Funzionario Commerciale</option>
                                     <option value="Preventivo Complementi d'Arredo">Preventivo Complementi d'Arredo</option>
                                     <option value="Progetti Contract & Hotellerie">Progetti Contract & Hotellerie</option>
                                     <option value="Altro">Altro</option>
@@ -3272,7 +3016,12 @@
                             <strong>In Auto:</strong> Parcheggio interno riservato ai visitatori in Via delle Mimose, 5.
                         </div>
                         <div class="map-visual-placeholder">
-                            <div class="map-pin-icon">📍</div>
+                            <div class="map-pin-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
                             <div>
                                 <strong>E.L.F. srl BLOOMING</strong><br>
                                 Via delle Mimose, 5 — 31033 Castelfranco Veneto (TV)
@@ -3328,7 +3077,7 @@
                 <h4>Social & Community</h4>
                 <p style="margin-bottom: 10px;">Seguici sui nostri canali ufficiali per scoprire le nuove collezioni e le ispirazioni d'arredo:</p>
                 <div>
-                    <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="social-pill-link">
+                    <a href="https://www.instagram.com/blooming_fabrics/" target="_blank" rel="noopener" class="social-pill-link">
                         <span>Instagram</span> <span>↗</span>
                     </a>
                 </div>
@@ -3371,42 +3120,7 @@
             </div>
         </div>
     </div>
-    <!-- =========================================================
-         V11: B2B TIRELLE CART — FLOATING ACTION BUTTON & MODAL DRAWER
-         ========================================================= -->
-    <button id="sample-cart-fab" onclick="openSampleCart()" title="Richiesta Tirelle B2B" aria-label="Apri carrello richiesta tirelle">
-        <span class="cart-fab-icon">🧵</span>
-        <span>Richiesta Tirelle</span>
-        <span id="cart-count-badge">0</span>
-    </button>
 
-    <div id="sample-cart-modal" role="dialog" aria-label="Carrello richiesta tirelle per architetti e designer">
-        <div class="cart-modal-overlay" onclick="closeSampleCart()"></div>
-        <div class="cart-modal-panel">
-            <div class="cart-panel-head">
-                <div>
-                    <h3>Richiesta Tirelle B2B</h3>
-                    <div class="cart-panel-sub">Selezione campioni per architetti e interior designer</div>
-                </div>
-                <button class="cart-panel-close" onclick="closeSampleCart()" aria-label="Chiudi carrello">✕</button>
-            </div>
-            <div class="cart-panel-body" id="cart-panel-body">
-                <div class="cart-empty-state">
-                    <div class="empty-icon">🧵</div>
-                    <p style="font-size:14px; font-weight:600; margin-bottom:8px;">Nessuna tirella selezionata</p>
-                    <p style="font-size:12.5px; color:var(--text-muted); line-height: 1.6;">
-                        Esplora il catalogo tessuti e clicca su <strong>+ Tirella</strong> sulle card o nella scheda tecnica per comporre la tua mazzetta di campioni.
-                    </p>
-                </div>
-            </div>
-            <div class="cart-panel-foot" id="cart-panel-foot" style="display:none;">
-                <button class="btn-accent" onclick="sendSampleCartToCommercial()">
-                    Invia Selezione al Funzionario Commerciale →
-                </button>
-                <button class="cart-clear-link" onclick="clearSampleCart()">Svuota tutta la selezione</button>
-            </div>
-        </div>
-    </div>
 
 
 
@@ -3578,7 +3292,6 @@
         let itemsPerPage = 24;
         let activeSlide = 0;
         let slideTimer = null;
-        let sampleCart = [];
 
         /* HEADER DINAMICO A SCOMPARSA (SMART HIDE/SHOW ON SCROLL) */
         let lastScrollY = window.scrollY;
@@ -3997,9 +3710,6 @@
                         <div class="fisch-card" id="card-${item.code}" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'))">
                             <div class="fisch-thumb-rect">
                                 ${imgMarkup}
-                                <button type="button" class="fisch-card-tirella-btn" title="Aggiungi a richiesta tirelle" onclick="handleCardTirellaClick(event, '${item.code}')">
-                                    <span>🧵 + Tirella</span>
-                                </button>
                             </div>
                             <div class="fisch-col-badge">${item.collection || 'BLOOMING'}</div>
                             <div class="fisch-item-title">${item.name}</div>
@@ -4029,26 +3739,6 @@
             card.querySelectorAll('.fisch-mini-swatch').forEach(sw => {
                 sw.classList.toggle('active', sw.getAttribute('title') === `Col. ${varCode}`);
             });
-        }
-
-        /* AGGIUNTA VELOCE TIRELLE DA CARD */
-        function handleCardTirellaClick(e, code) {
-            if (e) e.stopPropagation();
-            const card = document.getElementById('card-' + code);
-            const item = ALL_ITEMS.find(x => x.code === code);
-            if (!item) return;
-            const varCode = card ? card.getAttribute('data-current-var') : ((item.variants && item.variants[0]) ? item.variants[0].code : 'Master');
-            const imgSrc = card ? card.getAttribute('data-current-img') : (item.img || '');
-            addToSampleCart(code, varCode, item.name, imgSrc);
-            const btn = card ? card.querySelector('.fisch-card-tirella-btn') : null;
-            if (btn) {
-                btn.classList.add('added');
-                btn.innerHTML = '<span>✓ Aggiunto</span>';
-                setTimeout(() => {
-                    btn.classList.remove('added');
-                    btn.innerHTML = '<span>🧵 + Tirella</span>';
-                }, 2000);
-            }
         }
 
         function renderFullComplementsPage() {
@@ -4102,16 +3792,13 @@
                 <div class="drawer-top-box">
                     <div>
                         ${imgHtml}
-                        <div class="drawer-zoom-hint">🔍 Passa il mouse per zoom dettaglio filato</div>
+                        <div class="drawer-zoom-hint">Passa il cursore per ingrandire la trama del filato</div>
                     </div>
                     <div>
                         <div style="font-size:11.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px; font-weight:600;">Variante selezionata</div>
                         <div style="font-size:16.5px; font-weight:600; margin-bottom:16px;">Art. ${item.code} · Col. ${activeVarCode}</div>
-                        <button class="btn-accent" style="width:100%; padding:12px 16px; justify-content:center;" onclick="requestSampleForArticle('${item.code}', '${activeVarCode}', '${item.name}')">
-                            Richiedi Visita Commerciale →
-                        </button>
-                        <button type="button" class="btn-accent" style="width:100%; margin-top:8px; padding:11px 16px; justify-content:center; background:#141414; border:1px solid #141414;" onclick="addToSampleCart('${item.code}', '${activeVarCode}', '${item.name}', '${mainImg}')">
-                            🧵 + Aggiungi a Richiesta Tirelle
+                        <button class="btn-accent" style="width:100%; padding:14px 18px; justify-content:center;" onclick="requestCommercialVisitForArticle('${item.code}', '${activeVarCode}', '${item.name}')">
+                            Richiedi Visita Funzionario Commerciale →
                         </button>
                     </div>
                 </div>
@@ -4185,101 +3872,9 @@
         }
 
         /* =========================================================
-           V11: CARRELLO / RICHIESTA CAMPIONI (TIRELLE) B2B
+           RICHIESTA VISITA FUNZIONARIO COMMERCIALE & COMPLEMENTI
            ========================================================= */
-        function addToSampleCart(code, varCode, name, imgSrc) {
-            const key = `${code}_${varCode}`;
-            if (sampleCart.some(x => x.key === key)) {
-                openSampleCart();
-                return;
-            }
-            sampleCart.push({ key, code, varCode, name, imgSrc });
-            updateSampleCartUI();
-            openSampleCart();
-        }
-
-        function removeFromSampleCart(key) {
-            sampleCart = sampleCart.filter(x => x.key !== key);
-            updateSampleCartUI();
-        }
-
-        function clearSampleCart() {
-            sampleCart = [];
-            updateSampleCartUI();
-        }
-
-        function updateSampleCartUI() {
-            const badge = document.getElementById('cart-count-badge');
-            if (badge) {
-                badge.textContent = sampleCart.length;
-                badge.style.transform = 'scale(1.35)';
-                setTimeout(() => { badge.style.transform = ''; }, 280);
-            }
-            const body = document.getElementById('cart-panel-body');
-            const foot = document.getElementById('cart-panel-foot');
-            if (!body) return;
-
-            if (sampleCart.length === 0) {
-                body.innerHTML = `
-                    <div class="cart-empty-state">
-                        <div class="empty-icon">🧵</div>
-                        <p style="font-size:14px; font-weight:600; margin-bottom:8px;">Nessuna tirella selezionata</p>
-                        <p style="font-size:12.5px; color:var(--text-muted); line-height: 1.6;">
-                            Esplora il catalogo tessuti e clicca su <strong>+ Tirella</strong> sulle card o nella scheda tecnica per comporre la tua selezione di campioni.
-                        </p>
-                    </div>
-                `;
-                if (foot) foot.style.display = 'none';
-            } else {
-                body.innerHTML = sampleCart.map(item => `
-                    <div class="cart-item-row">
-                        <div class="cart-item-thumb">
-                            ${item.imgSrc ? `<img src="${item.imgSrc}" alt="${item.name}">` : `<div style="background:var(--bg-soft);width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-muted);">${item.code}</div>`}
-                        </div>
-                        <div class="cart-item-info">
-                            <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-code">Art. ${item.code} · Variante Col. ${item.varCode}</div>
-                        </div>
-                        <button type="button" class="cart-item-remove" onclick="removeFromSampleCart('${item.key}')" title="Rimuovi tirella" aria-label="Rimuovi">✕</button>
-                    </div>
-                `).join('');
-                if (foot) foot.style.display = 'block';
-            }
-        }
-
-        function openSampleCart() {
-            const m = document.getElementById('sample-cart-modal');
-            if (m) m.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSampleCart() {
-            const m = document.getElementById('sample-cart-modal');
-            if (m) m.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-
-        function sendSampleCartToCommercial() {
-            if (sampleCart.length === 0) return;
-            closeSampleCart();
-            switchPage('appuntamento');
-            const notesEl = document.getElementById('appt-notes-field');
-            if (notesEl) {
-                const listStr = sampleCart.map(x => `• ${x.name} (Art. ${x.code} - Col. ${x.varCode})`).join('\n');
-                notesEl.value = `Richiesta campionatura tirelle B2B:\n${listStr}\n\nDesidero concordare la visita con un funzionario commerciale per visionare questi articoli.`;
-            }
-            const typeSelect = document.querySelector('select[name="appt_type"]');
-            if (typeSelect) {
-                typeSelect.value = 'Richiesta Tirelle e Campionari';
-            }
-            setTimeout(() => {
-                const form = document.getElementById('form-prenotazione-appuntamento');
-                if (form) form.scrollIntoView({ behavior: 'smooth' });
-            }, 120);
-        }
-
-        /* RICHIESTA TIRELLA E QUOTAZIONE */
-        function requestSampleForArticle(code, varCode, name) {
+        function requestCommercialVisitForArticle(code, varCode, name) {
             closeItemDrawer();
             switchPage('appuntamento');
             const notesEl = document.getElementById('appt-notes-field');
@@ -4288,7 +3883,7 @@
                 if (notesEl.value && !notesEl.value.includes(entry)) {
                     notesEl.value += `, ${entry}`;
                 } else if (!notesEl.value) {
-                    notesEl.value = `Richiesta tirella / campionatura per: ${entry}`;
+                    notesEl.value = `Richiesta incontro con funzionario commerciale per visionare dal vivo il tessuto: ${entry}`;
                 }
             }
             setTimeout(() => {
@@ -4301,7 +3896,7 @@
             switchPage('appuntamento');
             const notesEl = document.getElementById('appt-notes-field');
             if (notesEl) {
-                notesEl.value = `Richiesta informazioni e preventivo per il complemento d'arredo: ${compName}`;
+                notesEl.value = `Richiesta consulenza e preventivo con funzionario commerciale per il complemento d'arredo: ${compName}`;
             }
             setTimeout(() => {
                 const f = document.getElementById('form-prenotazione-appuntamento');
@@ -4309,36 +3904,76 @@
             }, 80);
         }
 
-        /* GESTIONE FORM RICHIESTA VISITA COMMERCIALE */
+        /* GESTIONE FORM RICHIESTA VISITA COMMERCIALE (COLLEGAMENTO MAILTO: INFO@BLOOMINGFABRICS.IT) */
         function handleDedicatedAppointmentSubmit(e) {
             e.preventDefault();
             const form = e.target;
             const fullname = form.fullname.value.trim();
+            const company = (form.company ? form.company.value.trim() : '') || '-';
             const email = form.email.value.trim();
             const phone = form.phone.value.trim();
+            const city = (form.city ? form.city.value.trim() : '') || '-';
+            const apptType = (form.appt_type ? form.appt_type.value : '') || 'Visita Commerciale';
+            const prefDate = (form.preferred_date ? form.preferred_date.value : '') || 'Non specificata';
+            const prefTime = (form.preferred_time ? form.preferred_time.value : '') || '-';
+            const notes = (form.notes ? form.notes.value.trim() : '') || '-';
 
             if (!fullname || !email || !phone) {
                 alert('Compila tutti i campi obbligatori contrassegnati con *');
                 return;
             }
 
+            const subject = `Richiesta Visita Commerciale: ${fullname} - ${company}`;
+            const bodyText = `Richiesta Incontro Funzionario Commerciale dal sito BLOOMING:\n\n` +
+                `• Nominativo: ${fullname}\n` +
+                `• Studio / Negozio / Azienda: ${company}\n` +
+                `• Email: ${email}\n` +
+                `• Telefono: ${phone}\n` +
+                `• Città / Sede: ${city}\n` +
+                `• Tipologia Incontro: ${apptType}\n` +
+                `• Data preferita: ${prefDate}\n` +
+                `• Fascia oraria: ${prefTime}\n` +
+                `• Note e Articoli di interesse:\n${notes}\n\n` +
+                `---\nDestinatario: info@bloomingfabrics.it (E.L.F. srl BLOOMING)`;
+
+            const mailtoUrl = `mailto:info@bloomingfabrics.it?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+
             const feedback = document.getElementById('appt-form-feedback');
-            feedback.style.display = 'block';
-            feedback.innerHTML = `
-                <strong style="color:var(--accent);">Grazie ${fullname}!</strong><br>
-                La tua richiesta per <em>E.L.F. srl BLOOMING</em> è stata registrata con successo.<br>
-                Un nostro funzionario commerciale ti contatterà al recapito <strong>${phone}</strong> o via email all'indirizzo <em>${email}</em> entro 24 ore lavorative per concordare la visita o la spedizione delle tirelle.
-            `;
+            if (feedback) {
+                feedback.style.display = 'block';
+                feedback.innerHTML = `
+                    <div style="border-left: 3px solid var(--accent); padding-left: 14px;">
+                        <h4 style="font-size:16px; font-weight:600; color:var(--text); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Richiesta Inoltrata con Successo</h4>
+                        <p style="font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
+                            Grazie <strong>${fullname}</strong>. La tua richiesta di incontro commerciale per <em>${company}</em> è stata preparata ed indirizzata all'ufficio commerciale: <strong>info@bloomingfabrics.it</strong>.<br>
+                            Il tuo programma di posta elettronica si aprirà automaticamente per finalizzare l'invio.
+                        </p>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                            <a href="${mailtoUrl}" class="btn-accent" style="padding:10px 18px; font-size:12px;">
+                                Apri Email e Conferma Invio →
+                            </a>
+                            <span style="font-size:12px; color:var(--text-muted);">Oppure chiamaci: <strong>+39 0423 495444</strong></span>
+                        </div>
+                    </div>
+                `;
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            setTimeout(() => {
+                window.location.href = mailtoUrl;
+            }, 350);
+
             form.reset();
-            feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        /* GESTIONE FORM CONTATTI */
+        /* GESTIONE FORM CONTATTI (COLLEGAMENTO MAILTO: INFO@BLOOMINGFABRICS.IT) */
         function handleDirectContactSubmit(e) {
             e.preventDefault();
             const form = e.target;
             const fullname = form.fullname.value.trim();
             const email = form.email.value.trim();
+            const phone = (form.phone ? form.phone.value.trim() : '') || '-';
+            const subjectChoice = (form.subject ? form.subject.value : '') || 'Richiesta Informazioni BLOOMING';
             const msg = form.message.value.trim();
 
             if (!fullname || !email || !msg) {
@@ -4346,14 +3981,43 @@
                 return;
             }
 
+            const emailSubject = `Contatto dal Sito BLOOMING: ${subjectChoice} - ${fullname}`;
+            const bodyText = `Nuovo messaggio dal modulo contatti del sito BLOOMING:\n\n` +
+                `• Nominativo: ${fullname}\n` +
+                `• Email: ${email}\n` +
+                `• Telefono: ${phone}\n` +
+                `• Oggetto: ${subjectChoice}\n` +
+                `• Messaggio:\n${msg}\n\n` +
+                `---\nDestinatario: info@bloomingfabrics.it (E.L.F. srl BLOOMING)`;
+
+            const mailtoUrl = `mailto:info@bloomingfabrics.it?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(bodyText)}`;
+
             const feedback = document.getElementById('contact-form-feedback');
-            feedback.style.display = 'block';
-            feedback.innerHTML = `
-                <strong style="color:var(--accent);">Messaggio inviato con successo!</strong><br>
-                Grazie ${fullname}, abbiamo ricevuto la tua richiesta. I nostri uffici direzionali di Castelfranco Veneto ti risponderanno a breve all'indirizzo <em>${email}</em>.
-            `;
+            if (feedback) {
+                feedback.style.display = 'block';
+                feedback.innerHTML = `
+                    <div style="border-left: 3px solid var(--accent); padding-left: 14px;">
+                        <h4 style="font-size:16px; font-weight:600; color:var(--text); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Messaggio Preparato con Successo</h4>
+                        <p style="font-size:14px; color:var(--text-muted); line-height:1.6; margin-bottom:12px;">
+                            Grazie <strong>${fullname}</strong>. Il messaggio è stato indirizzato alla nostra sede di Castelfranco Veneto: <strong>info@bloomingfabrics.it</strong>.<br>
+                            Il tuo client di posta si aprirà automaticamente per completare l'invio.
+                        </p>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                            <a href="${mailtoUrl}" class="btn-accent" style="padding:10px 18px; font-size:12px;">
+                                Apri Email e Conferma Invio →
+                            </a>
+                            <span style="font-size:12px; color:var(--text-muted);">Sede Castelfranco Veneto: <strong>+39 0423 495444</strong></span>
+                        </div>
+                    </div>
+                `;
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            setTimeout(() => {
+                window.location.href = mailtoUrl;
+            }, 350);
+
             form.reset();
-            feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         /* ANIMAZIONI SCROLL REVEAL */
