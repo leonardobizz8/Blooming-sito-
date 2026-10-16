@@ -2501,16 +2501,25 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 28px rgba(123, 158, 126, 0.16);
         }
-        .eq-card-brand-badge {
-            display: inline-block;
-            align-self: flex-start;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
+        /* Sede speculare per i loghi ufficiali reali nelle due card */
+        .eq-brand-card-header {
+            display: flex;
+            align-items: center;
+            height: 42px;
+            margin-bottom: 20px;
+        }
+        .eq-brand-logo-real {
+            max-height: 28px;
+            width: auto;
+            max-width: 170px;
+            object-fit: contain;
+            display: block;
+        }
+        .eq-blooming-logo {
+            mix-blend-mode: multiply;
+        }
+        .eq-equora-logo {
+            height: 28px;
         }
         .eq-card-title {
             font-family: 'Cinzel', serif;
@@ -2841,8 +2850,8 @@
     <aside class="mobile-nav-drawer" id="mobile-nav-drawer">
         <div class="mobile-drawer-content-wrap">
             <div class="mobile-drawer-search">
-                <input type="text" placeholder="Cerca nel catalogo..." oninput="handleGlobalSearch(this.value); closeMobileMenu();">
-                <span>⌕</span>
+                <input type="text" id="mobile-search-input" placeholder="Cerca nel catalogo..." autocomplete="off">
+                <span onclick="handleGlobalSearch(document.getElementById('mobile-search-input').value); closeMobileMenu();" style="cursor:pointer;" title="Cerca">⌕</span>
             </div>
 
             <ul class="mobile-drawer-links">
@@ -2897,8 +2906,8 @@
             <!-- Destra: Ricerca globale, Selettore Lingua e Tasto Mobile (Instagram rimosso) -->
             <div class="nav-right">
                 <div class="header-search-wrap">
-                    <input type="text" id="global-search" placeholder="Cerca nel sito..." oninput="handleGlobalSearch(this.value)">
-                    <span class="search-icon">⌕</span>
+                    <input type="text" id="global-search" placeholder="Cerca nel sito..." autocomplete="off">
+                    <span class="search-icon" onclick="handleGlobalSearch(document.getElementById('global-search').value)" style="cursor:pointer;" title="Cerca">⌕</span>
                 </div>
 
                 <div class="lang-switch">
@@ -3263,6 +3272,14 @@
                 </p>
             </div>
 
+            <div style="max-width: 1360px; margin: 0 auto 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <div style="font-size: 13px; color: var(--text-muted);" id="complements-counter-label"><strong style="color:var(--accent);">4</strong> modelli disponibili</div>
+                <div class="fisch-search-bar" style="max-width: 360px; width: 100%;">
+                    <input type="text" id="comp-q-input" class="clean-input" style="padding: 6px 0; font-size: 13px;" placeholder="Cerca tra i complementi (es. panchina, poltrona)..." autocomplete="off">
+                    <span class="fisch-search-icon">⌕</span>
+                </div>
+            </div>
+
             <div class="complements-page-grid" id="full-complements-container"></div>
         </div>
 
@@ -3309,8 +3326,8 @@
                 <div class="equora-dual-grid">
                     <!-- SCATOLA 1: BLOOMING (Accenti Terracotta #D96B27) -->
                     <div class="equora-brand-card blooming-side">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                            <span class="eq-card-brand-badge" style="background:#FFF1E8; color:#D96B27; border: 1px solid rgba(217,107,39,0.25);">BLOOMING</span>
+                        <div class="eq-brand-card-header">
+                            <img src="blooming_logo.jpg" alt="BLOOMING" width="160" height="27" loading="lazy" decoding="async" class="eq-brand-logo-real eq-blooming-logo">
                         </div>
                         <h3 class="eq-card-title">La Massima Visione Creativa</h3>
                         <p class="eq-card-p">
@@ -3326,9 +3343,8 @@
 
                     <!-- SCATOLA 2: EQUORA (Toni Verdi #7B9E7E) -->
                     <div class="equora-brand-card equora-side">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                            <span class="eq-card-brand-badge" style="background:#EBF2EC; color:#38593F; border: 1px solid rgba(123,158,126,0.35);">EQUORA</span>
-                            <img src="equora_logo_green.png" alt="EQUORA" width="75" height="20" loading="lazy" decoding="async" style="height:20px; width:auto; opacity:0.9;">
+                        <div class="eq-brand-card-header">
+                            <img src="equora_logo_green.png" alt="ÉQUORA" width="120" height="32" loading="lazy" decoding="async" class="eq-brand-logo-real eq-equora-logo">
                         </div>
                         <h3 class="eq-card-title">La Solida Radice Quotidiana</h3>
                         <p class="eq-card-p">
@@ -3967,6 +3983,9 @@
             renderFullComplementsPage();
             renderEquoraGrid('ALL');
 
+            // Setup real-time search listeners on all inputs (global, catalog, complements, equora, mobile)
+            setupSearchListeners();
+
             // Setup hero slider interval
             startSlideShow();
 
@@ -4217,8 +4236,138 @@
             renderFischbacherPage();
         }
 
+        /* FUNZIONI DI RICERCA INTELLIGENTE & ASCOLTATORI REATTIVI */
+        function getActivePage() {
+            const activeView = document.querySelector('.page-view.active');
+            if (!activeView) return 'home';
+            return (activeView.id || '').replace('view-', '');
+        }
+
+        function itemMatchesQuery(it, q) {
+            if (!q) return true;
+            const tokens = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+            if (!tokens.length) return true;
+
+            const varText = (it.variants || []).map(v => `${v.code || ''} ${v.name || ''}`).join(' ');
+            const usesText = (it.uses || []).join(' ');
+            const fibersText = (it.fibers || []).join(' ');
+            const funcsText = (it.functions || []).join(' ');
+            const patsText = (it.patterns || []).join(' ');
+            const typsText = (it.typologies || []).join(' ');
+
+            const fullBlob = [
+                it.name || '',
+                it.code || '',
+                it.collection || '',
+                it.comp || '',
+                it.height || '',
+                it.martindale || '',
+                usesText,
+                fibersText,
+                funcsText,
+                patsText,
+                typsText,
+                varText
+            ].join(' ').toLowerCase();
+
+            return tokens.every(tok => fullBlob.includes(tok));
+        }
+
+        function complementMatchesQuery(c, q) {
+            if (!q) return true;
+            const tokens = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+            if (!tokens.length) return true;
+            const specsText = (c.specs || []).map(s => `${s[0]} ${s[1]}`).join(' ');
+            const fullText = `${c.name || ''} ${specsText}`.toLowerCase();
+            return tokens.every(tok => fullText.includes(tok));
+        }
+
+        function handleGlobalSearch(query) {
+            const val = (query || '').trim();
+            const activePage = getActivePage();
+
+            // Sincronizza tutti gli input di ricerca principali
+            const gInput = document.getElementById('global-search');
+            const mInput = document.getElementById('mobile-search-input');
+            if (gInput && gInput.value !== val) gInput.value = val;
+            if (mInput && mInput.value !== val) mInput.value = val;
+
+            const qLower = val.toLowerCase();
+            const isEquoraWord = qLower.includes('equora');
+            const isCompWord = ['panchina', 'poltrona', 'pouf', 'jabba', 'rocco', 'pucci', 'gemon', 'cuoio'].some(w => qLower.includes(w));
+
+            if (activePage === 'equora' || isEquoraWord) {
+                if (activePage !== 'equora') switchPage('equora');
+                const eqInput = document.getElementById('equora-search-input');
+                if (eqInput) eqInput.value = val;
+                handleEquoraSearch(val);
+                return;
+            }
+
+            if (activePage === 'complementi' || isCompWord) {
+                if (activePage !== 'complementi') switchPage('complementi');
+                const compInput = document.getElementById('comp-q-input');
+                if (compInput) compInput.value = val;
+                renderFullComplementsPage(val);
+                return;
+            }
+
+            // Default: Catalogo Prodotti
+            if (activePage !== 'prodotti') switchPage('prodotti');
+            const fischInput = document.getElementById('fisch-q-input');
+            if (fischInput) fischInput.value = val;
+            applyFischbacherCatalog();
+        }
+
+        function setupSearchListeners() {
+            const configs = [
+                { id: 'global-search', onVal: (v) => handleGlobalSearch(v) },
+                { id: 'mobile-search-input', onVal: (v) => handleGlobalSearch(v) },
+                { id: 'fisch-q-input', onVal: (v) => {
+                    const gi = document.getElementById('global-search');
+                    if (gi && gi.value !== v) gi.value = v;
+                    applyFischbacherCatalog();
+                }},
+                { id: 'comp-q-input', onVal: (v) => {
+                    const gi = document.getElementById('global-search');
+                    if (gi && gi.value !== v) gi.value = v;
+                    renderFullComplementsPage(v);
+                }},
+                { id: 'equora-search-input', onVal: (v) => {
+                    const gi = document.getElementById('global-search');
+                    if (gi && gi.value !== v) gi.value = v;
+                    handleEquoraSearch(v);
+                }}
+            ];
+
+            configs.forEach(({ id, onVal }) => {
+                const el = document.getElementById(id);
+                if (!el || el.dataset.searchBound) return;
+                el.dataset.searchBound = 'true';
+
+                ['input', 'keyup'].forEach(evtType => {
+                    el.addEventListener(evtType, (e) => {
+                        onVal(e.target.value);
+                    });
+                });
+
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        el.blur();
+                        closeMobileMenu();
+                        const activeView = document.querySelector('.page-view.active');
+                        if (activeView) {
+                            const grid = activeView.querySelector('.fisch-product-grid, .complements-page-grid, .equora-catalog-grid');
+                            if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+        }
+
         function applyFischbacherCatalog() {
-            const q = (document.getElementById('fisch-q-input') ? document.getElementById('fisch-q-input').value : '').trim().toLowerCase();
+            const q = (document.getElementById('fisch-q-input') ? document.getElementById('fisch-q-input').value : '').trim();
             const selUses = getCheckedValues('filter-box-uses');
             const selFuncs = getCheckedValues('filter-box-functions');
             const selFibs = getCheckedValues('filter-box-fibers');
@@ -4233,10 +4382,9 @@
                 if (isEq) return false;
 
                 if (q) {
-                    const matchQ = (it.name && it.name.toLowerCase().includes(q)) ||
-                                   (it.code && it.code.toLowerCase().includes(q)) ||
-                                   (it.collection && it.collection.toLowerCase().includes(q));
-                    if (!matchQ) return false;
+                    if (!itemMatchesQuery(it, q)) return false;
+                    // Se c'è una corrispondenza esatta per codice articolo, mostrala senza essere bloccata dai filtri secondari
+                    if (it.code && it.code.toLowerCase() === q.toLowerCase()) return true;
                 }
                 if (selUses.length && !selUses.some(u => (it.uses || []).includes(u))) return false;
                 if (selFuncs.length && !selFuncs.some(f => (it.functions || []).includes(f))) return false;
@@ -4386,10 +4534,41 @@
             });
         }
 
-        function renderFullComplementsPage() {
+        let currentCompSearch = '';
+
+        function renderFullComplementsPage(filterVal = null) {
+            if (filterVal !== null) {
+                currentCompSearch = (filterVal || '').trim().toLowerCase();
+            }
             const box = document.getElementById('full-complements-container');
             if (!box) return;
-            box.innerHTML = COMPLEMENTS_LIST.map(c => `
+
+            let list = COMPLEMENTS_LIST;
+            if (currentCompSearch) {
+                const tokens = currentCompSearch.split(/\s+/).filter(Boolean);
+                list = list.filter(c => {
+                    const specsText = (c.specs || []).map(s => `${s[0]} ${s[1]}`).join(' ');
+                    const fullText = `${c.name || ''} ${specsText}`.toLowerCase();
+                    return tokens.every(tok => fullText.includes(tok));
+                });
+            }
+
+            const counter = document.getElementById('complements-counter-label');
+            if (counter) {
+                counter.innerHTML = `<strong style="color:var(--accent);">${list.length}</strong> modelli disponibili`;
+            }
+
+            if (list.length === 0) {
+                box.innerHTML = `
+                    <div style="grid-column: 1 / -1; padding: 48px 20px; text-align: center; color: var(--text-muted);">
+                        <p style="font-size: 15px; margin-bottom: 12px;">Nessun complemento d'arredo trovato per "${currentCompSearch}".</p>
+                        <button class="btn-accent" style="font-size:11.5px; padding:10px 18px;" onclick="renderFullComplementsPage(''); const ci = document.getElementById('comp-q-input'); if(ci) ci.value=''; const gi = document.getElementById('global-search'); if(gi) gi.value='';">Mostra tutti i complementi</button>
+                    </div>
+                `;
+                return;
+            }
+
+            box.innerHTML = list.map(c => `
                 <div class="comp-full-card">
                     <div class="comp-full-img">
                         <img src="${c.img}" alt="${c.name}" width="600" height="480" loading="lazy" decoding="async">
@@ -4747,11 +4926,19 @@
             }
 
             if (currentEquoraSearch) {
+                const tokens = currentEquoraSearch.toLowerCase().split(/\s+/).filter(Boolean);
                 items = items.filter(it => {
-                    const name = (it.name || '').toLowerCase();
-                    const code = (it.code || '').toLowerCase();
-                    const col = (it.collection || '').toLowerCase();
-                    return name.includes(currentEquoraSearch) || code.includes(currentEquoraSearch) || col.includes(currentEquoraSearch);
+                    const varText = (it.variants || []).map(v => `${v.code || ''} ${v.name || ''}`).join(' ');
+                    const fullText = [
+                        it.name || '',
+                        it.code || '',
+                        it.collection || '',
+                        it.comp || '',
+                        it.martindale || '',
+                        it.height || '',
+                        varText
+                    ].join(' ').toLowerCase();
+                    return tokens.every(tok => fullText.includes(tok));
                 });
             }
 
@@ -4860,6 +5047,11 @@
             localStorage.setItem('blooming_cookie_consent', 'necessary_only');
             const banner = document.getElementById('cookie-banner');
             if (banner) banner.style.display = 'none';
+        }
+
+        // Inizializzazione immediata della ricerca reattiva in tempo reale
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setupSearchListeners();
         }
     </script>
 </body>
