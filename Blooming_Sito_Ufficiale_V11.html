@@ -599,7 +599,7 @@
         }
 
         .hero-slide#h-slide-1 img {
-            object-position: center 36%;
+            object-position: 65% 60%;
         }
 
         .hero-slide#h-slide-2 img {
@@ -702,6 +702,58 @@
             width: 54px;
         }
 
+        /* Indicatore verde dedicato per Equora */
+        .hero-dots-nav.equora-active .hero-dot-pill.active {
+            background: #7B9E7E !important;
+        }
+
+        /* Frecce laterali discrete per navigazione manuale Hero Slider */
+        .hero-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(20, 20, 20, 0.28);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 12;
+            transition: all 0.25s ease;
+            opacity: 0.7;
+            padding: 0;
+        }
+        .hero-slider-arrow:hover {
+            background: rgba(20, 20, 20, 0.65);
+            border-color: rgba(255, 255, 255, 0.55);
+            transform: translateY(-50%) scale(1.06);
+            opacity: 1;
+        }
+        .hero-slider-arrow svg {
+            display: block;
+        }
+        .hero-arrow-prev {
+            left: 28px;
+        }
+        .hero-arrow-next {
+            right: 28px;
+        }
+        @media (max-width: 768px) {
+            .hero-slider-arrow {
+                width: 36px;
+                height: 36px;
+                opacity: 0.55;
+            }
+            .hero-arrow-prev { left: 12px; }
+            .hero-arrow-next { right: 12px; }
+        }
+
         /* =========================================================
            3. SEZIONE D'INGRESSO "COSA STAI CERCANDO?" (ORIGINALE BLOOMING)
            4 MACRO-AREE: 1) Tende 2) Imbottiti 3) Outdoor & Ignifughi 4) Complementi
@@ -790,6 +842,10 @@
 
         .dest-card-complementi .dest-media img {
             object-position: center 80%;
+        }
+
+        .dest-card-imbottiti .dest-media img {
+            object-position: 65% 60%;
         }
 
 
@@ -3068,7 +3124,7 @@
                         <div class="hero-slide-content">
                             <div class="hero-slide-kicker" style="color:#C2DBC5;">Nuovo Marchio · Collezione Autonoma</div>
                             <div style="margin-bottom: 14px;">
-                                <img src="equora_logo_badge.png" alt="ÉQUORA" style="max-height: 48px; width: auto; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);">
+                                <img src="equora_logo_green.png" alt="ÉQUORA" style="height: 42px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.35)); display: block;">
                             </div>
                             <h2 class="hero-slide-title">EQUORA</h2>
                             <p class="hero-slide-sub">“Tessuti in Equilibrio” — Una scelta consapevole, giusta, equilibrata, fatta di una qualità accessibile e del “ben fatto”.</p>
@@ -3076,6 +3132,14 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Frecce laterali di navigazione manuale discrete -->
+                <button class="hero-slider-arrow hero-arrow-prev" onclick="prevHeroSlide(); startSlideShow();" aria-label="Slide precedente">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button class="hero-slider-arrow hero-arrow-next" onclick="nextHeroSlide(); startSlideShow();" aria-label="Slide successiva">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
 
                 <div class="hero-dots-nav">
                     <button class="hero-dot-pill active" onclick="setHeroSlide(0)" title="Nuova Collezione"></button>
@@ -3109,9 +3173,9 @@
                     </div>
 
                     <!-- 2) IMBOTTITI: Associata all'immagine locale "Ambientazione_02_A.jpg" -->
-                    <div class="dest-card" onclick="openProductsWithUse('Imbottiti')">
+                    <div class="dest-card dest-card-imbottiti" onclick="openProductsWithUse('Imbottiti')">
                         <div class="dest-media">
-                            <img src="Ambientazione_02_A.jpg" alt="Tessuti per Imbottiti Blooming">
+                            <img src="Ambientazione_02_A.jpg" alt="Tessuti per Imbottiti Blooming" style="object-position: 65% 60%;">
                         </div>
                         <div class="dest-body">
                             <span class="dest-num">02 / Imbottiti</span>
@@ -3138,7 +3202,6 @@
                     <div class="dest-card dest-card-equora" onclick="switchPage('equora')">
                         <div class="dest-media">
                             <img src="Garden Pavilion Hero - 16-9 4K Interior.jpg" alt="EQUORA — Tessuti in Equilibrio">
-                            <span class="dest-badge-equora">Nuovo Marchio</span>
                         </div>
                         <div class="dest-body">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -3378,18 +3441,18 @@
              ========================================================= -->
         <div class="page-view" id="view-equora">
             <!-- 1. EQUORA HERO INTRO & LOGO PULITO (SENZA BOX/QUADRATINO, SU SFONDO NEUTRO E CALDO) -->
-            <section class="equora-hero-banner" style="background: var(--bg-soft, #F9F8F5); border-bottom: 1px solid var(--line); padding: 50px 30px 42px; text-align: center;">
+            <section class="equora-hero-banner" style="background: var(--bg-soft, #F9F8F5); border-bottom: 1px solid var(--line); padding: 54px 30px 44px; text-align: center;">
                 <div style="max-width: 860px; margin: 0 auto;">
-                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 22px;">
-                        <img src="equora_logo_green.png" alt="EQUORA — Tessuti in Equilibrio" style="height: 54px; width: auto; object-fit: contain; display: block; margin: 0 auto;">
+                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;">
+                        <img src="equora_logo_green.png" alt="EQUORA — Tessuti in Equilibrio" style="height: 68px; width: auto; object-fit: contain; display: block; margin: 0 auto;">
                     </div>
-                    <div style="display: inline-block; padding: 4px 14px; background: #EBF2EC; color: #38593F; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; border-radius: 20px; margin-bottom: 16px;">
+                    <div style="display: inline-block; padding: 4px 14px; background: #EBF2EC; color: #38593F; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; border-radius: 20px; margin-bottom: 16px; font-family: 'Jost', sans-serif;">
                         EQUORA — TESSUTI IN EQUILIBRIO
                     </div>
-                    <h1 style="font-family: 'Cinzel', serif; font-size: 32px; font-weight: 400; color: #2C3E33; margin: 0 0 16px; letter-spacing: 0.03em;">
+                    <h1 style="font-family: 'Cinzel', serif; font-size: clamp(26px, 3.2vw, 34px); font-weight: 400; color: #2C3E33; margin: 0 0 16px; letter-spacing: 0.03em; line-height: 1.35;">
                         Una scelta consapevole, giusta, equilibrata.
                     </h1>
-                    <p style="font-size: 15.5px; line-height: 1.75; color: #4E5D54; max-width: 820px; margin: 0 auto;">
+                    <p style="font-family: 'Jost', sans-serif; font-size: 15.5px; line-height: 1.75; color: #4E5D54; max-width: 820px; margin: 0 auto;">
                         <strong>EQUORA</strong> nasce dalla precisa esigenza di proporre un tessuto concreto, quotidiano e accessibile, realizzato con la medesima cura sartoriale e dedizione che contraddistinguono la nostra manifattura. Mentre <strong>BLOOMING</strong> esprime la massima visione creativa su filati nobili, grandi altezze e nobilitazioni tessili d'alta gamma, <strong>EQUORA</strong> ne costituisce la solida radice: una collezione pensata per l'abitare di ogni giorno, in perfetto equilibrio tra estetica e funzione, prezzo e valore, bellezza e sincerità.
                     </p>
                 </div>
@@ -3405,9 +3468,9 @@
             <!-- 3. DUE SCATOLE DI DIVISIONE: BLOOMING vs EQUORA -->
             <section class="equora-dual-section reveal-on-scroll" style="padding-top: 40px; padding-bottom: 30px;">
                 <div style="text-align: center; margin-bottom: 28px;">
-                    <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #4F7055; font-weight: 600; margin-bottom: 6px;">Due Visioni Complementari</div>
-                    <h2 style="font-family: 'Cinzel', serif; font-size: 26px; color: #27382E; margin: 0 0 8px;">Due marchi, due anime del nostro fare prodotto</h2>
-                    <p style="font-size: 14px; color: var(--text-muted); max-width: 650px; margin: 0 auto;">
+                    <div style="font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #4F7055; font-weight: 600; margin-bottom: 6px;">Due Visioni Complementari</div>
+                    <h2 style="font-family: 'Cinzel', serif; font-size: 26px; font-weight: 400; color: #27382E; margin: 0 0 8px;">Due marchi, due anime del nostro fare prodotto</h2>
+                    <p style="font-family: 'Jost', sans-serif; font-size: 14px; color: var(--text-muted); max-width: 650px; margin: 0 auto;">
                         La divisione netta tra la ricerca d'alta gamma sartoriale e la concretezza accessibile quotidiana.
                     </p>
                 </div>
@@ -3417,10 +3480,8 @@
                     <div class="equora-brand-card blooming-side">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                             <span class="eq-card-brand-badge" style="background:#FFF1E8; color:#D96B27; border: 1px solid rgba(217,107,39,0.25);">BLOOMING</span>
-                            <span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #D96B27; font-weight: 600;">Alta Gamma</span>
                         </div>
                         <h3 class="eq-card-title">La Massima Visione Creativa</h3>
-                        <div class="eq-card-tagline" style="color: #D96B27;">Fibre Nobili & Made in Italy Sartoriale</div>
                         <p class="eq-card-p">
                             La punta avanzata della ricerca tessile per progetti esclusivi, residenziale di pregio e contract di lusso. Grandi altezze fino a 330 cm per tendaggi senza giunte, lini purissimi, lane materiche, rasi e finissaggi scultorei ad alto valore aggiunto.
                         </p>
@@ -3439,7 +3500,6 @@
                             <img src="equora_logo_green.png" alt="EQUORA" style="height:20px; width:auto; opacity:0.9;">
                         </div>
                         <h3 class="eq-card-title">La Solida Radice Quotidiana</h3>
-                        <div class="eq-card-tagline" style="color: #4A7052;">Qualità del "Ben Fatto" & Valore Accessibile</div>
                         <p class="eq-card-p">
                             Una proposta tessile concreta e pronta per l’abitare quotidiano. Realizzata con la stessa dedizione e precisione tecnica, offrendo una scelta trasparente tra estetica e funzione, prezzo accessibile e durata nel tempo.
                         </p>
@@ -4099,6 +4159,10 @@
             document.querySelectorAll('.hero-dot-pill').forEach((dot, i) => {
                 dot.classList.toggle('active', i === idx);
             });
+            const dotsNav = document.querySelector('.hero-dots-nav');
+            if (dotsNav) {
+                dotsNav.classList.toggle('equora-active', idx === 2);
+            }
         }
 
         function nextHeroSlide() {
