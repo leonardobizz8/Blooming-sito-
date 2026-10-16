@@ -2337,17 +2337,17 @@
         }
 
         /* =========================================================
-           EQUORA BRAND & IDENTITY DEDICATA (VERDE SALVIA / MINERALE)
+           EQUORA BRAND & IDENTITY DEDICATA (VERDE SALVIA UFFICIALE #7B9E7E)
            ========================================================= */
         :root {
-            --eq-sage: #4F6D5E;
-            --eq-sage-dark: #2A3E34;
-            --eq-sage-light: #EBF1ED;
-            --eq-border: #D8E2DC;
+            --eq-sage: #7B9E7E;
+            --eq-sage-dark: #3F5E42;
+            --eq-sage-light: #F1F6F2;
+            --eq-border: #C8D8CB;
         }
 
         .nav-btn-equora {
-            color: #3E594C !important;
+            color: #3F5E42 !important;
             font-weight: 600 !important;
             letter-spacing: 0.12em;
         }
@@ -2355,77 +2355,73 @@
         .mob-link-equora .equora-dot,
         .fisch-tab-equora .equora-dot {
             display: inline-block;
-            width: 7px;
-            height: 7px;
-            background: #4F6D5E;
+            width: 8px;
+            height: 8px;
+            background: #7B9E7E;
             border-radius: 50%;
-            margin-right: 5px;
+            margin-right: 6px;
             vertical-align: middle;
         }
         .mob-link-equora {
-            color: #3E594C !important;
+            color: #3F5E42 !important;
             font-weight: 600 !important;
         }
         .fisch-tab-equora {
-            color: #3E594C !important;
-            background: #F3F7F4 !important;
-            border-left: 2px solid #4F6D5E !important;
+            color: #3F5E42 !important;
+            background: #F1F6F2 !important;
+            border-left: 3px solid #7B9E7E !important;
             font-weight: 600 !important;
         }
         .fisch-tab-equora:hover {
-            background: #E5ECE8 !important;
+            background: #E4ECE6 !important;
         }
 
         /* Banner d'entrata Equora */
         .equora-hero-banner {
-            background: linear-gradient(135deg, #F4F7F5 0%, #E8EFEA 100%);
-            border-bottom: 1px solid #DCE6E0;
-            padding: 60px 48px;
+            background: linear-gradient(135deg, #F4F7F5 0%, #E6EFE8 100%);
+            border-bottom: 1px solid #D2E0D5;
+            padding: 56px 48px;
         }
         .equora-hero-inner {
             max-width: 1200px;
             margin: 0 auto;
         }
-        .equora-logo-card {
+        
+        /* Showcase Logo Ufficiale Equora */
+        .equora-logo-showcase {
+            margin-bottom: 26px;
             display: inline-flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 32px;
-            background: #FFFFFF;
-            border: 1.5px solid #CCD8D1;
-            border-radius: 6px;
-            box-shadow: 0 4px 16px rgba(62, 89, 76, 0.06);
-            margin-bottom: 24px;
+            align-items: flex-start;
         }
-        .equora-logo-wordmark {
-            font-family: 'Cinzel', serif;
-            font-size: 26px;
-            letter-spacing: 0.22em;
-            font-weight: 600;
-            color: #2D463A;
-            line-height: 1.1;
+        .equora-brand-logo-img {
+            max-width: 360px;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(123, 158, 126, 0.24);
+            display: block;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
-        .equora-logo-tagline {
-            font-family: 'Jost', sans-serif;
+        .equora-brand-logo-img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(123, 158, 126, 0.35);
+        }
+        .equora-logo-caption {
             font-size: 11px;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-            color: #4F6D5E;
-            margin-top: 5px;
-            font-weight: 500;
+            color: #5C7A60;
+            font-weight: 600;
+            margin-top: 10px;
         }
-        .equora-logo-hint {
-            font-size: 10px;
-            letter-spacing: 0.08em;
-            color: #7A8D83;
-            margin-top: 3px;
-        }
+
         .equora-kicker {
             font-size: 12px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #4F6D5E;
+            color: #4A6C4E;
             font-weight: 600;
             margin-bottom: 10px;
         }
@@ -2433,7 +2429,7 @@
             font-family: 'Cinzel', serif;
             font-size: 38px;
             line-height: 1.25;
-            color: #2A3E34;
+            color: #2D4430;
             max-width: 900px;
             margin-bottom: 14px;
             font-weight: 400;
@@ -2449,10 +2445,10 @@
         /* Box Manifesto del Papà */
         .equora-manifesto-box {
             background: #FFFFFF;
-            border-left: 4px solid #4F6D5E;
+            border-left: 4px solid #7B9E7E;
             border-radius: 0 8px 8px 0;
             padding: 36px 40px;
-            box-shadow: 0 6px 24px rgba(62, 89, 76, 0.06);
+            box-shadow: 0 6px 24px rgba(123, 158, 126, 0.10);
             margin-top: 24px;
             position: relative;
         }
@@ -2470,7 +2466,7 @@
             font-family: 'Cinzel', serif;
             font-size: 19px;
             line-height: 1.6;
-            color: #2A3E34;
+            color: #2D4430;
             margin-bottom: 20px;
         }
         .equora-manifesto-body {
@@ -2496,15 +2492,15 @@
             font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: #3E594C;
+            color: #3F5E42;
         }
         .equora-quote-slogan-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 6px 14px;
-            background: #E8EFEA;
-            color: #2D463A;
+            background: #EAF1EB;
+            color: #2D4430;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
@@ -2537,8 +2533,8 @@
             border-top: 4px solid var(--accent);
         }
         .equora-brand-card.equora-side {
-            border-top: 4px solid #4F6D5E;
-            background: #FAFCFA;
+            border-top: 4px solid #7B9E7E;
+            background: #FAFBF9;
         }
         .eq-card-brand-badge {
             display: inline-block;
@@ -2589,7 +2585,7 @@
             content: "•";
             position: absolute;
             left: 0;
-            color: #4F6D5E;
+            color: #7B9E7E;
         }
 
         /* 4 Valori strip */
@@ -2609,7 +2605,7 @@
         .equora-val-num {
             font-size: 11px;
             letter-spacing: 0.16em;
-            color: #5A7B6B;
+            color: #5C7A60;
             font-weight: 600;
             text-transform: uppercase;
             margin-bottom: 6px;
@@ -2617,7 +2613,7 @@
         .equora-val-title {
             font-family: 'Cinzel', serif;
             font-size: 18px;
-            color: #2D463A;
+            color: #2D4430;
             margin-bottom: 8px;
         }
         .equora-val-desc {
@@ -2651,7 +2647,7 @@
             padding: 8px 18px;
             border: 1px solid #CCD8D1;
             background: #FFFFFF;
-            color: #3E594C;
+            color: #3F5E42;
             font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.08em;
@@ -2662,12 +2658,12 @@
             font-family: 'Jost', sans-serif;
         }
         .eq-pill-btn:hover {
-            background: #E8EFEA;
+            background: #EAF1EB;
         }
         .eq-pill-btn.active {
-            background: #3E594C;
+            background: #7B9E7E;
             color: #FFFFFF;
-            border-color: #3E594C;
+            border-color: #7B9E7E;
         }
         .equora-search-box {
             position: relative;
@@ -2683,7 +2679,7 @@
             font-family: 'Jost', sans-serif;
         }
         .equora-search-box input:focus {
-            border-color: #3E594C;
+            border-color: #7B9E7E;
         }
         .equora-search-box span {
             position: absolute;
@@ -2712,8 +2708,8 @@
         }
         .equora-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 24px rgba(62, 89, 76, 0.08);
-            border-color: #CCD8D1;
+            box-shadow: 0 10px 24px rgba(123, 158, 126, 0.16);
+            border-color: #7B9E7E;
         }
         .eq-card-media {
             position: relative;
@@ -2734,7 +2730,7 @@
         .eq-card-hover-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(42, 62, 52, 0.45);
+            background: rgba(45, 68, 48, 0.45);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2746,7 +2742,7 @@
         }
         .eq-card-hover-overlay span {
             background: #FFFFFF;
-            color: #2A3E34;
+            color: #2D4430;
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.1em;
@@ -2758,8 +2754,8 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(255, 255, 255, 0.92);
-            color: #2D463A;
+            background: rgba(255, 255, 255, 0.94);
+            color: #2D4430;
             font-size: 10px;
             font-weight: 600;
             letter-spacing: 0.1em;
@@ -2767,6 +2763,7 @@
             padding: 4px 8px;
             border-radius: 3px;
             backdrop-filter: blur(4px);
+            border: 1px solid rgba(123, 158, 126, 0.2);
         }
         .eq-card-body {
             padding: 16px 18px 18px;
@@ -2787,7 +2784,7 @@
         .eq-card-name {
             font-family: 'Cinzel', serif;
             font-size: 17px;
-            color: #2A3E34;
+            color: #2D4430;
             margin-bottom: 10px;
             font-weight: 500;
         }
@@ -2804,7 +2801,7 @@
             color: #55625B;
         }
         .eq-card-spec strong {
-            color: #2A3E34;
+            color: #2D4430;
             font-weight: 500;
         }
         .eq-swatches-strip {
@@ -2829,8 +2826,8 @@
         }
         .eq-swatch-dot:hover, .eq-swatch-dot.active {
             transform: scale(1.2);
-            border-color: #3E594C;
-            box-shadow: 0 0 0 1px #3E594C;
+            border-color: #7B9E7E;
+            box-shadow: 0 0 0 1px #7B9E7E;
         }
         .eq-swatch-more {
             font-size: 11px;
@@ -2844,9 +2841,9 @@
         .eq-card-btn {
             width: 100%;
             padding: 8px 12px;
-            background: #F4F7F5;
-            color: #3E594C;
-            border: 1px solid #D4E0D9;
+            background: #F1F6F2;
+            color: #3F5E42;
+            border: 1px solid #C8D8CB;
             border-radius: 4px;
             font-size: 11.5px;
             font-weight: 600;
@@ -2857,21 +2854,21 @@
             font-family: 'Jost', sans-serif;
         }
         .eq-card-btn:hover {
-            background: #3E594C;
+            background: #7B9E7E;
             color: #FFFFFF;
-            border-color: #3E594C;
+            border-color: #7B9E7E;
         }
         .dest-card-equora {
             border-color: #CCD8D1;
         }
         .dest-card-equora:hover {
-            border-color: #4F6D5E;
+            border-color: #7B9E7E;
         }
         .dest-badge-equora {
             position: absolute;
             top: 12px;
             left: 12px;
-            background: #4F6D5E;
+            background: #7B9E7E;
             color: #FFFFFF;
             font-size: 10px;
             font-weight: 600;
@@ -3041,10 +3038,13 @@
                     <img src="Garden Pavilion Hero - 16-9 4K Interior.jpg" alt="EQUORA — Tessuti in Equilibrio">
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content">
-                            <div class="hero-slide-kicker" style="color:#A3C2B1;">Nuovo Marchio · Collezione Autonoma</div>
+                            <div class="hero-slide-kicker" style="color:#C2DBC5;">Nuovo Marchio · Collezione Autonoma</div>
+                            <div style="margin-bottom: 14px;">
+                                <img src="equora_logo_badge.png" alt="ÉQUORA" style="max-height: 48px; width: auto; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);">
+                            </div>
                             <h2 class="hero-slide-title">EQUORA</h2>
                             <p class="hero-slide-sub">“Tessuti in Equilibrio” — Una scelta consapevole, giusta, equilibrata, fatta di una qualità accessibile e del “ben fatto”.</p>
-                            <button class="btn-accent" style="background:#4F6D5E; border-color:#4F6D5E;" onclick="switchPage('equora')">Scopri EQUORA →</button>
+                            <button class="btn-accent" style="background:#7B9E7E; border-color:#7B9E7E;" onclick="switchPage('equora')">Scopri EQUORA →</button>
                         </div>
                     </div>
                 </div>
@@ -3113,10 +3113,13 @@
                             <span class="dest-badge-equora">Nuovo Marchio</span>
                         </div>
                         <div class="dest-body">
-                            <span class="dest-num" style="color:#4F6D5E;">04 / EQUORA</span>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                <span class="dest-num" style="color:#7B9E7E;">04 / EQUORA</span>
+                                <img src="equora_logo_green.png" alt="ÉQUORA" style="height:17px; width:auto; opacity:0.85;">
+                            </div>
                             <h3 class="dest-title">EQUORA</h3>
                             <p class="dest-desc">Tessuti in equilibrio: una scelta consapevole, giusta e concreta. La solida radice del quotidiano unita alla dedizione del "ben fatto".</p>
-                            <span class="dest-cta" style="color:#4F6D5E;">Entra nel mondo Equora →</span>
+                            <span class="dest-cta" style="color:#7B9E7E;">Entra nel mondo Equora →</span>
                         </div>
                     </div>
                 </div>
@@ -3349,12 +3352,10 @@
             <!-- 1. EQUORA HERO INTRO & LOGO -->
             <section class="equora-hero-banner">
                 <div class="equora-hero-inner">
-                    <!-- Placeholder Logo EQUORA (Pronto a ricevere il file immagine del logo) -->
-                    <div class="equora-logo-card">
-                        <!-- Quando carichi il file del logo, inseriremo: <img src="equora_logo.png" alt="EQUORA" style="max-height: 48px; width: auto;"> -->
-                        <span class="equora-logo-wordmark">EQUORA</span>
-                        <span class="equora-logo-tagline">TESSUTI IN EQUILIBRIO</span>
-                        <span class="equora-logo-hint">Marchio Autonomo · Qualità del "Ben Fatto"</span>
+                    <!-- Logo Ufficiale EQUORA (Colore e visuale dall'archivio brand) -->
+                    <div class="equora-logo-showcase">
+                        <img src="equora_logo_badge.png" alt="ÉQUORA — Fabrics in balance — BLOOMING" class="equora-brand-logo-img">
+                        <span class="equora-logo-caption">Marchio Autonomo · Qualità del "Ben Fatto"</span>
                     </div>
 
                     <div class="equora-kicker">Collezione Indipendente · Lancio Ufficiale</div>
@@ -3422,7 +3423,10 @@
 
                     <!-- SCHEDA EQUORA -->
                     <div class="equora-brand-card equora-side">
-                        <div class="eq-card-brand-badge" style="background:#E5ECE8; color:#2D463A;">EQUORA</div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                            <div class="eq-card-brand-badge" style="background:#EBF2EC; color:#3F5E42;">EQUORA</div>
+                            <img src="equora_logo_green.png" alt="ÉQUORA" style="height:26px; width:auto; opacity:0.9;">
+                        </div>
                         <h3 class="eq-card-title">La Solida Radice Quotidiana</h3>
                         <div class="eq-card-tagline">Equilibrio, concretezza, prezzo accessibile e qualità del "ben fatto"</div>
                         <p class="eq-card-p">
@@ -3433,7 +3437,7 @@
                             <li><strong>Prestazioni:</strong> Elevata resistenza all'usura, lavabilità e praticità</li>
                             <li><strong>Stile:</strong> Grafica leggera, cromie riposanti, sobria accoglienza</li>
                         </ul>
-                        <button class="btn-accent" style="margin-top: 20px; font-size: 12px; padding: 10px 18px; background:#4F6D5E; border-color:#4F6D5E;" onclick="document.getElementById('equora-catalog-start').scrollIntoView({behavior:'smooth'})">Vedi i 21 Tessuti Equora ↓</button>
+                        <button class="btn-accent" style="margin-top: 20px; font-size: 12px; padding: 10px 18px; background:#7B9E7E; border-color:#7B9E7E;" onclick="document.getElementById('equora-catalog-start').scrollIntoView({behavior:'smooth'})">Vedi i 21 Tessuti Equora ↓</button>
                     </div>
                 </div>
 
@@ -4878,7 +4882,7 @@
             }
 
             if (counter) {
-                counter.innerHTML = `<strong style="color:#3E594C;">${items.length}</strong> articoli trovati`;
+                counter.innerHTML = `<strong style="color:#7B9E7E;">${items.length}</strong> articoli trovati`;
             }
 
             if (items.length === 0) {
