@@ -244,14 +244,11 @@
             font-weight: 600;
         }
 
-        .nav-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--accent);
+        /* La riga di sottolineatura NON appare sulle voci standard (né hover né active) */
+        .nav-btn::after,
+        .nav-btn.active::after,
+        .nav-btn:hover::after {
+            display: none !important;
         }
 
         .nav-right {
@@ -605,7 +602,7 @@
         }
 
         .hero-slide#h-slide-1 img {
-            object-position: 65% 60%;
+            object-position: 55% 72%;
         }
 
         .hero-slide#h-slide-2 img {
@@ -708,9 +705,13 @@
             width: 54px;
         }
 
-        /* Indicatore verde dedicato per Equora */
+        /* Indicatori verdi dedicati quando la slide attiva è EQUORA */
+        .hero-dots-nav.equora-active .hero-dot-pill {
+            background: rgba(200, 225, 205, 0.45);
+        }
         .hero-dots-nav.equora-active .hero-dot-pill.active {
             background: #7B9E7E !important;
+            width: 54px;
         }
 
         /* Frecce laterali discrete per navigazione manuale Hero Slider */
@@ -851,7 +852,7 @@
         }
 
         .dest-card-imbottiti .dest-media img {
-            object-position: 65% 60%;
+            object-position: 70% 75%;
         }
 
 
@@ -2418,29 +2419,21 @@
             --eq-border: #C8D8CB;
         }
 
-        /* V11.1: Personalizzazione hover / active dedicato verde per EQUORA */
+        /* V11.2: Sottolineatura verde dedicata ESCLUSIVA per la voce EQUORA */
         .nav-btn-equora {
             color: var(--text-muted);
             transition: color 0.2s ease;
+            position: relative;
         }
-        .nav-btn-equora:hover {
-            color: #3F5E42 !important;
-        }
-        .nav-btn-equora:hover::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #7B9E7E;
-        }
+        .nav-btn-equora:hover,
         .nav-btn-equora.active {
             color: #3F5E42 !important;
             font-weight: 600;
         }
+        .nav-btn-equora:hover::after,
         .nav-btn-equora.active::after {
-            content: '';
+            content: '' !important;
+            display: block !important;
             position: absolute;
             bottom: 0;
             left: 0;
@@ -2854,9 +2847,7 @@
 
             <ul class="mobile-drawer-links">
                 <li><button class="mob-link active" data-page="home" onclick="switchPage('home'); closeMobileMenu();" data-i18n="nav_home">Home</button></li>
-                <li><button class="mob-link" data-page="tende" onclick="openProductsWithUse('Tende'); closeMobileMenu();">Tende</button></li>
-                <li><button class="mob-link" data-page="tessuti" onclick="openProductsWithUse('Imbottiti'); closeMobileMenu();">Tessuti</button></li>
-                <li><button class="mob-link" data-page="complementi" onclick="switchPage('complementi'); closeMobileMenu();" data-i18n="nav_comp">Complementi</button></li>
+                <li><button class="mob-link" data-page="prodotti" onclick="switchPage('prodotti'); closeMobileMenu();" data-i18n="nav_prod">Prodotti</button></li>
                 <li><button class="mob-link mob-link-equora" data-page="equora" onclick="switchPage('equora'); closeMobileMenu();">EQUORA</button></li>
                 <li><button class="mob-link" data-page="azienda" onclick="switchPage('azienda'); closeMobileMenu();" data-i18n="nav_company">L'Azienda</button></li>
                 <li><button class="mob-link" data-page="appuntamento" onclick="switchPage('appuntamento'); closeMobileMenu();" data-i18n="nav_appt">Incontra un Funzionario</button></li>
@@ -2895,9 +2886,7 @@
             <nav class="nav-desktop" aria-label="Menu principale">
                 <ul class="nav-left">
                     <li><button class="nav-btn active" data-page="home" onclick="switchPage('home')" data-i18n="nav_home">Home</button></li>
-                    <li><button class="nav-btn" data-page="tende" onclick="openProductsWithUse('Tende')">Tende</button></li>
-                    <li><button class="nav-btn" data-page="tessuti" onclick="openProductsWithUse('Imbottiti')">Tessuti</button></li>
-                    <li><button class="nav-btn" data-page="complementi" onclick="switchPage('complementi')" data-i18n="nav_comp">Complementi</button></li>
+                    <li><button class="nav-btn" data-page="prodotti" onclick="switchPage('prodotti')" data-i18n="nav_prod">Prodotti</button></li>
                     <li><button class="nav-btn nav-btn-equora" data-page="equora" onclick="switchPage('equora')">EQUORA</button></li>
                     <li><button class="nav-btn" data-page="azienda" onclick="switchPage('azienda')" data-i18n="nav_company">L'Azienda</button></li>
                     <li><button class="nav-btn" data-page="appuntamento" onclick="switchPage('appuntamento')" data-i18n="nav_appt">Incontra un Funzionario</button></li>
@@ -2966,14 +2955,11 @@
                 <div class="hero-slide" id="h-slide-2">
                     <img src="Garden Pavilion Hero - 16-9 4K Interior.jpg" alt="EQUORA — Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async">
                     <div class="hero-slide-overlay">
-                        <div class="hero-slide-content">
-                            <div class="hero-slide-kicker" style="color:#C2DBC5;">Nuovo Marchio · Collezione Autonoma</div>
-                            <div style="margin-bottom: 14px;">
-                                <img src="equora_logo_green.png" alt="ÉQUORA" width="158" height="42" loading="lazy" decoding="async" style="height: 42px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0,0,0,0.35)); display: block;">
+                        <div class="hero-slide-content" style="max-width: 680px;">
+                            <div style="margin-bottom: 28px;">
+                                <img src="equora_logo_green.png" alt="ÉQUORA" width="255" height="68" loading="lazy" decoding="async" style="height: 64px; width: auto; max-width: 100%; filter: brightness(0) invert(1) drop-shadow(0 4px 18px rgba(0,0,0,0.45)); display: block;">
                             </div>
-                            <h2 class="hero-slide-title">EQUORA</h2>
-                            <p class="hero-slide-sub">“Tessuti in Equilibrio” — Una scelta consapevole, giusta, equilibrata, fatta di una qualità accessibile e del “ben fatto”.</p>
-                            <button class="btn-accent" style="background:#7B9E7E; border-color:#7B9E7E;" onclick="switchPage('equora')">Scopri EQUORA →</button>
+                            <button class="btn-accent" style="background:#7B9E7E; border-color:#7B9E7E; box-shadow: 0 4px 16px rgba(123, 158, 126, 0.4);" onclick="switchPage('equora')">Scopri EQUORA →</button>
                         </div>
                     </div>
                 </div>
@@ -3020,7 +3006,7 @@
                     <!-- 2) IMBOTTITI: Associata all'immagine locale "Ambientazione_02_A.jpg" -->
                     <div class="dest-card dest-card-imbottiti" onclick="openProductsWithUse('Imbottiti')">
                         <div class="dest-media">
-                            <img src="Ambientazione_02_A.jpg" alt="Tessuti per Imbottiti Blooming" width="1289" height="1600" loading="lazy" decoding="async" style="object-position: 65% 60%;">
+                            <img src="Ambientazione_02_A.jpg" alt="Tessuti per Imbottiti Blooming" width="1289" height="1600" loading="lazy" decoding="async" style="object-position: 70% 75%;">
                         </div>
                         <div class="dest-body">
                             <span class="dest-num">02 / Imbottiti</span>
@@ -4183,9 +4169,7 @@
             });
             document.querySelectorAll('.nav-btn, .mob-link').forEach(btn => {
                 const dp = btn.getAttribute('data-page');
-                if (cat === 'Tende' && dp === 'tende') btn.classList.add('active');
-                else if (cat === 'Tessuti' && dp === 'tessuti') btn.classList.add('active');
-                else if (dp === 'tende' || dp === 'tessuti') btn.classList.remove('active');
+                btn.classList.toggle('active', dp === 'prodotti');
             });
             document.querySelectorAll('#filter-box-uses input[type="checkbox"]').forEach(cb => {
                 if (cat === 'Tende') {
@@ -4207,12 +4191,6 @@
         function openProductsWithUse(useVal) {
             switchPage('prodotti');
             resetAllFischFilters();
-            document.querySelectorAll('.nav-btn, .mob-link').forEach(btn => {
-                const dp = btn.getAttribute('data-page');
-                if (useVal === 'Tende' && dp === 'tende') btn.classList.add('active');
-                else if (useVal !== 'Tende' && dp === 'tessuti') btn.classList.add('active');
-                else if (dp === 'tende' || dp === 'tessuti') btn.classList.remove('active');
-            });
             if (useVal === 'Tende') {
                 selectTopMacroTab('Tende');
             } else {
