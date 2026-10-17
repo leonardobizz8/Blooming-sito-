@@ -32,6 +32,58 @@
     <noscript>
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
     </noscript>
+    <!-- =========================================================
+         GOOGLE ANALYTICS 4 (GA4) & GOOGLE CONSENT MODE V2
+         Conformità GDPR Europeo ed Italiano (Garante Privacy)
+         Blocco preventivo automatico fino al consenso esplicito
+         ========================================================= -->
+    <script>
+        // Inizializzazione dataLayer globale
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+
+        // ID Misurazione GA4 (Sostituire G-XXXXXXXXXX con il proprio Measurement ID GA4)
+        window.GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+
+        // Blocco preventivo di default secondo GDPR: tutti i consensi sono 'denied'
+        var initialConsent = localStorage.getItem('blooming_cookie_consent');
+        gtag('consent', 'default', {
+            'analytics_storage': initialConsent === 'accepted_all' ? 'granted' : 'denied',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'wait_for_update': 500
+        });
+
+        gtag('js', new Date());
+        gtag('config', window.GA_MEASUREMENT_ID, {
+            'anonymize_ip': true,
+            'cookie_flags': 'SameSite=None;Secure'
+        });
+
+        // Carica dinamicamente la libreria esterna gtag.js SOLO se il consenso è già stato accordato
+        if (initialConsent === 'accepted_all') {
+            loadGA4Script();
+        }
+
+        function loadGA4Script() {
+            if (document.getElementById('ga4-core-script')) return;
+            var s = document.createElement('script');
+            s.id = 'ga4-core-script';
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + window.GA_MEASUREMENT_ID;
+            document.head.appendChild(s);
+        }
+
+        // Helper centralizzato per tracciamento eventi catalogo e lead B2B
+        function trackEvent(eventName, params) {
+            try {
+                if (typeof gtag === 'function' && localStorage.getItem('blooming_cookie_consent') === 'accepted_all') {
+                    gtag('event', eventName, params || {});
+                }
+            } catch(e) {}
+        }
+    </script>
 
     <style>
         :root {
@@ -2079,7 +2131,7 @@
         }
 
         /* =========================================================
-           COOKIE / PRIVACY BANNER GDPR
+           COOKIE / PRIVACY BANNER GDPR (CONFORME LINEE GUIDA GARANTE 2021)
            ========================================================= */
         #cookie-banner {
             position: fixed;
@@ -2087,45 +2139,81 @@
             left: 0;
             right: 0;
             background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-top: 1px solid var(--line);
-            padding: 18px 48px;
-            z-index: 900;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+            padding: 22px 48px;
+            z-index: 1000;
+            box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.08);
             display: none;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
         }
 
         .cookie-banner-content {
             max-width: 1360px;
             margin: 0 auto;
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 28px;
+            gap: 32px;
             flex-wrap: wrap;
         }
 
-        .cookie-banner-content p {
+        .cookie-banner-text {
+            max-width: 860px;
+            flex: 1 1 500px;
+        }
+
+        .cookie-banner-title {
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .cookie-banner-text p {
             font-size: 12.5px;
             color: var(--text-muted);
             line-height: 1.6;
-            max-width: 860px;
+            margin: 0;
+        }
+
+        .cookie-inline-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+            color: var(--accent);
+            text-decoration: underline;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .cookie-inline-link:hover {
+            color: var(--accent-hover);
         }
 
         .cookie-banner-actions {
             display: flex;
-            gap: 12px;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .cookie-btn {
-            padding: 8px 18px;
+            padding: 10px 20px;
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.12em;
             text-transform: uppercase;
             cursor: pointer;
             border: 1px solid var(--accent);
+            border-radius: 2px;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .cookie-accept {
@@ -2136,16 +2224,314 @@
         .cookie-accept:hover {
             background: var(--accent-hover);
             border-color: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
-        .cookie-pref {
-            background: transparent;
+        .cookie-refuse {
+            background: #FFFFFF;
             color: var(--text);
             border-color: var(--line);
         }
 
-        .cookie-pref:hover {
+        .cookie-refuse:hover {
             background: var(--bg-soft);
+            border-color: #BDBBB5;
+        }
+
+        .cookie-pref {
+            background: transparent;
+            color: var(--text-muted);
+            border-color: transparent;
+            text-decoration: underline;
+        }
+
+        .cookie-pref:hover {
+            color: var(--text);
+        }
+
+        .cookie-banner-close {
+            position: absolute;
+            top: -12px;
+            right: -24px;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            line-height: 1;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .cookie-banner-close:hover {
+            color: var(--text);
+            background: var(--bg-soft);
+        }
+
+        /* =========================================================
+           MODALE PRIVACY POLICY & COOKIE POLICY (GDPR EUROPEO)
+           ========================================================= */
+        .legal-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 1100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .legal-modal-backdrop.open {
+            display: flex;
+        }
+
+        .legal-modal-dialog {
+            background: #FFFFFF;
+            width: 100%;
+            max-width: 880px;
+            max-height: 90vh;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: legalModalFadeIn 0.25s ease-out;
+        }
+
+        @keyframes legalModalFadeIn {
+            from { opacity: 0; transform: scale(0.98) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .legal-modal-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-soft);
+        }
+
+        .legal-modal-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .legal-tab-btn {
+            background: none;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .legal-tab-btn.active {
+            background: #FFFFFF;
+            color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .legal-modal-close {
+            background: none;
+            border: none;
+            font-size: 26px;
+            line-height: 1;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .legal-modal-close:hover {
+            color: var(--text);
+        }
+
+        .legal-modal-body {
+            padding: 28px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #383838;
+        }
+
+        .legal-section {
+            display: none;
+        }
+
+        .legal-section.active {
+            display: block;
+        }
+
+        .legal-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: var(--text);
+            margin: 0 0 16px;
+        }
+
+        .legal-section h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 22px 0 8px;
+        }
+
+        .legal-section p, .legal-section li {
+            font-size: 13.5px;
+            color: #4A4A4A;
+            line-height: 1.7;
+        }
+
+        .legal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 12.5px;
+        }
+
+        .legal-table th, .legal-table td {
+            border: 1px solid var(--line);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .legal-table th {
+            background: var(--bg-soft);
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .cookie-preference-box {
+            background: var(--bg-soft);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .consent-switch-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(226, 223, 215, 0.7);
+        }
+
+        .consent-switch-row:last-child {
+            border-bottom: none;
+        }
+
+        .consent-switch-row p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge-always-active {
+            background: #E8EFE9;
+            color: #2D5A34;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        /* Toggle Switch UI */
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #CCC;
+            transition: .25s ease;
+            border-radius: 24px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .25s ease;
+            border-radius: 50%;
+        }
+
+        .switch-toggle input:checked + .slider-toggle {
+            background-color: var(--accent);
+        }
+
+        .switch-toggle input:checked + .slider-toggle:before {
+            transform: translateX(22px);
+        }
+
+        .legal-modal-footer {
+            padding: 16px 28px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: flex-end;
+            background: var(--bg-soft);
+        }
+
+        /* Footer Legal Links */
+        .footer-legal-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer-legal-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            transition: color 0.2s ease;
+            text-decoration: underline;
+        }
+
+        .footer-legal-btn:hover {
+            color: var(--accent);
         }
 
         /* =========================================================
@@ -3743,6 +4129,13 @@
 
         <div class="footer-bottom-bar">
             <div>© 2026 E.L.F. srl BLOOMING — Tutti i diritti riservati. P.IVA 03326430240</div>
+            <div class="footer-legal-links">
+                <button type="button" class="footer-legal-btn" onclick="openPolicyModal('privacy')">Privacy Policy</button>
+                <span>·</span>
+                <button type="button" class="footer-legal-btn" onclick="openPolicyModal('cookie')">Cookie Policy</button>
+                <span>·</span>
+                <button type="button" class="footer-legal-btn" onclick="openCookiePreferences()">Preferenze Cookie</button>
+            </div>
             <div>Made in Italy · Castelfranco Veneto (TV)</div>
         </div>
     </footer>
@@ -3760,15 +4153,167 @@
         <span>↑</span>
     </button>
 
-    <!-- COOKIE / PRIVACY BANNER GDPR -->
-    <div id="cookie-banner">
-        <div class="cookie-banner-content">
-            <p>
-                Questo sito utilizza cookie tecnici e funzionali per assicurare la corretta navigazione e migliorare la tua esperienza d'uso. Continuando la navigazione o cliccando su "Accetta tutti", acconsenti all'uso dei cookie.
-            </p>
+    <!-- COOKIE / PRIVACY BANNER GDPR (Conforme Linee Guida Garante Privacy 2021) -->
+    <div id="cookie-banner" role="dialog" aria-modal="true" aria-labelledby="cookie-banner-title">
+        <div class="cookie-banner-content" style="position: relative;">
+            <button class="cookie-banner-close" onclick="dismissCookies()" aria-label="Chiudi banner e mantieni solo i cookie tecnici necessari" title="Chiudi (Solo necessari)">×</button>
+            <div style="margin-bottom: 12px;">
+                <h3 id="cookie-banner-title" style="font-family:'Cinzel',serif; font-size:16px; margin:0 0 6px; color:var(--text); letter-spacing:0.04em;">Gestione della Privacy e Consenso Cookie</h3>
+                <p style="margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--text-muted);">
+                    Noi e partner terzi selezionati utilizziamo cookie tecnici essenziali per consentire il funzionamento del sito. Previo tuo consenso esplicito, utilizziamo inoltre <strong>Google Analytics 4</strong> in forma aggregata e con indirizzo IP anonimizzato per valutare le interazioni sui cataloghi e migliorare la fruizione dei nostri prodotti tessili. Cliccando su <strong>"Accetta tutti"</strong> acconsenti all'uso dei cookie analitici. Cliccando su <strong>"Solo necessari"</strong> o sulla <strong>"×"</strong> in alto a destra, continui la navigazione rifiutando tutti i cookie analitici facoltativi. Puoi modificare o revocare la tua scelta in ogni momento dal link <em>"Preferenze Cookie"</em> nel footer. Per maggiori informazioni consulta la nostra <button type="button" class="footer-legal-btn" onclick="openPolicyModal('privacy')">Informativa Privacy</button> e la <button type="button" class="footer-legal-btn" onclick="openPolicyModal('cookie')">Cookie Policy</button>.
+                </p>
+            </div>
             <div class="cookie-banner-actions">
-                <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accetta tutti</button>
-                <button class="cookie-btn cookie-pref" onclick="dismissCookies()">Solo necessari</button>
+                <button type="button" class="cookie-btn cookie-accept" onclick="acceptCookies()">Accetta tutti</button>
+                <button type="button" class="cookie-btn cookie-pref" onclick="dismissCookies()">Solo necessari</button>
+                <button type="button" class="cookie-btn" style="background:var(--bg-sand); color:var(--text); border:1px solid var(--line);" onclick="openCookiePreferences()">Personalizza</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE INFORMATIVA LEGALE PRIVACY & COOKIE POLICY (GDPR) -->
+    <div class="legal-modal-backdrop" id="legal-modal" onclick="if(event.target===this) closePolicyModal()">
+        <div class="legal-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="legal-modal-heading">
+            <div class="legal-modal-header">
+                <div class="legal-modal-tabs">
+                    <button type="button" class="legal-tab-btn active" id="legal-tab-btn-privacy" onclick="switchPolicyTab('privacy')">Informativa Privacy</button>
+                    <button type="button" class="legal-tab-btn" id="legal-tab-btn-cookie" onclick="switchPolicyTab('cookie')">Cookie Policy & Preferenze</button>
+                </div>
+                <button type="button" class="legal-modal-close" onclick="closePolicyModal()" aria-label="Chiudi finestra modale">×</button>
+            </div>
+
+            <div class="legal-modal-body">
+                <!-- Sezione Informativa Privacy -->
+                <div class="legal-section active" id="legal-sec-privacy">
+                    <h2 id="legal-modal-heading">Informativa sul Trattamento dei Dati Personali</h2>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Ai sensi dell'Art. 13 del Regolamento UE 2016/679 (GDPR)</p>
+
+                    <h3>1. Titolare del Trattamento</h3>
+                    <p>
+                        Il Titolare del trattamento dei dati è <strong>E.L.F. srl BLOOMING</strong>, con sede legale e operativa in Via delle Mimose, 5 — 31033 Castelfranco Veneto (TV) — Italia, P.IVA e C.F. 03326430240, Tel. +39 0423 495444, Email: <a href="mailto:info@bloomingfabrics.it">info@bloomingfabrics.it</a>.
+                    </p>
+
+                    <h3>2. Tipologia di Dati Trattati e Finalità</h3>
+                    <p>
+                        Attraverso il presente sito web aziendale possono essere trattate le seguenti categorie di dati:
+                    </p>
+                    <ul>
+                        <li><strong>Dati di navigazione e tecnici:</strong> Indirizzi IP, parametri del browser e del sistema operativo, raccolti automaticamente per consentire la sicurezza e la corretta visualizzazione delle pagine.</li>
+                        <li><strong>Dati forniti volontariamente dall'utente:</strong> Dati anagrafici e di contatto (nome, cognome, ragione sociale, email, telefono, città, indirizzo di studio/showroom) inseriti nei moduli per la <em>Richiesta di visita/appuntamento con un funzionario</em> o per <em>Informazioni commerciali sui prodotti</em>. Tali dati sono utilizzati esclusivamente per evadere le richieste avanzate dall'interessato nel contesto professionale B2B.</li>
+                        <li><strong>Dati statistici anonimizzati:</strong> Raccolti tramite Google Analytics 4 (previo consenso esplicito dell'utente) con anonimizzazione dell'indirizzo IP, utilizzati esclusivamente per analisi statistiche aggregate sull'utilizzo del catalogo.</li>
+                    </ul>
+
+                    <h3>3. Base Giuridica del Trattamento</h3>
+                    <p>
+                        Il trattamento dei dati per la gestione delle richieste di contatto e visite di agenti si fonda sull'<strong>esecuzione di misure precontrattuali o contrattuali</strong> adottate su richiesta dell'interessato (Art. 6.1.b GDPR). I dati tecnici di navigazione sono trattati per il <strong>legittimo interesse</strong> del Titolare a garantire la sicurezza informatica (Art. 6.1.f GDPR). I dati statistici di Google Analytics 4 vengono raccolti e trattati unicamente sulla base del <strong>consenso libero ed esplicito</strong> espresso dall'interessato tramite il banner cookie (Art. 6.1.a GDPR).
+                    </p>
+
+                    <h3>4. Modalità di Trattamento e Conservazione</h3>
+                    <p>
+                        I dati personali sono trattati con strumenti automatizzati e manuali nel rispetto dei principi di correttezza, liceità, trasparenza e tutela della riservatezza. I dati di contatto professionale vengono conservati per il tempo strettamente necessario a gestire la richiesta commerciale e per gli eventuali obblighi fiscali o legali previsti dalla normativa vigente.
+                    </p>
+
+                    <h3>5. Destinatari e Trasferimento dei Dati</h3>
+                    <p>
+                        I dati non vengono in alcun caso diffusi o ceduti a soggetti terzi per scopi promozionali ingiustificati. Possono essere comunicati a funzionari commerciali, agenti di zona incaricati dal Titolare e fornitori tecnici di servizi informatici debitamente designati quali Responsabili del Trattamento ai sensi dell'Art. 28 GDPR. Nel caso di Google Analytics 4, i dati statistici anonimizzati possono essere trattati su server situati nell'Unione Europea o conformi al Data Privacy Framework UE-USA.
+                    </p>
+
+                    <h3>6. Diritti dell'Interessato (Artt. 15-22 GDPR)</h3>
+                    <p>
+                        In qualità di interessato, l'utente può in qualsiasi momento esercitare i diritti previsti dagli articoli da 15 a 22 del GDPR: diritto di accesso ai dati, rettifica, cancellazione (diritto all'oblio), limitazione del trattamento, portabilità dei dati, opposizione al trattamento, nonché revoca del consenso precedentemente prestato. Le richieste possono essere indirizzate via email a <a href="mailto:info@bloomingfabrics.it">info@bloomingfabrics.it</a>. L'interessato ha inoltre il diritto di proporre reclamo all'Autorità Garante per la Protezione dei Dati Personali (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">www.garanteprivacy.it</a>).
+                    </p>
+                </div>
+
+                <!-- Sezione Cookie Policy & Preferenze -->
+                <div class="legal-section" id="legal-sec-cookie">
+                    <h2>Informativa Estesa sui Cookie</h2>
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Conforme alle Linee Guida Cookie del Garante Privacy del 10 giugno 2021</p>
+
+                    <p>
+                        I cookie sono stringhe di testo di piccole dimensioni che i siti web visitati inviano al terminale dell'utente, dove vengono memorizzati per essere poi ritrasmessi agli stessi siti alla visita successiva. Il presente sito impiega esclusivamente cookie tecnici necessari e, solo previo consenso dell'utente, cookie analitici di terze parti.
+                    </p>
+
+                    <h3>1. Cookie Tecnici (Essenziali)</h3>
+                    <p>
+                        Sono indispensabili per consentire la corretta navigazione, l'accesso alle funzionalità interattive del catalogo tessile e la memorizzazione della scelta espressa in materia di privacy. Per l'installazione di tali cookie non è richiesto il preventivo consenso dell'utente.
+                    </p>
+
+                    <h3>2. Cookie Analitici (Google Analytics 4)</h3>
+                    <p>
+                        Il sito utilizza il servizio <strong>Google Analytics 4 (GA4)</strong>, fornito da Google Ireland Limited. Questo strumento consente di analizzare il traffico del sito in forma aggregata (ad es. numero di visualizzazioni dei tessuti, articoli più consultati, tempo di permanenza). Il servizio è configurato nel rispetto del principio di <em>blocco preventivo</em>: nessuno script o cookie di tracciamento viene avviato prima del consenso esplicito dell'utente, e la funzione di anonimizzazione dell'indirizzo IP è sempre attiva.
+                    </p>
+
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th>Nome Cookie</th>
+                                <th>Fornitore</th>
+                                <th>Tipologia</th>
+                                <th>Durata</th>
+                                <th>Finalità</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>blooming_cookie_consent</code></td>
+                                <td>E.L.F. srl (Prima parte)</td>
+                                <td>Tecnico (Necessario)</td>
+                                <td>1 anno (localStorage)</td>
+                                <td>Memorizza le preferenze di consenso cookie espresse dall'utente.</td>
+                            </tr>
+                            <tr>
+                                <td><code>_ga</code></td>
+                                <td>Google Analytics (Terza parte)</td>
+                                <td>Analitico (Facoltativo)</td>
+                                <td>2 anni</td>
+                                <td>Genera un identificatore statistico anonimo per distinguere gli utenti unici.</td>
+                            </tr>
+                            <tr>
+                                <td><code>_ga_*</code></td>
+                                <td>Google Analytics (Terza parte)</td>
+                                <td>Analitico (Facoltativo)</td>
+                                <td>2 anni / Sessione</td>
+                                <td>Mantiene lo stato della sessione per analisi aggregate di navigazione.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Pannello di Gestione Preferenze Consenso -->
+                    <div class="cookie-preference-box" id="cookie-preferences-panel">
+                        <h3 style="margin-top:0;">Gestione e Revoca del Consenso</h3>
+                        <p style="margin-bottom:16px;">
+                            Puoi abilitare o disabilitare in tempo reale i cookie analitici non essenziali. La modifica ha effetto immediato.
+                        </p>
+
+                        <div class="consent-switch-row">
+                            <div>
+                                <strong style="font-size:13.5px; color:var(--text);">Cookie Tecnici & Funzionali</strong>
+                                <p>Necessari per la visualizzazione delle collezioni, il filtraggio dei tessuti e la gestione del consenso.</p>
+                            </div>
+                            <span class="badge-always-active">Sempre Attivi</span>
+                        </div>
+
+                        <div class="consent-switch-row">
+                            <div>
+                                <strong style="font-size:13.5px; color:var(--text);">Google Analytics 4 (Statistiche Anonime)</strong>
+                                <p>Raccoglie metriche d'uso in forma aggregata con mascheramento IP per comprendere le interazioni sui cataloghi.</p>
+                            </div>
+                            <label class="switch-toggle" aria-label="Attiva o disattiva Google Analytics 4">
+                                <input type="checkbox" id="ga4-consent-toggle" onchange="toggleAnalyticsConsent(this.checked)">
+                                <span class="slider-toggle"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <h3>Come Disabilitare i Cookie dal Browser</h3>
+                    <p>
+                        L'utente può inoltre gestire le preferenze relative ai cookie direttamente all'interno del proprio browser (Chrome, Safari, Firefox, Edge) impedendone l'installazione o cancellando i cookie già archiviati.
+                    </p>
+                </div>
+            </div>
+
+            <div class="legal-modal-footer">
+                <button type="button" class="btn-primary" style="padding:8px 24px; font-size:12.5px;" onclick="closePolicyModal()">Ho Capito / Chiudi</button>
             </div>
         </div>
     </div>
@@ -4105,6 +4650,12 @@
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(checkScrollReveal, 100);
+
+            // GA4 Page View Tracking (rispetta il consenso GDPR)
+            trackEvent('page_view', {
+                page_title: pageId.charAt(0).toUpperCase() + pageId.slice(1),
+                page_location: window.location.origin + window.location.pathname + '#' + pageId
+            });
         }
 
         /* CAMBIO LINGUA (IT / EN) */
@@ -4217,6 +4768,12 @@
                 }
             });
             applyFischbacherCatalog();
+
+            // GA4 Category Selection Tracking
+            trackEvent('select_content', {
+                content_type: 'catalog_macro_category',
+                item_id: cat
+            });
         }
 
         function openProductsWithFilter(mode) {
@@ -4606,6 +5163,14 @@
             const item = ALL_ITEMS.find(x => x.code === code);
             if (!item) return;
 
+            // GA4 Item Selection Tracking
+            trackEvent('select_item', {
+                item_id: code,
+                item_name: item.name,
+                item_category: item.collection,
+                item_variant: varCode || 'Master'
+            });
+
             const selVar = varCode
                 ? item.variants.find(v => v.code === varCode) || item.variants[0]
                 : (item.variants[0] || { code: 'Master', img: item.img });
@@ -4739,6 +5304,10 @@
             if (notesEl) {
                 notesEl.value = `Richiesta consulenza e preventivo con funzionario commerciale per il complemento d'arredo: ${compName}`;
             }
+            // GA4 Complement Inquiry Event
+            trackEvent('inquire_complement', {
+                item_name: compName
+            });
             setTimeout(() => {
                 const f = document.getElementById('form-prenotazione-appuntamento');
                 if (f) f.scrollIntoView({ behavior: 'smooth' });
@@ -4763,6 +5332,12 @@
                 alert('Compila tutti i campi obbligatori contrassegnati con *');
                 return;
             }
+
+            // GA4 Lead Generation Tracking
+            trackEvent('generate_lead', {
+                lead_type: 'commercial_appointment',
+                appointment_type: apptType
+            });
 
             const subject = `Richiesta Visita Commerciale: ${fullname} - ${company}`;
             const bodyText = `Richiesta Incontro Funzionario Commerciale dal sito BLOOMING:\n\n` +
@@ -4821,6 +5396,12 @@
                 alert('Compila tutti i campi obbligatori contrassegnati con *');
                 return;
             }
+
+            // GA4 Contact Form Event
+            trackEvent('contact', {
+                method: 'direct_form',
+                subject: subjectChoice
+            });
 
             const emailSubject = `Contatto dal Sito BLOOMING: ${subjectChoice} - ${fullname}`;
             const bodyText = `Nuovo messaggio dal modulo contatti del sito BLOOMING:\n\n` +
@@ -5043,27 +5624,100 @@
             });
         }
 
-        /* COOKIE BANNER GDPR */
+        /* COOKIE BANNER GDPR & PREFERENCES MANAGEMENT (Linee Guida Garante Privacy) */
         function setupCookieBanner() {
             const consent = localStorage.getItem('blooming_cookie_consent');
+            updatePreferencesToggle(consent === 'accepted_all');
             if (!consent) {
                 setTimeout(() => {
                     const banner = document.getElementById('cookie-banner');
                     if (banner) banner.style.display = 'block';
-                }, 1200);
+                }, 1000);
             }
         }
 
         function acceptCookies() {
             localStorage.setItem('blooming_cookie_consent', 'accepted_all');
+            if (typeof gtag === 'function') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted'
+                });
+            }
+            if (typeof loadGA4Script === 'function') {
+                loadGA4Script();
+            }
+            trackEvent('cookie_consent', { consent_level: 'all' });
             const banner = document.getElementById('cookie-banner');
             if (banner) banner.style.display = 'none';
+            updatePreferencesToggle(true);
         }
 
         function dismissCookies() {
             localStorage.setItem('blooming_cookie_consent', 'necessary_only');
+            if (typeof gtag === 'function') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied'
+                });
+            }
             const banner = document.getElementById('cookie-banner');
             if (banner) banner.style.display = 'none';
+            updatePreferencesToggle(false);
+        }
+
+        function updatePreferencesToggle(isChecked) {
+            const toggle = document.getElementById('ga4-consent-toggle');
+            if (toggle) toggle.checked = !!isChecked;
+        }
+
+        function toggleAnalyticsConsent(enable) {
+            if (enable) {
+                acceptCookies();
+            } else {
+                dismissCookies();
+            }
+        }
+
+        function openPolicyModal(tab) {
+            const modal = document.getElementById('legal-modal');
+            if (!modal) return;
+            switchPolicyTab(tab || 'privacy');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePolicyModal() {
+            const modal = document.getElementById('legal-modal');
+            if (modal) modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function switchPolicyTab(tab) {
+            const isPrivacy = tab === 'privacy';
+            const secPrivacy = document.getElementById('legal-sec-privacy');
+            const secCookie = document.getElementById('legal-sec-cookie');
+            const btnPrivacy = document.getElementById('legal-tab-btn-privacy');
+            const btnCookie = document.getElementById('legal-tab-btn-cookie');
+
+            if (secPrivacy) secPrivacy.classList.toggle('active', isPrivacy);
+            if (secCookie) secCookie.classList.toggle('active', !isPrivacy);
+            if (btnPrivacy) btnPrivacy.classList.toggle('active', isPrivacy);
+            if (btnCookie) btnCookie.classList.toggle('active', !isPrivacy);
+
+            const consent = localStorage.getItem('blooming_cookie_consent');
+            updatePreferencesToggle(consent === 'accepted_all');
+        }
+
+        function openCookiePreferences() {
+            openPolicyModal('cookie');
+            setTimeout(() => {
+                const box = document.getElementById('cookie-preferences-panel');
+                if (box) {
+                    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    box.style.transition = 'box-shadow 0.3s ease';
+                    box.style.boxShadow = '0 0 0 2px var(--accent)';
+                    setTimeout(() => { box.style.boxShadow = ''; }, 1800);
+                }
+            }, 200);
         }
 
         // Inizializzazione immediata della ricerca reattiva in tempo reale
