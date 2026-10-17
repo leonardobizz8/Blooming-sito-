@@ -1751,27 +1751,45 @@
 
         /* =========================================================
            4. PAGINA 4: L'AZIENDA — VALORIZZAZIONE MADE IN ITALY & CASTELFRANCO VENETO
+           LAYOUT EDITORIALE ASIMMETRICO, OVERLAPPING MASONRY, PARALLAX & STAGGERED REVEAL
            ========================================================= */
         .company-section-wrap {
-            max-width: 1360px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 64px 48px 96px;
+            padding: 64px 48px 120px;
             display: grid;
-            grid-template-columns: 1.05fr 0.95fr;
-            gap: 64px;
+            grid-template-columns: 1.08fr 0.92fr;
+            gap: 72px;
             align-items: center;
+            position: relative;
+        }
+
+        .company-text-block {
+            position: relative;
+            z-index: 2;
         }
 
         .company-text-block h2 {
-            font-size: 24px;
+            font-size: clamp(24px, 2.6vw, 32px);
             font-weight: 600;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.10em;
             text-transform: uppercase;
-            margin-bottom: 24px;
+            margin-bottom: 26px;
             color: var(--text);
+            line-height: 1.35;
         }
 
-        .company-text-block p {
+        /* Lead Paragraph: tono editoriale di respiro (font-family rigorosamente intatto) */
+        .company-lead-p {
+            font-size: clamp(19px, 2.1vw, 24px) !important;
+            font-weight: 400 !important;
+            color: var(--text) !important;
+            line-height: 1.62 !important;
+            letter-spacing: -0.01em;
+            margin-bottom: 26px !important;
+        }
+
+        .company-body-p {
             font-size: 15px;
             font-weight: 400;
             color: var(--text-muted);
@@ -1784,31 +1802,109 @@
             font-weight: 600;
         }
 
-
-
-        .company-photo-duo {
-            display: grid;
-            grid-template-columns: 1.25fr 1fr;
-            gap: 20px;
-            align-items: stretch;
+        /* COMPOSIZIONE OVERLAPPING MASONRY */
+        .company-photo-composition {
+            position: relative;
+            width: 100%;
+            padding: 24px 0 60px 48px;
         }
 
-        .company-photo-duo img {
+        .company-img-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #F4F1EA;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        .company-img-frame img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
             display: block;
-            border-radius: 4px;
-            border: 1px solid var(--line);
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
         }
 
-        .company-photo-duo img:first-child {
-            aspect-ratio: 16 / 10;
+        /* Micro-interazione hover zoom interno */
+        .company-img-frame:hover img {
+            transform: scale(1.05);
         }
 
-        .company-photo-duo img:last-child {
-            aspect-ratio: 4 / 5;
+        /* Immagine Primaria: Grande, Verticale (Portrait) */
+        .company-img-primary {
+            width: 82%;
+            margin-left: auto;
+            aspect-ratio: 3 / 4;
+            max-height: 600px;
+            z-index: 1;
+            will-change: transform;
+        }
+
+        .company-img-accent-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            font-size: 10.5px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text);
+            border-radius: 20px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            pointer-events: none;
+        }
+
+        /* Immagine Secondaria: Più piccola, sovrapposta in basso a sinistra */
+        .company-img-secondary {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 60%;
+            aspect-ratio: 16 / 11;
+            z-index: 3;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 24px 50px rgba(27, 24, 20, 0.18);
+            will-change: transform;
+        }
+
+        /* SCROLL REVEAL STAGGERED & FADE-IN UP (1s, cubic-bezier) */
+        .company-reveal-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .company-section-wrap.is-revealed .company-reveal-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .company-section-wrap.is-revealed .company-reveal-item:nth-child(1) {
+            transition-delay: 0.08s;
+        }
+        .company-section-wrap.is-revealed .company-reveal-item:nth-child(2) {
+            transition-delay: 0.22s;
+        }
+        .company-section-wrap.is-revealed .company-reveal-item:nth-child(3) {
+            transition-delay: 0.36s;
+        }
+        .company-section-wrap.is-revealed .company-reveal-item:nth-child(4) {
+            transition-delay: 0.50s;
+        }
+        .company-section-wrap.is-revealed .company-reveal-item:nth-child(5) {
+            transition-delay: 0.64s;
+        }
+        .company-section-wrap.is-revealed .company-photo-composition.company-reveal-item {
+            transition-delay: 0.28s;
         }
 
         /* =========================================================
@@ -2834,8 +2930,22 @@
             .destinations-grid, .comp-mini-grid, .fisch-product-grid, .complements-page-grid, .footer-main-grid, .dedicated-form-grid, .distance-grid {
                 grid-template-columns: 1fr;
             }
-            .company-photo-duo {
-                grid-template-columns: 1fr;
+            .company-photo-composition {
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                max-width: 100%;
+            }
+            .company-img-primary {
+                width: 100%;
+                margin: 0;
+            }
+            .company-img-secondary {
+                position: static;
+                width: 100%;
+                border-width: 1px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             }
             .drawer-top-box {
                 grid-template-columns: 1fr;
@@ -4026,28 +4136,40 @@
                 <p>E.L.F. srl BLOOMING — Tessuti d'Arredamento e Manifattura d'Interni</p>
             </div>
 
-            <div class="company-section-wrap reveal-on-scroll">
+            <div class="company-section-wrap reveal-on-scroll" id="company-main-section">
                 <div class="company-text-block">
-                    <h2 data-i18n="az_sub_h">Lo stile, il gusto e l'eccellenza tessile italiana</h2>
-                    <p>
+                    <h2 class="company-reveal-item" data-i18n="az_sub_h">Lo stile, il gusto e l'eccellenza tessile italiana</h2>
+                    
+                    <!-- Lead Paragraph Editoriale: Font preservato, dimensioni e line-height ampliati per respiro visivo -->
+                    <p class="company-lead-p company-reveal-item">
                         Fondata nel 2004 nel cuore operoso della tradizione tessile veneta, <strong>BLOOMING</strong> nasce dalla passione di esprimere il più autentico <strong>Made in Italy sartoriale</strong> attraverso manufatti d'eccezione. Creiamo collezioni originali nel segno della rigorosa <strong>tecnica artigianale</strong> e dell'armonia estetica, profondamente ispirate dalla ricca tradizione manifatturiera italiana.
                     </p>
-                    <p>
+                    
+                    <p class="company-body-p company-reveal-item">
                         Ogni tessuto è il risultato di un'accurata <strong>ricerca del filato</strong>, unita alle tecniche più moderne di <strong>tessitura, nobilitazione e finissaggio</strong>. Il pilastro centrale e l'essenza stessa dell'identità sartoriale <strong>BLOOMING</strong> risiede nella selezione rigorosa delle <strong>fibre naturali più nobili</strong>: il <strong>lino purissimo</strong>, per la sua caduta fluida, texture viva e traspirabilità naturale ideale nei tendaggi in grande altezza; il <strong>cotone pettinato</strong> a fibra lunga, sinonimo di mano vellutata e tenuta cromatica impeccabile; la <strong>viscosa nobilitata</strong> di origine vegetale, che dona riflessi caldi e una cadenza scultorea; e la <strong>lana pregiata</strong>, ricercata per la sua impareggiabile profondità materica, calore tattile e naturale resilienza elastica. Queste materie prime d'eccellenza rappresentano per noi un denominatore comune irrinunciabile: il fondamento per una personale ricerca della bellezza tessile destinata a durare nel tempo.
                     </p>
-                    <p>
+                    
+                    <p class="company-body-p company-reveal-item">
                         Dalla selezione delle materie prime al controllo meticoloso di ogni pezza, la nostra <strong>eccellenza manifatturiera sartoriale</strong> si concretizza in standard qualitativi di altissimo profilo: grande altezza fino a 330 cm per tendaggi senza giunte, resistenze all'abrasione per imbottiti importanti e certificazioni ignifughe internazionali (FR) per il contract. Una <strong>cura del dettaglio sartoriale</strong> al servizio di architetti, arredatori e professionisti dell'interior design.
                     </p>
 
-                    <div style="margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap;">
+                    <div class="company-actions-row company-reveal-item" style="margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap;">
                         <button class="btn-accent" onclick="switchPage('appuntamento')">Richiedi la visita di un funzionario in studio →</button>
                         <button class="dedar-explore-all-link" style="padding: 12px 16px;" onclick="switchPage('prodotti')">Esplora la collezione tessuti</button>
                     </div>
                 </div>
-                <!-- Foto Sezione Azienda: Ambientazione_01_A.webp e Ambientazione_01_B.webp -->
-                <div class="company-photo-duo">
-                    <img src="Ambientazione_01_A.webp" alt="Tessuti Blooming Sartoriali" width="1600" height="893" loading="lazy" decoding="async">
-                    <img src="Ambientazione_01_B.webp" alt="Manifattura Tessile Blooming" width="1289" height="1600" loading="lazy" decoding="async">
+
+                <!-- Composizione Overlapping Masonry con Parallasse e Hover Zoom -->
+                <div class="company-photo-composition company-reveal-item">
+                    <!-- Foto 1: Primaria Verticale (Manifattura Tessile Blooming) -->
+                    <div class="company-img-frame company-img-primary">
+                        <img src="Ambientazione_01_B.webp" alt="Manifattura Tessile Blooming" width="1289" height="1600" loading="lazy" decoding="async">
+                        <div class="company-img-accent-tag">Atelier Castelfranco Veneto</div>
+                    </div>
+                    <!-- Foto 2: Secondaria Orizzontale Sovrapposta in basso a sinistra (Tessuti Blooming Sartoriali) -->
+                    <div class="company-img-frame company-img-secondary">
+                        <img src="Ambientazione_01_A.webp" alt="Tessuti Blooming Sartoriali" width="1600" height="893" loading="lazy" decoding="async">
+                    </div>
                 </div>
             </div>
         </div>
@@ -5775,7 +5897,9 @@
             form.reset();
         }
 
-        /* ANIMAZIONI SCROLL REVEAL */
+        /* ANIMAZIONI SCROLL REVEAL (INTERSECTION OBSERVER) & PARALLASSE EDITORIALE */
+        let updateCompanyParallax = null;
+
         function setupScrollReveal() {
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries, obs) => {
@@ -5785,12 +5909,15 @@
                             obs.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.1 });
+                }, { threshold: 0.12 });
 
                 document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
             } else {
                 document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-revealed'));
             }
+
+            // Inizializza Parallasse Asimmetrico Sezione Azienda
+            initCompanyParallax();
         }
 
         function checkScrollReveal() {
@@ -5800,6 +5927,62 @@
                     el.classList.add('is-revealed');
                 }
             });
+            if (typeof updateCompanyParallax === 'function') {
+                updateCompanyParallax();
+            }
+        }
+
+        /* EFFETTO PARALLASSE ASINCRONO AD ALTA PRECISIONE (Azienda Overlapping Masonry) */
+        function initCompanyParallax() {
+            const section = document.getElementById('company-main-section') || document.querySelector('.company-section-wrap');
+            const primary = document.querySelector('.company-img-primary');
+            const secondary = document.querySelector('.company-img-secondary');
+            if (!section || !primary || !secondary) return;
+
+            let ticking = false;
+
+            updateCompanyParallax = function() {
+                // Su smartphone compatto manteniamo il flusso a schede senza offset di parallasse
+                if (window.innerWidth <= 640) {
+                    primary.style.transform = '';
+                    secondary.style.transform = '';
+                    ticking = false;
+                    return;
+                }
+
+                const rect = section.getBoundingClientRect();
+                const winH = window.innerHeight;
+
+                const viewAzienda = document.getElementById('view-azienda');
+                const isViewActive = viewAzienda && viewAzienda.classList.contains('active');
+
+                if (isViewActive && rect.top < winH && rect.bottom > 0) {
+                    const centerOffset = (rect.top + rect.height / 2) - (winH / 2);
+                    // Parallasse asimmetrico: la foto primaria slitta delicatamente verso il basso, la secondaria in opposizione verso l'alto
+                    const primaryY = centerOffset * 0.04;
+                    const secondaryY = centerOffset * -0.075;
+
+                    primary.style.transform = `translate3d(0, ${primaryY.toFixed(2)}px, 0)`;
+                    secondary.style.transform = `translate3d(0, ${secondaryY.toFixed(2)}px, 0)`;
+                }
+                ticking = false;
+            };
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateCompanyParallax);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateCompanyParallax);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            updateCompanyParallax();
         }
 
         /* =========================================================
