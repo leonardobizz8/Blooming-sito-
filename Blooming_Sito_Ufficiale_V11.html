@@ -1359,6 +1359,40 @@
             color: var(--text-muted);
         }
 
+        .blooming-col-pills {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .fisch-col-pill {
+            background: #FFFFFF;
+            border: 1px solid var(--line);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            font-size: 11.5px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fisch-col-pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .fisch-col-pill.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #FFFFFF;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(154, 123, 86, 0.25);
+        }
+
         .fisch-sort-wrap {
             display: flex;
             align-items: center;
@@ -3540,7 +3574,7 @@
              ========================================================= -->
         <div class="page-view" id="view-prodotti">
             <div class="fischbacher-top-tabs">
-                <button class="fisch-tab active" data-topcat="Tende" onclick="selectTopMacroTab('Tende')">1. TENDE</button>
+                <button class="fisch-tab" data-topcat="Tende" onclick="selectTopMacroTab('Tende')">1. TENDE</button>
                 <button class="fisch-tab" data-topcat="Tessuti" onclick="selectTopMacroTab('Tessuti')" data-i18n="tab_imbottiti">2. TESSUTI</button>
                 <button class="fisch-tab" data-topcat="COMPLEMENTI_LINK" onclick="switchPage('complementi')">3. COMPLEMENTI</button>
                 <button class="fisch-tab" data-topcat="EQUORA_LINK" onclick="switchPage('equora')">EQUORA</button>
@@ -3634,8 +3668,12 @@
                 <!-- CATALOGO PRINCIPALE -->
                 <section>
                     <div class="fisch-Utility-bar">
-                        <div>
+                        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                             <span id="fisch-count-label" style="font-weight: 500;">Caricamento tessuti...</span>
+                            <div class="blooming-col-pills" id="blooming-col-pills">
+                                <button type="button" class="fisch-col-pill active" id="btn-blooming-new" onclick="filterBloomingCollection('NEW', this)">Nuova Collezione 2026</button>
+                                <button type="button" class="fisch-col-pill" id="btn-blooming-all" onclick="filterBloomingCollection('ALL', this)">Tutti i Prodotti</button>
+                            </div>
                         </div>
                         <div class="fisch-sort-wrap">
                             <label for="fisch-sort-select" data-i18n="sort_label" style="font-weight: 500;">Ordina Per</label>
@@ -3769,14 +3807,14 @@
                     <div>
                         <div style="font-size: 11px; letter-spacing: 0.15em; color: #4F6D5E; text-transform: uppercase; font-weight: 600;">Collezione Attiva</div>
                         <h2 style="font-family:'Cinzel',serif; font-size: 26px; color: #2D463A; margin: 4px 0;">Catalogo Tessuti EQUORA</h2>
-                        <div id="equora-counter-label" style="font-size: 13px; color: #6D7F75;">21 articoli disponibili</div>
+                        <div id="equora-counter-label" style="font-size: 13px; color: #6D7F75;">11 articoli disponibili</div>
                     </div>
 
                     <!-- Filtri rapidi per collezione Equora -->
                     <div class="equora-filter-pills">
-                        <button class="eq-pill-btn active" onclick="filterEquoraGrid('ALL', this)">Tutti i Tessuti Equora (21)</button>
-                        <button class="eq-pill-btn" onclick="filterEquoraGrid('Autunno 2026', this)">Equora Autunno 2026 (11)</button>
-                        <button class="eq-pill-btn" onclick="filterEquoraGrid('Evergreen', this)">Equora Evergreen (10)</button>
+                        <button class="eq-pill-btn active" id="btn-eq-autumn" onclick="filterEquoraGrid('Autunno 2026', this)">Equora Autunno 2026 (11)</button>
+                        <button class="eq-pill-btn" id="btn-eq-all" onclick="filterEquoraGrid('ALL', this)">Tutti i Tessuti Equora (21)</button>
+                        <button class="eq-pill-btn" id="btn-eq-evergreen" onclick="filterEquoraGrid('Evergreen', this)">Equora Evergreen (10)</button>
                     </div>
 
                     <!-- Ricerca dinamica Equora -->
@@ -4329,6 +4367,13 @@
            V11: JAVASCRIPT AVANZATO PER IL SITO UFFICIALE BLOOMING
            ========================================================= */
 
+        // NORMALIZZAZIONE STAGNA DEI BRAND (BLOOMING vs EQUORA)
+        ALL_ITEMS.forEach(it => {
+            const col = (it.collection || '').toLowerCase();
+            const br = (it.brand || '').toLowerCase();
+            it.brand = (col.includes('equora') || br.includes('equora')) ? 'equora' : 'blooming';
+        });
+
         /* COMPLEMENTI D'ARREDO (FILE LOCALI INVECE DI BASE64) */
         const COMPLEMENTS_LIST = [
             {
@@ -4539,11 +4584,11 @@
                 if (preloader) preloader.classList.add('loaded');
             }, 600);
 
-            // Populate filters and render catalog
+            // Inizializzazione catalogo: APERTURA DI DEFAULT SULL'ULTIMA COLLEZIONE
             populateDynamicFilterBoxes();
-            applyFischbacherCatalog();
+            filterBloomingCollection('NEW');
             renderFullComplementsPage();
-            renderEquoraGrid('ALL');
+            filterEquoraGrid('Autunno 2026');
 
             // Setup real-time search listeners on all inputs (global, catalog, complements, equora, mobile)
             setupSearchListeners();
@@ -4683,13 +4728,56 @@
             setLanguage(l);
         }
 
+        /* =========================================================
+           FILTRAGGIO RIGOROSO CATALOGO BLOOMING & GESTIONE COLLEZIONI
+           ========================================================= */
+        let currentBloomingCollectionMode = 'NEW'; // Di default apre sull'ultima collezione ("Nuova Collezione 2026")
+
+        function filterBloomingCollection(mode, btnEl) {
+            currentBloomingCollectionMode = mode;
+            if (btnEl) {
+                document.querySelectorAll('.fisch-col-pill').forEach(b => b.classList.remove('active'));
+                btnEl.classList.add('active');
+            } else {
+                const newBtn = document.getElementById('btn-blooming-new');
+                const allBtn = document.getElementById('btn-blooming-all');
+                if (newBtn && allBtn) {
+                    newBtn.classList.toggle('active', mode === 'NEW');
+                    allBtn.classList.toggle('active', mode === 'ALL');
+                }
+            }
+            if (mode === 'NEW') {
+                // Deseleziona eventuali checkbox della sidebar che andrebbero in conflitto
+                document.querySelectorAll('#filter-box-collections input[type="checkbox"]').forEach(cb => cb.checked = false);
+            }
+            applyFischbacherCatalog();
+        }
+
+        function onSidebarFilterChange() {
+            // Se l'utente seleziona una specifica collezione dalla sidebar, sblocca la restrizione "NEW"
+            if (currentBloomingCollectionMode === 'NEW') {
+                const checkedCols = getCheckedValues('filter-box-collections');
+                if (checkedCols.length > 0) {
+                    currentBloomingCollectionMode = 'ALL';
+                    const newBtn = document.getElementById('btn-blooming-new');
+                    const allBtn = document.getElementById('btn-blooming-all');
+                    if (newBtn) newBtn.classList.remove('active');
+                    if (allBtn) allBtn.classList.add('active');
+                }
+            }
+            applyFischbacherCatalog();
+        }
+
         /* POPOLA ACCORDION LATERALI DINAMICI */
         function populateDynamicFilterBoxes() {
             const patSet = new Set();
             const typSet = new Set();
             const colCounts = {};
 
-            ALL_ITEMS.forEach(it => {
+            // STRICT BRAND SAFETY: Solo ed esclusivamente articoli Blooming nel catalogo Blooming
+            const bloomingOnly = ALL_ITEMS.filter(it => it.brand === 'blooming');
+
+            bloomingOnly.forEach(it => {
                 (it.patterns || []).forEach(p => p && patSet.add(p.trim()));
                 (it.typologies || []).forEach(t => t && typSet.add(t.trim()));
                 if (it.collection) {
@@ -4701,14 +4789,14 @@
             const patBox = document.getElementById('filter-box-patterns');
             if (patBox) {
                 patBox.innerHTML = Array.from(patSet).sort().map(p => `
-                    <label class="fisch-check-row"><input type="checkbox" value="${p}" onchange="applyFischbacherCatalog()"> ${p}</label>
+                    <label class="fisch-check-row"><input type="checkbox" value="${p}" onchange="onSidebarFilterChange()"> ${p}</label>
                 `).join('');
             }
 
             const typBox = document.getElementById('filter-box-typologies');
             if (typBox) {
                 typBox.innerHTML = Array.from(typSet).sort().map(t => `
-                    <label class="fisch-check-row"><input type="checkbox" value="${t}" onchange="applyFischbacherCatalog()"> ${t}</label>
+                    <label class="fisch-check-row"><input type="checkbox" value="${t}" onchange="onSidebarFilterChange()"> ${t}</label>
                 `).join('');
             }
 
@@ -4716,7 +4804,7 @@
             if (colBox) {
                 const sortedCols = Object.keys(colCounts).sort((a, b) => colCounts[b] - colCounts[a]);
                 colBox.innerHTML = sortedCols.map(c => `
-                    <label class="fisch-check-row"><input type="checkbox" value="${c}" onchange="applyFischbacherCatalog()"> ${c} (${colCounts[c]})</label>
+                    <label class="fisch-check-row"><input type="checkbox" value="${c}" onchange="onSidebarFilterChange()"> ${c} (${colCounts[c]})</label>
                 `).join('');
             }
         }
@@ -4733,12 +4821,11 @@
         }
 
         function resetAllFischFilters() {
-            document.getElementById('fisch-q-input').value = '';
+            const fi = document.getElementById('fisch-q-input');
+            if (fi) fi.value = '';
             document.querySelectorAll('.fisch-sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
             document.querySelectorAll('.fisch-tab').forEach(t => t.classList.remove('active'));
-            const defTab = document.querySelector('.fisch-tab[data-topcat="Tende"]');
-            if (defTab) defTab.classList.add('active');
-            applyFischbacherCatalog();
+            filterBloomingCollection('NEW');
         }
 
         /* 3 SOLE MACRO-CATEGORIE RIGOROSE (TENDE, TESSUTI PER IMBOTTITI, COMPLEMENTI) */
@@ -4779,6 +4866,7 @@
         function openProductsWithFilter(mode) {
             switchPage('prodotti');
             resetAllFischFilters();
+            filterBloomingCollection(mode || 'NEW');
         }
 
         function openProductsWithUse(useVal) {
@@ -4951,9 +5039,15 @@
             const sortMode = document.getElementById('fisch-sort-select') ? document.getElementById('fisch-sort-select').value : 'collection_asc';
 
             filteredItems = ALL_ITEMS.filter(it => {
-                // Escludi articoli EQUORA dal catalogo principale Blooming per netta e rigorosa separazione dei marchi
-                const isEq = (it.collection && it.collection.toLowerCase().includes('equora')) || (it.brand && it.brand.toLowerCase().includes('equora'));
-                if (isEq) return false;
+                // REGOLA FERREA: SEPARAZIONE STAGNA DEI BRAND. La griglia Blooming renderizza SOLO brand === 'blooming'
+                if (it.brand !== 'blooming') return false;
+
+                // REGOLA FERREA: APERTURA DI DEFAULT SULL'ULTIMA COLLEZIONE
+                // Se la modalità attiva è 'NEW', isola l'ultima collezione in ordine temporale ("Corea Autunno" / is_new)
+                if (currentBloomingCollectionMode === 'NEW') {
+                    const isLatest = it.is_new === true || (it.collection && it.collection.toLowerCase().includes('corea autunno'));
+                    if (!isLatest) return false;
+                }
 
                 if (q) {
                     if (!itemMatchesQuery(it, q)) return false;
@@ -4997,6 +5091,8 @@
 
         /* RENDERING GRIGLIA CATALOGO (1:1 ASPECT RATIO, SWATCHES INTERATTIVI E B2B TIRELLE) */
         function renderFischbacherPage() {
+            // STRICT BRAND SAFETY: sicurezza assoluta, elimina qualsiasi elemento non blooming
+            filteredItems = filteredItems.filter(it => it.brand === 'blooming');
             const total = filteredItems.length;
             const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
             const countLabel = document.getElementById('fisch-count-label');
@@ -5044,6 +5140,7 @@
                 }
 
                 grid.innerHTML = slice.map(item => {
+                    if (item.brand !== 'blooming') return '';
                     const hasImg = item.img && item.img.trim() !== '';
                     const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
                     const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
@@ -5074,7 +5171,7 @@
                     }
 
                     return `
-                        <div class="fisch-card" id="card-${item.code}" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'))">
+                        <div class="fisch-card" id="card-${item.code}" data-brand="blooming" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
                             <div class="fisch-thumb-rect">
                                 ${imgMarkup}
                             </div>
@@ -5159,8 +5256,9 @@
         }
 
         /* DRAWER SCHEDA TECNICA CON LENTE ZOOM MATERICA & SELETTORE VARIANTI */
-        function openItemDrawer(code, varCode = null) {
-            const item = ALL_ITEMS.find(x => x.code === code);
+        function openItemDrawer(code, varCode = null, brand = null) {
+            const targetBrand = brand || (getActivePage() === 'equora' ? 'equora' : 'blooming');
+            const item = ALL_ITEMS.find(x => x.code === code && x.brand === targetBrand) || ALL_ITEMS.find(x => x.code === code);
             if (!item) return;
 
             // GA4 Item Selection Tracking
@@ -5185,7 +5283,7 @@
                 : `<div class="fisch-woven-fallback drawer-sample-img">Art. ${item.code}</div>`;
 
             const swatchesHtml = (item.variants || []).map(v => `
-                <div class="drawer-swatch-cell ${v.code === activeVarCode ? 'active' : ''}" onclick="openItemDrawer('${item.code}', '${v.code}')">
+                <div class="drawer-swatch-cell ${v.code === activeVarCode ? 'active' : ''}" onclick="openItemDrawer('${item.code}', '${v.code}', '${item.brand}')">
                     <img src="${v.img || item.img}" width="64" height="64" loading="lazy" decoding="async" alt="Variante ${v.code}" onerror="this.style.background='#EAE8E3'">
                     <span>${v.code}</span>
                 </div>
@@ -5472,15 +5570,12 @@
         /* =========================================================
            GESTIONE CATALOGO DEDICATO EQUORA — TESSUTI IN EQUILIBRIO
            ========================================================= */
-        let currentEquoraFilter = 'ALL';
+        let currentEquoraFilter = 'Autunno 2026';
         let currentEquoraSearch = '';
 
         function getEquoraItems() {
-            return ALL_ITEMS.filter(it => {
-                const col = (it.collection || '').toLowerCase();
-                const br = (it.brand || '').toLowerCase();
-                return col.includes('equora') || br.includes('equora');
-            });
+            // STRICT BRAND SAFETY: Solo ed esclusivamente articoli EQUORA
+            return ALL_ITEMS.filter(it => it.brand === 'equora');
         }
 
         function filterEquoraGrid(filter, btnEl) {
@@ -5488,6 +5583,14 @@
             if (btnEl) {
                 document.querySelectorAll('.eq-pill-btn').forEach(b => b.classList.remove('active'));
                 btnEl.classList.add('active');
+            } else {
+                document.querySelectorAll('.eq-pill-btn').forEach(b => {
+                    const txt = (b.textContent || '');
+                    if (filter === 'Autunno 2026' && txt.includes('Autunno 2026')) b.classList.add('active');
+                    else if (filter === 'ALL' && txt.includes('Tutti')) b.classList.add('active');
+                    else if (filter === 'Evergreen' && txt.includes('Evergreen')) b.classList.add('active');
+                    else b.classList.remove('active');
+                });
             }
             renderEquoraGrid();
         }
@@ -5515,10 +5618,11 @@
             const counter = document.getElementById('equora-counter-label');
             if (!container) return;
 
-            let items = getEquoraItems();
+            // STRICT BRAND SAFETY: Solo ed esclusivamente articoli EQUORA
+            let items = getEquoraItems().filter(it => it.brand === 'equora');
 
             if (currentEquoraFilter === 'Autunno 2026') {
-                items = items.filter(it => (it.collection || '').toLowerCase().includes('autunno'));
+                items = items.filter(it => (it.collection || '').toLowerCase().includes('autunno') || it.is_new === true);
             } else if (currentEquoraFilter === 'Evergreen') {
                 items = items.filter(it => !(it.collection || '').toLowerCase().includes('autunno'));
             }
@@ -5541,20 +5645,21 @@
             }
 
             if (counter) {
-                counter.innerHTML = `<strong style="color:#7B9E7E;">${items.length}</strong> articoli trovati`;
+                counter.innerHTML = `<strong style="color:#7B9E7E;">${items.length}</strong> articoli disponibili`;
             }
 
             if (items.length === 0) {
                 container.innerHTML = `
                     <div style="grid-column: 1 / -1; padding: 48px; text-align: center; color: #6D7F75;">
                         <p style="font-size: 16px; margin-bottom: 12px;">Nessun tessuto Equora trovato per i criteri specificati.</p>
-                        <button class="eq-pill-btn" onclick="document.getElementById('equora-search-input').value=''; currentEquoraSearch=''; filterEquoraGrid('ALL');">Mostra tutti i tessuti Equora</button>
+                        <button class="eq-pill-btn" onclick="document.getElementById('equora-search-input').value=''; currentEquoraSearch=''; filterEquoraGrid('Autunno 2026');">Mostra ultima collezione Equora</button>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = items.map(it => {
+                if (it.brand !== 'equora') return '';
                 const variants = it.variants || [];
                 const firstVar = variants[0] || {};
                 const heroImg = it.img || firstVar.img || 'cat_imbottiti.webp';
@@ -5583,7 +5688,7 @@
                 }
 
                 return `
-                    <div class="equora-card" id="eq-card-${it.code}" onclick="openItemDrawer('${it.code}')">
+                    <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
                         <div class="eq-card-media">
                             <img src="${heroImg}" alt="${it.name}" class="eq-card-img" width="400" height="400" loading="lazy" decoding="async" onerror="this.src='cat_imbottiti.webp'">
                             <div class="eq-card-hover-overlay">
@@ -5604,7 +5709,7 @@
                             </div>
                             ${swatchesHtml}
                             <div class="eq-card-action">
-                                <button type="button" class="eq-card-btn" onclick="openItemDrawer('${it.code}'); event.stopPropagation();">Dettagli & Campionario B2B</button>
+                                <button type="button" class="eq-card-btn" onclick="openItemDrawer('${it.code}', null, 'equora'); event.stopPropagation();">Dettagli & Campionario B2B</button>
                             </div>
                         </div>
                     </div>
