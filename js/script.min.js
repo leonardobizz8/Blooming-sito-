@@ -931,13 +931,13 @@
         /* RENDERING SINGOLA CARD BLOOMING (GPU-ACCELERATED, 0-CLS, LAZY & ASYNC DECODING) */
         function renderBloomingCardHtml(item, isFirst) {
             if (item.brand !== 'blooming') return '';
+            const fallbackSrc = 'placeholder.jpg';
             const hasImg = item.img && item.img.trim() !== '';
             const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
-            const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
+            const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (hasImg ? item.img : fallbackSrc);
+            const initialImg = hasImg ? item.img : fallbackSrc;
 
-            const imgMarkup = hasImg
-                ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
-                : `<div class="fisch-woven-fallback" id="card-img-${item.code}">BLOOMING ${item.code}</div>`;
+            const imgMarkup = `<img src="${initialImg}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">`;
 
             const variantsList = item.variants || [];
             let swatchesHtml = '';
@@ -949,10 +949,10 @@
                         ${visibleVars.map((v, vIdx) => `
                             <button type="button" 
                                     class="fisch-mini-swatch ${vIdx === 0 ? 'active' : ''}" 
-                                    style="background-image: url('${v.img || item.img}')"
+                                    style="background-image: url('${v.img || item.img || fallbackSrc}')"
                                     title="Col. ${v.code}"
                                     aria-label="Colore ${v.code}"
-                                    onclick="selectCardVariant(event, '${item.code}', '${v.code}', '${v.img || item.img}')">
+                                    onclick="selectCardVariant(event, '${item.code}', '${v.code}', '${v.img || item.img || fallbackSrc}')">
                             </button>
                         `).join('')}
                         ${variantsList.length > maxShow ? `<span class="fisch-more-swatches">+${variantsList.length - maxShow}</span>` : ''}
@@ -1040,11 +1040,17 @@
             if (e) e.stopPropagation();
             const card = document.getElementById('card-' + code);
             if (!card) return;
+            const fallbackSrc = 'placeholder.jpg';
+            const targetImg = (imgSrc && imgSrc.trim() !== '') ? imgSrc : fallbackSrc;
             card.setAttribute('data-current-var', varCode);
-            card.setAttribute('data-current-img', imgSrc);
+            card.setAttribute('data-current-img', targetImg);
             const img = document.getElementById('card-img-' + code);
-            if (img && imgSrc) {
-                img.src = imgSrc;
+            if (img) {
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = fallbackSrc;
+                };
+                img.src = targetImg;
             }
             const codeEl = document.getElementById('card-code-' + code);
             if (codeEl) {
@@ -1094,7 +1100,7 @@
                 return `
                 <div class="comp-full-card" >
                     <div class="comp-full-img">
-                        <img src="${c.img}" alt="Complemento d'arredo Blooming ${c.name}" width="600" height="480" loading="lazy" decoding="async">
+                        <img src="${c.img || 'placeholder.jpg'}" alt="Complemento d'arredo Blooming ${c.name}" width="600" height="480" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='placeholder.jpg';">
                     </div>
                     <div class="comp-full-top">
                         <h2>${c.name}</h2>
@@ -1127,18 +1133,17 @@
                 ? item.variants.find(v => v.code === varCode) || item.variants[0]
                 : (item.variants[0] || { code: 'Master', img: item.img });
 
-            const mainImg = (selVar && selVar.img) ? selVar.img : item.img;
+            const fallbackSrc = 'placeholder.jpg';
+            const mainImg = (selVar && selVar.img) ? selVar.img : (item.img || fallbackSrc);
             const activeVarCode = selVar ? selVar.code : 'Master';
 
-            const imgHtml = mainImg
-                ? `<div class="drawer-sample-container" id="drawer-zoom-container">
-                       <img src="${mainImg}" id="drawer-main-preview" class="drawer-sample-img" alt="Dettaglio texture tessuto ${item.name} Art. ${item.code}" width="600" height="600" loading="lazy" decoding="async">
-                   </div>`
-                : `<div class="fisch-woven-fallback drawer-sample-img">Art. ${item.code}</div>`;
+            const imgHtml = `<div class="drawer-sample-container" id="drawer-zoom-container">
+                       <img src="${mainImg}" id="drawer-main-preview" class="drawer-sample-img" alt="Dettaglio texture tessuto ${item.name} Art. ${item.code}" width="600" height="600" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                   </div>`;
 
             const swatchesHtml = (item.variants || []).map(v => `
                 <div class="drawer-swatch-cell ${v.code === activeVarCode ? 'active' : ''}" onclick="openItemDrawer('${item.code}', '${v.code}', '${item.brand}')">
-                    <img src="${v.img || item.img}" width="64" height="64" loading="lazy" decoding="async" alt="Variante ${v.code}" onerror="this.style.background='#EAE8E3'">
+                    <img src="${v.img || item.img || fallbackSrc}" width="64" height="64" loading="lazy" decoding="async" alt="Variante ${v.code}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                     <span>${v.code}</span>
                 </div>
             `).join('');
@@ -1552,8 +1557,16 @@
             e.stopPropagation();
             const card = document.getElementById('eq-card-' + itemCode);
             if (!card) return;
+            const fallbackSrc = 'placeholder.jpg';
+            const targetImg = (imgSrc && imgSrc.trim() !== '') ? imgSrc : fallbackSrc;
             const img = card.querySelector('.eq-card-img');
-            if (img && imgSrc) img.src = imgSrc;
+            if (img) {
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = fallbackSrc;
+                };
+                img.src = targetImg;
+            }
             const codeSpan = card.querySelector('.eq-card-variant-code');
             if (codeSpan && varCode) codeSpan.textContent = 'Var. ' + varCode;
             card.querySelectorAll('.eq-swatch-dot').forEach(dot => {
@@ -1566,7 +1579,8 @@
             if (it.brand !== 'equora') return '';
             const variants = it.variants || [];
             const firstVar = variants[0] || {};
-            const heroImg = it.img || firstVar.img || 'cat_imbottiti.webp';
+            const fallbackSrc = 'placeholder.jpg';
+            const heroImg = (it.img && it.img.trim() !== '') ? it.img : ((firstVar && firstVar.img) ? firstVar.img : fallbackSrc);
             const comp = it.comp ? `<div class="eq-card-spec"><span>Comp.</span> <strong>${it.comp}</strong></div>` : '';
             const h = it.height ? `<div class="eq-card-spec"><span>H.</span> <strong>${it.height}</strong></div>` : '';
             const mart = it.martindale ? `<div class="eq-card-spec"><span>Mart.</span> <strong>${it.martindale}</strong></div>` : '';
@@ -1582,8 +1596,8 @@
                                     class="eq-swatch-dot ${sIdx === 0 ? 'active' : ''}" 
                                     data-var="${v.code || ''}" 
                                     title="${v.name || ('Col. ' + v.code)}" 
-                                    style="background-image: url('${v.img || heroImg}')"
-                                    onclick="selectEquoraCardVariant(event, '${it.code}', '${v.code || ''}', '${v.img || heroImg}')">
+                                    style="background-image: url('${v.img || heroImg || fallbackSrc}')"
+                                    onclick="selectEquoraCardVariant(event, '${it.code}', '${v.code || ''}', '${v.img || heroImg || fallbackSrc}')">
                             </button>
                         `).join('')}
                         ${variants.length > maxSwatches ? `<span class="eq-swatch-more">+${variants.length - maxSwatches}</span>` : ''}
@@ -1594,7 +1608,7 @@
             return `
                 <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
                     <div class="eq-card-media">
-                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
+                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                         <div class="eq-card-hover-overlay">
                             <span>Richiedi Scheda & Tirelle →</span>
                         </div>
