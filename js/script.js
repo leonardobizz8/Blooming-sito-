@@ -266,6 +266,16 @@
            ========================================================= */
         let lenisInstance = null;
 
+        function refreshScrollHeights() {
+            if (typeof AOS !== 'undefined') {
+                try { AOS.refresh(); } catch (e) {}
+            }
+            if (lenisInstance) {
+                try { lenisInstance.resize(); } catch (e) {}
+            }
+        }
+        window.refreshScrollHeights = refreshScrollHeights;
+
         function initSmoothScroll() {
             const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
             if (isMobile || typeof Lenis === 'undefined') {
@@ -288,7 +298,8 @@
                 }
                 requestAnimationFrame(raf);
 
-                } catch(e) {
+                window.addEventListener('resize', refreshScrollHeights);
+            } catch(e) {
                 console.warn('Inizializzazione Lenis fallback:', e);
             }
         }
@@ -404,10 +415,9 @@
             // Setup Cookie Banner
             try { setupCookieBanner(); } catch(e) { console.warn(e); }
 
-            // Refresh globale animazioni AOS dopo rendering iniziale
-            if (typeof AOS !== 'undefined') {
-                setTimeout(() => { try { AOS.refresh(); } catch(e) {} }, 300);
-            }
+            // Refresh globale animazioni AOS e altezze Lenis dopo rendering iniziale
+            setTimeout(refreshScrollHeights, 150);
+            setTimeout(refreshScrollHeights, 500);
         }
 
         if (document.readyState === 'loading') {
@@ -510,27 +520,17 @@
                 }
             });
 
-            const isGridHeavyPage = (pageId === 'prodotti' || pageId === 'equora');
             if (lenisInstance) {
-                if (isGridHeavyPage) {
-                    lenisInstance.stop();
-                    document.documentElement.classList.remove('lenis', 'lenis-smooth');
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-                } else {
-                    document.documentElement.classList.add('lenis', 'lenis-smooth');
-                    lenisInstance.start();
-                    lenisInstance.scrollTo(0, { immediate: true });
-                }
+                lenisInstance.resize();
+                lenisInstance.scrollTo(0, { immediate: true });
             } else {
                 window.scrollTo({ top: 0, behavior: 'instant' });
             }
             setTimeout(() => {
-                if (!isGridHeavyPage) {
-                    checkScrollReveal();
-                    initSplitTitles();
-                    initCurtainReveal();
-                    if (typeof AOS !== 'undefined') AOS.refresh();
-                }
+                checkScrollReveal();
+                initSplitTitles();
+                initCurtainReveal();
+                refreshScrollHeights();
             }, 100);
 
             // GA4 Page View Tracking (rispetta il consenso GDPR)
@@ -961,7 +961,7 @@
             const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
 
             const imgMarkup = hasImg
-                ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
+                ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onload="if(window.refreshScrollHeights)window.refreshScrollHeights();" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
                 : `<div class="fisch-woven-fallback" id="card-img-${item.code}">BLOOMING ${item.code}</div>`;
 
             const variantsList = item.variants || [];
@@ -1029,6 +1029,7 @@
                     </div>`;
                     if (loadMoreBtn) loadMoreBtn.style.display = 'none';
                     if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+                    refreshScrollHeights();
                     return;
                 }
 
@@ -1039,6 +1040,11 @@
                 } else {
                     grid.innerHTML = cardsHtml;
                 }
+
+                // Sincronizzazione immediata altezze DOM per evitare scroll lock
+                refreshScrollHeights();
+                setTimeout(refreshScrollHeights, 80);
+                setTimeout(refreshScrollHeights, 250);
             }
 
             // Controllo visibilità pulsante Carica Altri
@@ -1616,7 +1622,7 @@
             return `
                 <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
                     <div class="eq-card-media">
-                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
+                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onload="if(window.refreshScrollHeights)window.refreshScrollHeights();" onerror="this.src='cat_imbottiti.webp'">
                         <div class="eq-card-hover-overlay">
                             <span>Richiedi Scheda & Tirelle →</span>
                         </div>
@@ -1703,6 +1709,7 @@
                 `;
                 if (loadMoreBtn) loadMoreBtn.style.display = 'none';
                 if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+                refreshScrollHeights();
                 return;
             }
 
@@ -1717,6 +1724,11 @@
             } else {
                 container.innerHTML = cardsHtml;
             }
+
+            // Sincronizzazione immediata altezze DOM per evitare scroll lock
+            refreshScrollHeights();
+            setTimeout(refreshScrollHeights, 80);
+            setTimeout(refreshScrollHeights, 250);
 
             // Controllo visibilità pulsante Carica Altri Equora
             if (loadMoreBtn) {

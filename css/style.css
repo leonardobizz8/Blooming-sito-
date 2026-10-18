@@ -36,14 +36,19 @@
             font-size: 15px;
             line-height: 1.55;
             -webkit-font-smoothing: antialiased;
-            scroll-behavior: smooth;
+            height: auto !important;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         body {
-            min-height: 100vh;
+            height: auto !important;
+            min-height: 100%;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            overflow-y: visible;
             padding-top: 96px; /* Spazio per header fisso a scomparsa */
         }
 
@@ -524,15 +529,21 @@
            ========================================================= */
         main {
             flex: 1;
+            height: auto !important;
+            overflow: visible !important;
         }
 
         .page-view {
             display: none;
+            height: auto !important;
+            overflow: visible !important;
             animation: fadeInView 0.35s ease forwards;
         }
 
         .page-view.active {
             display: block;
+            height: auto !important;
+            overflow: visible !important;
         }
 
         @keyframes fadeInView {
@@ -1525,7 +1536,7 @@
         .fisch-thumb-rect {
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: #F1EFEA;
+            background: #f3f3f3;
             overflow: hidden;
             margin-bottom: 12px;
             position: relative;
@@ -2928,7 +2939,7 @@
         .fisch-thumb-rect {
             width: 100%;
             aspect-ratio: 1 / 1 !important;
-            background: #F1EFEA;
+            background: #f3f3f3;
             overflow: hidden;
             margin-bottom: 12px;
             position: relative;
@@ -3354,7 +3365,7 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             overflow: hidden;
-            background: #F4F7F5;
+            background: #f3f3f3;
         }
         .eq-card-img {
             width: 100%;
@@ -3605,16 +3616,12 @@
 
         /* 1. LENIS SMOOTH SCROLL INTEGRATION */
         html.lenis, html.lenis body {
-            height: auto;
+            height: auto !important;
+            min-height: 100%;
+            overflow-y: visible;
         }
         .lenis.lenis-smooth {
             scroll-behavior: auto !important;
-        }
-        .lenis.lenis-smooth [data-lenis-prevent] {
-            overscroll-behavior: contain;
-        }
-        .lenis.lenis-stopped {
-            overflow: hidden;
         }
 
         /* 2. EFFETTO REVEAL A SIPARIO SULLE FOTO PRINCIPALI (.reveal-image) */
@@ -3704,33 +3711,37 @@
     perspective: 1000px;
 }
 
-/* 2. Strict Zero-CLS Container Aspect Ratios */
+/* 2. Strict Zero-CLS Container Aspect Ratios & #f3f3f3 Elegant Placeholder */
 .fisch-thumb-rect,
 .eq-card-media {
     width: 100%;
     aspect-ratio: 1 / 1 !important;
+    background-color: #f3f3f3 !important;
     overflow: hidden !important;
     position: relative;
-    contain: paint;
+    display: block;
 }
 
 .fisch-thumb-rect img,
 .eq-card-media img,
 .eq-card-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    display: block !important;
+    background-color: #f3f3f3 !important;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* 2. Off-Screen Rendering Prevention (content-visibility: auto) */
-.fisch-card,
-.equora-card,
-.comp-full-card {
-    content-visibility: auto;
-    contain-intrinsic-size: 500px;
-    contain: layout style paint;
+.fisch-woven-fallback {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1 !important;
+    background-color: #f3f3f3 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 3. GPU-Accelerated Hover Interactions Only */
