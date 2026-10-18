@@ -85,7 +85,19 @@
         }
     </script>
 
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
     <style>
+        /* Regola di supporto luxury per fade-in ad opacità pura */
+        [data-aos="fade-in"] {
+            opacity: 0;
+            transition-property: opacity;
+        }
+        [data-aos="fade-in"].aos-animate {
+            opacity: 1;
+        }
+
         :root {
             --bg: #FFFFFF;
             --bg-soft: #F9F8F5;
@@ -3649,11 +3661,11 @@
             <section class="hero-slider-section">
                 <!-- Slide 1: Nuova Collezione (Ambientazione_03_A.webp - Critical LCP Element) -->
                 <div class="hero-slide active" id="h-slide-0">
-                    <img src="Ambientazione_03_A.webp" alt="Nuova Collezione Blooming" width="1920" height="1071" loading="eager" fetchpriority="high" decoding="async">
+                    <img src="Ambientazione_03_A.webp" alt="Nuova Collezione Blooming" width="1920" height="1071" loading="eager" fetchpriority="high" decoding="async" data-aos="fade-in" data-aos-duration="1200">
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content">
                             <div class="hero-slide-kicker" data-i18n="s1_kicker">Novità Tessile 2026</div>
-                            <h1 class="hero-slide-title" data-i18n="s1_title">Nuova Collezione</h1>
+                            <h1 class="hero-slide-title" data-i18n="s1_title" data-aos="fade-up">Nuova Collezione</h1>
                             <p class="hero-slide-sub" data-i18n="s1_sub">Ricerca materica, fibre naturali nobili e lavorazioni d'eccellenza Made in Italy.</p>
                             <button class="btn-accent" onclick="openProductsWithFilter('ALL')" data-i18n="s1_cta">Esplora la collezione →</button>
                         </div>
@@ -3662,11 +3674,11 @@
 
                 <!-- Slide 2: Complementi d'Arredo (hero_slide_complementi.webp) -->
                 <div class="hero-slide" id="h-slide-1">
-                    <img src="hero_slide_complementi.webp" alt="Complementi d'Arredo" width="1600" height="2002" loading="lazy" decoding="async">
+                    <img src="hero_slide_complementi.webp" alt="Complementi d'Arredo" width="1600" height="2002" loading="lazy" decoding="async" data-aos="fade-in" data-aos-duration="1200">
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content">
                             <div class="hero-slide-kicker" data-i18n="s3_kicker">Produzione d'Eccellenza</div>
-                            <h2 class="hero-slide-title" data-i18n="s3_title">Complementi d'Arredo</h2>
+                            <h2 class="hero-slide-title" data-i18n="s3_title" data-aos="fade-up">Complementi d'Arredo</h2>
                             <p class="hero-slide-sub" data-i18n="s3_sub">Panchina Rocco, Poltrona Jabba The Hutt, Pouf Gemon e Poltrona Pucci: arredi scultura rivestibili con i tessuti esclusivi della collezione.</p>
                             <button class="btn-accent" onclick="switchPage('complementi')" data-i18n="s3_cta">Esplora i complementi →</button>
                         </div>
@@ -3675,10 +3687,10 @@
 
                 <!-- Slide 3: Equora (Garden Pavilion) -->
                 <div class="hero-slide" id="h-slide-2">
-                    <img src="garden_pavilion_hero.webp" alt="EQUORA — Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async">
+                    <img src="garden_pavilion_hero.webp" alt="EQUORA — Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async" data-aos="fade-in" data-aos-duration="1200">
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content" style="max-width: 680px;">
-                            <div style="margin-bottom: 28px;">
+                            <div style="margin-bottom: 28px;" data-aos="fade-up">
                                 <img src="equora_logo_green.webp" alt="ÉQUORA" width="255" height="68" loading="lazy" decoding="async" style="height: 64px; width: auto; max-width: 100%; filter: brightness(0) invert(1) drop-shadow(0 4px 18px rgba(0,0,0,0.45)); display: block;">
                             </div>
                             <button class="btn-accent" style="background:#7B9E7E; border-color:#7B9E7E; box-shadow: 0 4px 16px rgba(123, 158, 126, 0.4);" onclick="switchPage('equora')">Scopri EQUORA →</button>
@@ -3703,7 +3715,7 @@
 
             <!-- 2. SEZIONE D'INGRESSO "COSA STAI CERCANDO?" (ORIGINALE BLOOMING — 4 MACRO-AREE) -->
             <section class="blooming-destinations-section reveal-on-scroll">
-                <div class="destinations-header">
+                <div class="destinations-header" data-aos="fade-up">
                     <div class="destinations-kicker">Destinazioni d'Uso & Materia</div>
                     <h2 class="destinations-heading" data-i18n="what_looking">Cosa stai cercando?</h2>
                     <p class="destinations-intro">
@@ -3713,7 +3725,7 @@
 
                 <div class="destinations-grid">
                     <!-- 1) TENDE: Associata all'immagine "ciuff_e_vaso.webp" -->
-                    <div class="dest-card" onclick="openProductsWithUse('Tende')">
+                    <div class="dest-card" data-aos="fade-up" data-aos-delay="0" onclick="openProductsWithUse('Tende')">
                         <div class="dest-media">
                             <img src="ciuff_e_vaso.webp" alt="Tende e Grande Altezza Blooming" width="893" height="1075" loading="lazy" decoding="async">
                         </div>
@@ -3726,7 +3738,7 @@
                     </div>
 
                     <!-- 2) IMBOTTITI: Associata all'immagine "Ambientazione_02_A.webp" -->
-                    <div class="dest-card dest-card-imbottiti" onclick="openProductsWithUse('Imbottiti')">
+                    <div class="dest-card dest-card-imbottiti" data-aos="fade-up" data-aos-delay="100" onclick="openProductsWithUse('Imbottiti')">
                         <div class="dest-media">
                             <img src="Ambientazione_02_A.webp" alt="Tessuti per Imbottiti Blooming" width="900" height="1118" loading="lazy" decoding="async" style="object-position: 70% 75%;">
                         </div>
@@ -3739,7 +3751,7 @@
                     </div>
 
                     <!-- 3) COMPLEMENTI: Associata all'immagine "panchina.webp" (Pouf e complementi) -->
-                    <div class="dest-card dest-card-complementi" onclick="switchPage('complementi')">
+                    <div class="dest-card dest-card-complementi" data-aos="fade-up" data-aos-delay="200" onclick="switchPage('complementi')">
                         <div class="dest-media">
                             <img src="panchina.webp" alt="Complementi d'Arredo Blooming" width="893" height="1600" loading="lazy" decoding="async" style="object-position: center 80%;">
                         </div>
@@ -3752,7 +3764,7 @@
                     </div>
 
                     <!-- 4) EQUORA: Associata all'immagine "garden_pavilion_hero.webp" -->
-                    <div class="dest-card dest-card-equora" onclick="switchPage('equora')">
+                    <div class="dest-card dest-card-equora" data-aos="fade-up" data-aos-delay="300" onclick="switchPage('equora')">
                         <div class="dest-media">
                             <img src="garden_pavilion_hero.webp" alt="EQUORA — Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async" style="object-position: 60% center;">
                         </div>
@@ -3768,7 +3780,7 @@
                     </div>
                 </div>
 
-                <div class="destinations-bottom-bar">
+                <div class="destinations-bottom-bar" data-aos="fade-up">
                     <p data-i18n="dedar_sub_quote">Un intreccio autentico di filati, trame e cromie: il tessuto per ogni progetto d'architettura d'interni.</p>
                     <button class="dedar-explore-all-link" onclick="switchPage('prodotti')" data-i18n="explore_all_btn">ESPLORA L'INTERO CATALOGO PRODOTTI</button>
                 </div>
@@ -3777,13 +3789,13 @@
             <!-- 3. SEZIONE COMPLEMENTI D'ARREDO IN HOME -->
             <section class="home-complements-strip reveal-on-scroll">
                 <div class="home-complements-inner">
-                    <div class="strip-head-bar">
+                    <div class="strip-head-bar" data-aos="fade-up">
                         <h2 data-i18n="comp_strip_title">Complementi d'Arredo</h2>
                         <button class="dedar-explore-all-link" onclick="switchPage('complementi')" data-i18n="comp_strip_link">Vedi schede e misure →</button>
                     </div>
 
                     <div class="comp-mini-grid">
-                        <div class="comp-mini-card" onclick="switchPage('complementi')">
+                        <div class="comp-mini-card" data-aos="fade-up" data-aos-delay="0" onclick="switchPage('complementi')">
                             <div class="comp-mini-thumb">
                                 <img src="panchina_rocco.webp" alt="Panchina Rocco" width="800" height="640" loading="lazy" decoding="async">
                             </div>
@@ -3791,7 +3803,7 @@
                             <div class="comp-mini-sub">L 120 × P 40 × H 40 cm · Manici in cuoio naturale o nero</div>
                         </div>
 
-                        <div class="comp-mini-card" onclick="switchPage('complementi')">
+                        <div class="comp-mini-card" data-aos="fade-up" data-aos-delay="100" onclick="switchPage('complementi')">
                             <div class="comp-mini-thumb">
                                 <img src="poltrona_jabba.webp" alt="Jabba The Hutt" width="800" height="640" loading="lazy" decoding="async">
                             </div>
@@ -3799,7 +3811,7 @@
                             <div class="comp-mini-sub">L 73 × P 85 × H 80 cm · Braccioli in frassino ulivato</div>
                         </div>
 
-                        <div class="comp-mini-card" onclick="switchPage('complementi')">
+                        <div class="comp-mini-card" data-aos="fade-up" data-aos-delay="200" onclick="switchPage('complementi')">
                             <div class="comp-mini-thumb">
                                 <img src="pouf_gemon.webp" alt="Pouf Gemon" width="800" height="621" loading="lazy" decoding="async">
                             </div>
@@ -3807,7 +3819,7 @@
                             <div class="comp-mini-sub">Ø 35 × H 46 cm · Manico in cuoio</div>
                         </div>
 
-                        <div class="comp-mini-card" onclick="switchPage('complementi')">
+                        <div class="comp-mini-card" data-aos="fade-up" data-aos-delay="300" onclick="switchPage('complementi')">
                             <div class="comp-mini-thumb">
                                 <img src="poltrona_pucci.webp" alt="Poltrona Pucci" width="800" height="604" loading="lazy" decoding="async">
                             </div>
@@ -3820,7 +3832,7 @@
 
             <!-- 4. TEASER APPUNTAMENTO & VISITA COMMERCIALE -->
             <section class="home-appointment-teaser reveal-on-scroll">
-                <div class="teaser-left">
+                <div class="teaser-left" data-aos="fade-up">
                     <div class="kicker" data-i18n="appt_kicker">Servizio Clienti & Trade B2B</div>
                     <h2 data-i18n="appt_heading">Incontra il mondo Blooming</h2>
                     <p data-i18n="appt_desc">
@@ -3831,9 +3843,9 @@
                         <button class="dedar-explore-all-link" style="padding:14px 20px;" onclick="switchPage('contatti')">Contatta i nostri uffici</button>
                     </div>
                 </div>
-                <div class="teaser-right-box">
+                <div class="teaser-right-box" data-aos="fade-up" data-aos-delay="150">
                     <h4>Vantaggi per Architetti & Designer</h4>
-                    <ul>
+                    <ul data-aos="fade">
                         <li><strong>Agente in Studio:</strong> Presentazione campionari direttamente presso la tua sede.</li>
                         <li><strong>Invio Tirelle Rapido:</strong> Spedizione celere di campioni per moodboard di progetto.</li>
                         <li><strong>Consulenza Tecnica:</strong> Assistenza specializzata su capitolati contract e certificazioni FR.</li>
@@ -3849,7 +3861,7 @@
              PAGINA 2: PRODOTTI (LAYOUT FISCHBACHER 1819)
              ========================================================= -->
         <div class="page-view" id="view-prodotti">
-            <div class="fischbacher-top-tabs">
+            <div class="fischbacher-top-tabs" data-aos="fade-up">
                 <button class="fisch-tab" data-topcat="Tende" onclick="selectTopMacroTab('Tende')">1. TENDE</button>
                 <button class="fisch-tab" data-topcat="Tessuti" onclick="selectTopMacroTab('Tessuti')" data-i18n="tab_imbottiti">2. TESSUTI</button>
                 <button class="fisch-tab" data-topcat="COMPLEMENTI_LINK" onclick="switchPage('complementi')">3. COMPLEMENTI</button>
@@ -3858,7 +3870,7 @@
 
             <div class="fischbacher-container">
                 <!-- SIDEBAR FILTRI -->
-                <aside class="fisch-sidebar">
+                <aside class="fisch-sidebar" data-aos="fade">
                     <div class="fisch-sidebar-head">
                         <span data-i18n="filter_heading">FILTRO PRODOTTI</span>
                         <button class="fisch-reset-btn" onclick="resetAllFischFilters()" data-i18n="filter_reset">Reset</button>
@@ -3943,7 +3955,7 @@
 
                 <!-- CATALOGO PRINCIPALE -->
                 <section>
-                    <div class="fisch-Utility-bar">
+                    <div class="fisch-Utility-bar" data-aos="fade-up">
                         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                             <span id="fisch-count-label" style="font-weight: 500;">Caricamento tessuti...</span>
                             <div class="blooming-col-pills" id="blooming-col-pills">
@@ -3980,17 +3992,17 @@
              PAGINA 3: COMPLEMENTI D'ARREDO (SCHEDE COMPLETE)
              ========================================================= -->
         <div class="page-view" id="view-complementi">
-            <div class="page-lead-header">
+            <div class="page-lead-header" data-aos="fade-up">
                 <div>
                     <div class="lead-kicker">Manifattura d'Eccellenza</div>
-                    <h1 data-i18n="comp_page_h">Complementi d'Arredo</h1>
+                    <h1 data-i18n="comp_page_h" data-aos="fade-up">Complementi d'Arredo</h1>
                 </div>
                 <p data-i18n="comp_page_p">
                     Panchine, poltrone e pouf realizzati artigianalmente in Italia e personalizzabili con tutti i tessuti della collezione Blooming.
                 </p>
             </div>
 
-            <div style="max-width: 1360px; margin: 0 auto 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <div style="max-width: 1360px; margin: 0 auto 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;" data-aos="fade-up">
                 <div style="font-size: 13px; color: var(--text-muted);" id="complements-counter-label"><strong style="color:var(--accent);">4</strong> modelli disponibili</div>
                 <div class="fisch-search-bar" style="max-width: 360px; width: 100%;">
                     <input type="text" id="comp-q-input" class="clean-input" style="padding: 6px 0; font-size: 13px;" placeholder="Cerca tra i complementi (es. panchina, poltrona)..." autocomplete="off">
@@ -4009,19 +4021,19 @@
             <!-- 1. EQUORA HERO INTRO & LOGO PULITO (SENZA BOX/QUADRATINO, SU SFONDO NEUTRO E CALDO) -->
             <section class="equora-hero-banner" style="background: var(--bg-soft, #F9F8F5); border-bottom: 1px solid var(--line); padding: 54px 30px 44px; text-align: center;">
                 <div style="max-width: 860px; margin: 0 auto;">
-                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;" data-aos="fade-up">
                         <img src="equora_logo_green.webp" alt="EQUORA — Tessuti in Equilibrio" width="255" height="68" loading="lazy" decoding="async" style="height: 68px; width: auto; object-fit: contain; display: block; margin: 0 auto;">
                     </div>
-                    <div style="display: inline-block; padding: 4px 14px; background: #EBF2EC; color: #38593F; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; border-radius: 20px; margin-bottom: 16px; font-family: 'Jost', sans-serif;">
+                    <div style="display: inline-block; padding: 4px 14px; background: #EBF2EC; color: #38593F; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; border-radius: 20px; margin-bottom: 16px; font-family: 'Jost', sans-serif;" data-aos="fade-up">
                         EQUORA — TESSUTI IN EQUILIBRIO
                     </div>
-                    <h1 style="font-family: 'Cinzel', serif; font-size: clamp(26px, 3.2vw, 34px); font-weight: 400; color: #2C3E33; margin: 0 0 16px; letter-spacing: 0.03em; line-height: 1.35;">
+                    <h1 style="font-family: 'Cinzel', serif; font-size: clamp(26px, 3.2vw, 34px); font-weight: 400; color: #2C3E33; margin: 0 0 16px; letter-spacing: 0.03em; line-height: 1.35;" data-aos="fade-up">
                         Una scelta consapevole, giusta, equilibrata.
                     </h1>
-                    <p style="font-family: 'Jost', sans-serif; font-size: 15.5px; line-height: 1.75; color: #4E5D54; max-width: 820px; margin: 0 auto;">
+                    <p style="font-family: 'Jost', sans-serif; font-size: 15.5px; line-height: 1.75; color: #4E5D54; max-width: 820px; margin: 0 auto;" data-aos="fade-up" data-aos-delay="100">
                         <strong>EQUORA</strong> nasce dalla precisa esigenza di proporre un tessuto concreto, quotidiano e accessibile, realizzato con la medesima cura e dedizione che contraddistinguono la nostra manifattura. Mentre <strong>BLOOMING</strong> esprime la massima visione creativa su filati nobili, grandi altezze e nobilitazioni tessili d'alta gamma, <strong>EQUORA</strong> ne costituisce la solida radice: una collezione pensata per l'abitare di ogni giorno, in perfetto equilibrio tra estetica e funzione, prezzo e valore, bellezza e sincerità.
                     </p>
-                    <div style="margin-top: 30px; display: flex; justify-content: center;">
+                    <div style="margin-top: 30px; display: flex; justify-content: center;" data-aos="fade-up" data-aos-delay="200">
                         <button type="button" class="btn-equora-cta" onclick="document.getElementById('equora-catalog-start').scrollIntoView({behavior:'smooth'})">
                             VAI AL CATALOGO EQUORA
                         </button>
@@ -4031,14 +4043,14 @@
 
             <!-- 2. LA GRANDE FOTO D'IMPATTO (INALTERATA) -->
             <section style="max-width: 1440px; margin: 0 auto; padding: 32px 30px 0;">
-                <div style="width: 100%; height: 440px; max-height: 55vh; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: #EEF2EE;">
+                <div style="width: 100%; height: 440px; max-height: 55vh; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); background: #EEF2EE;" data-aos="fade-in" data-aos-duration="1200">
                     <img src="garden_pavilion_hero.webp" alt="Ambientazione Equora Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
                 </div>
             </section>
 
             <!-- 3. DUE SCATOLE DI DIVISIONE: BLOOMING vs EQUORA -->
             <section class="equora-dual-section reveal-on-scroll" style="padding-top: 40px; padding-bottom: 30px;">
-                <div style="text-align: center; margin-bottom: 28px;">
+                <div style="text-align: center; margin-bottom: 28px;" data-aos="fade-up">
                     <div style="font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #4F7055; font-weight: 600; margin-bottom: 6px;">Due Visioni Complementari</div>
                     <h2 style="font-family: 'Cinzel', serif; font-size: 26px; font-weight: 400; color: #27382E; margin: 0 0 8px;">Due marchi, due anime del nostro fare prodotto</h2>
                     <p style="font-family: 'Jost', sans-serif; font-size: 14px; color: var(--text-muted); max-width: 650px; margin: 0 auto;">
@@ -4048,7 +4060,7 @@
 
                 <div class="equora-dual-grid">
                     <!-- SCATOLA 1: BLOOMING (Accenti Terracotta #D96B27) -->
-                    <div class="equora-brand-card blooming-side">
+                    <div class="equora-brand-card blooming-side" data-aos="fade-up">
                         <div class="eq-brand-card-header">
                             <img src="blooming_logo.webp" alt="BLOOMING" width="142" height="24" loading="lazy" decoding="async" class="eq-brand-logo-real eq-blooming-logo">
                         </div>
@@ -4056,7 +4068,7 @@
                         <p class="eq-card-p">
                             La punta avanzata della ricerca tessile per progetti esclusivi, residenziale di pregio e contract di lusso. Grandi altezze fino a 330 cm per tendaggi senza giunte, lini purissimi, lane materiche, rasi e finissaggi scultorei ad alto valore aggiunto.
                         </p>
-                        <ul class="eq-card-points" style="margin-bottom: 24px;">
+                        <ul class="eq-card-points" data-aos="fade" style="margin-bottom: 24px;">
                             <li style="--bullet-color:#D96B27;"><strong>Fibre Nobili:</strong> Lino 100%, cotoni pettinati, lana d'alta gamma</li>
                             <li style="--bullet-color:#D96B27;"><strong>Altezza:</strong> Fino a 330 cm per tendaggi continui senza giunte</li>
                             <li style="--bullet-color:#D96B27;"><strong>Target:</strong> Architetti, interior designer e arredo di pregio</li>
@@ -4065,7 +4077,7 @@
                     </div>
 
                     <!-- SCATOLA 2: EQUORA (Toni Verdi #7B9E7E) -->
-                    <div class="equora-brand-card equora-side">
+                    <div class="equora-brand-card equora-side" data-aos="fade-up" data-aos-delay="150">
                         <div class="eq-brand-card-header">
                             <img src="equora_logo_green.webp" alt="ÉQUORA" width="124" height="33" loading="lazy" decoding="async" class="eq-brand-logo-real eq-equora-logo">
                         </div>
@@ -4073,7 +4085,7 @@
                         <p class="eq-card-p">
                             Una proposta tessile concreta e pronta per l’abitare quotidiano. Realizzata con la stessa dedizione e precisione tecnica, offrendo una scelta trasparente tra estetica e funzione, prezzo accessibile e durata nel tempo.
                         </p>
-                        <ul class="eq-card-points" style="margin-bottom: 24px;">
+                        <ul class="eq-card-points" data-aos="fade" style="margin-bottom: 24px;">
                             <li style="--bullet-color:#7B9E7E;"><strong>Valori Chiave:</strong> Equilibrio, onestà, calma e misura</li>
                             <li style="--bullet-color:#7B9E7E;"><strong>Prestazioni:</strong> Elevata resistenza all'usura e manutenzione pratica</li>
                             <li style="--bullet-color:#7B9E7E;"><strong>Collezione:</strong> 21 tessuti coordinati (Autunno ed Evergreen)</li>
@@ -4085,7 +4097,7 @@
 
             <!-- 4. SUBITO SOTTO: CATALOGO TESSUTI EQUORA -->
             <section class="equora-catalog-wrap" id="equora-catalog-start" style="padding-top: 20px;">
-                <div class="equora-catalog-controls">
+                <div class="equora-catalog-controls" data-aos="fade-up">
                     <div>
                         <div style="font-size: 11px; letter-spacing: 0.15em; color: #4F6D5E; text-transform: uppercase; font-weight: 600;">Collezione Attiva</div>
                         <h2 style="font-family:'Cinzel',serif; font-size: 26px; color: #2D463A; margin: 4px 0;">Catalogo Tessuti EQUORA</h2>
@@ -4117,39 +4129,39 @@
              4. PAGINA 4: L'AZIENDA — VALORIZZAZIONE MADE IN ITALY & CASTELFRANCO VENETO
              ========================================================= -->
         <div class="page-view" id="view-azienda">
-            <div class="page-lead-header">
+            <div class="page-lead-header" data-aos="fade-up">
                 <div>
                     <div class="lead-kicker">Manifattura Italiana — Dal 2004</div>
-                    <h1 data-i18n="az_page_h">L'Azienda</h1>
+                    <h1 data-i18n="az_page_h" data-aos="fade-up">L'Azienda</h1>
                 </div>
                 <p>E.L.F. srl BLOOMING — Tessuti d'Arredamento e Manifattura d'Interni</p>
             </div>
 
             <div class="company-section-wrap reveal-on-scroll" id="company-main-section">
                 <div class="company-text-block">
-                    <h2 class="company-reveal-item" data-i18n="az_sub_h">Lo stile, il gusto e l'eccellenza tessile italiana</h2>
+                    <h2 class="company-reveal-item" data-i18n="az_sub_h" data-aos="fade-up">Lo stile, il gusto e l'eccellenza tessile italiana</h2>
                     
                     <!-- Lead Paragraph Editoriale: Font preservato, dimensioni e line-height ampliati per respiro visivo -->
-                    <p class="company-lead-p company-reveal-item">
+                    <p class="company-lead-p company-reveal-item" data-aos="fade-up">
                         Fondata nel 2004 nel cuore operoso della tradizione tessile veneta, <strong>BLOOMING</strong> nasce dalla passione di esprimere il più autentico <strong>Made in Italy</strong> attraverso manufatti d'eccezione. Creiamo collezioni originali nel segno della rigorosa <strong>tecnica artigianale</strong> e dell'armonia estetica, profondamente ispirate dalla ricca tradizione manifatturiera italiana.
                     </p>
                     
-                    <p class="company-body-p company-reveal-item">
+                    <p class="company-body-p company-reveal-item" data-aos="fade-up">
                         Ogni tessuto è il risultato di un'accurata <strong>ricerca del filato</strong>, unita alle tecniche più moderne di <strong>tessitura, nobilitazione e finissaggio</strong>. Il pilastro centrale e l'essenza stessa dell'identità <strong>BLOOMING</strong> risiede nella selezione rigorosa delle <strong>fibre naturali più nobili</strong>: il <strong>lino purissimo</strong>, per la sua caduta fluida, texture viva e traspirabilità naturale ideale nei tendaggi in grande altezza; il <strong>cotone pettinato</strong> a fibra lunga, sinonimo di mano vellutata e tenuta cromatica impeccabile; la <strong>viscosa nobilitata</strong> di origine vegetale, che dona riflessi caldi e una cadenza scultorea; e la <strong>lana pregiata</strong>, ricercata per la sua impareggiabile profondità materica, calore tattile e naturale resilienza elastica. Queste materie prime d'eccellenza rappresentano per noi un denominatore comune irrinunciabile: il fondamento per una personale ricerca della bellezza tessile destinata a durare nel tempo.
                     </p>
                     
-                    <p class="company-body-p company-reveal-item">
+                    <p class="company-body-p company-reveal-item" data-aos="fade-up">
                         Dalla selezione delle materie prime al controllo meticoloso di ogni pezza, la nostra <strong>eccellenza manifatturiera</strong> si concretizza in standard qualitativi di altissimo profilo: grande altezza fino a 330 cm per tendaggi senza giunte, resistenze all'abrasione per imbottiti importanti e certificazioni ignifughe internazionali (FR) per il contract. Una <strong>cura del dettaglio</strong> al servizio di architetti, arredatori e professionisti dell'interior design.
                     </p>
 
-                    <div class="company-actions-row company-reveal-item" style="margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap;">
+                    <div class="company-actions-row company-reveal-item" data-aos="fade-up" style="margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap;">
                         <button class="btn-accent" onclick="switchPage('appuntamento')">Richiedi la visita di un funzionario in studio →</button>
                         <button class="dedar-explore-all-link" style="padding: 12px 16px;" onclick="switchPage('prodotti')">Esplora la collezione tessuti</button>
                     </div>
                 </div>
 
                 <!-- Composizione Overlapping Masonry con Parallasse e Hover Zoom -->
-                <div class="company-photo-composition company-reveal-item">
+                <div class="company-photo-composition company-reveal-item" data-aos="fade-up">
                     <!-- Foto 1: Primaria Verticale (Manifattura Tessile Blooming) -->
                     <div class="company-img-frame company-img-primary">
                         <img src="Ambientazione_01_B.webp" alt="Manifattura Tessile Blooming" width="1289" height="1600" loading="lazy" decoding="async">
@@ -4166,10 +4178,10 @@
              PAGINA 5: APPUNTAMENTO DEDICATA
              ========================================================= -->
         <div class="page-view" id="view-appuntamento">
-            <div class="page-lead-header">
+            <div class="page-lead-header" data-aos="fade-up">
                 <div>
                     <div class="lead-kicker">Rete Commerciale & Consulenza su Misura</div>
-                    <h1>Richiedi la Visita di un Funzionario</h1>
+                    <h1 data-aos="fade-up">Richiedi la Visita di un Funzionario</h1>
                 </div>
                 <p>
                     Vivi l'eccellenza tessile Blooming: richiedi la visita di un nostro funzionario commerciale direttamente presso il tuo studio o azienda per toccare con mano le consistenze, i pesi e le armature delle nostre collezioni.
@@ -4177,11 +4189,11 @@
             </div>
 
             <div class="appt-page-wrap reveal-on-scroll">
-                <div class="appt-page-left">
+                <div class="appt-page-left" data-aos="fade-up">
                     <div class="appt-box-card">
                         <h3>Il Servizio di Visita in Studio</h3>
                         <p>Un nostro funzionario commerciale vi incontrerà direttamente nel vostro studio o azienda con l'intero archivio campionario Blooming ed Equora Collection. Avrete la possibilità di valutare tessuti, armature, finiture e complementi d'arredo direttamente sul moodboard e sui progetti in corso d'opera.</p>
-                        <ul class="appt-benefits-list">
+                        <ul class="appt-benefits-list" data-aos="fade">
                             <li><strong>Consulenza Dedicata:</strong> Supporto specialistico per progetti residenziali, hotellerie e contract.</li>
                             <li><strong>Tirelle & Campionari:</strong> Selezione immediata di mazzette colore e tirelle per i tuoi moodboard.</li>
                             <li><strong>Personalizzazione Complementi:</strong> Studio su misura di accostamenti per poltrone, panchine e pouf.</li>
@@ -4200,7 +4212,7 @@
                     </div>
                 </div>
 
-                <div class="appt-page-right">
+                <div class="appt-page-right" data-aos="fade-up" data-aos-delay="150">
                     <div class="form-container-card">
                         <div class="form-card-title">Modulo Richiesta Visita Commerciale</div>
                         <p class="form-card-sub">Compila i campi per concordare la visita di un nostro funzionario commerciale presso il tuo studio o negozio. La richiesta verrà inoltrata direttamente a <strong>info@bloomingfabrics.it</strong>.</p>
@@ -4272,10 +4284,10 @@
              PAGINA 6: CONTATTI DEDICATA
              ========================================================= -->
         <div class="page-view" id="view-contatti">
-            <div class="page-lead-header">
+            <div class="page-lead-header" data-aos="fade-up">
                 <div>
                     <div class="lead-kicker">Sede & Riferimenti Ufficiali</div>
-                    <h1>Contatti</h1>
+                    <h1 data-aos="fade-up">Contatti</h1>
                 </div>
                 <p>
                     Siamo a completa disposizione di professionisti del settore e clienti per informazioni sui prodotti, disponibilità a magazzino, campionature e collaborazioni commerciali.
@@ -4285,7 +4297,7 @@
             <div class="contacts-page-wrap reveal-on-scroll">
                 <!-- 3 Carte Informative -->
                 <div class="contacts-cards-row">
-                    <div class="contact-card">
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="0">
                         <div class="card-kicker">Sede Legale & Uffici Direzionali</div>
                         <h3>E.L.F. srl BLOOMING</h3>
                         <p>
@@ -4296,7 +4308,7 @@
                         <div class="card-note">A pochi minuti dal centro storico di Castelfranco Veneto</div>
                     </div>
 
-                    <div class="contact-card">
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="card-kicker">Ufficio Commerciale & B2B</div>
                         <h3>Ordini & Campionari</h3>
                         <p>
@@ -4307,7 +4319,7 @@
                         <div class="card-note">Richiesta listini, tirelle e visite commerciali</div>
                     </div>
 
-                    <div class="contact-card">
+                    <div class="contact-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="card-kicker">Orari & Assistenza</div>
                         <h3>Uffici & Ricevimento</h3>
                         <p>
@@ -4320,7 +4332,7 @@
                 </div>
 
                 <!-- Griglia Modulo Contatti + Posizione e Come Raggiungerci -->
-                <div class="contacts-main-grid">
+                <div class="contacts-main-grid" data-aos="fade-up">
                     <div class="form-container-card">
                         <div class="form-card-title">Invia un Messaggio Diretto</div>
                         <p class="form-card-sub">Compila il form per richieste generiche, consulenze d'arredo o collaborazioni contract.</p>
@@ -4942,6 +4954,11 @@
 
             // Setup Cookie Banner
             setupCookieBanner();
+
+            // Refresh globale animazioni AOS dopo rendering iniziale
+            if (typeof AOS !== 'undefined') {
+                setTimeout(() => { AOS.refresh(); }, 250);
+            }
         });
 
         /* HERO SLIDER 3 SLIDE */
@@ -5032,7 +5049,10 @@
             });
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(checkScrollReveal, 100);
+            setTimeout(() => {
+                checkScrollReveal();
+                if (typeof AOS !== 'undefined') AOS.refresh();
+            }, 100);
 
             // GA4 Page View Tracking (rispetta il consenso GDPR)
             trackEvent('page_view', {
@@ -5484,11 +5504,12 @@
                     return;
                 }
 
-                grid.innerHTML = slice.map(item => {
+                grid.innerHTML = slice.map((item, idx) => {
                     if (item.brand !== 'blooming') return '';
                     const hasImg = item.img && item.img.trim() !== '';
                     const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
                     const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
+                    const delay = (idx % 4) * 100;
 
                     const imgMarkup = hasImg
                         ? `<img src="${item.img}" id="card-img-${item.code}" alt="${item.name}" width="400" height="400" loading="lazy" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
@@ -5516,7 +5537,7 @@
                     }
 
                     return `
-                        <div class="fisch-card" id="card-${item.code}" data-brand="blooming" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
+                        <div class="fisch-card" id="card-${item.code}" data-brand="blooming" data-aos="fade-up" data-aos-delay="${delay}" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
                             <div class="fisch-thumb-rect">
                                 ${imgMarkup}
                             </div>
@@ -5527,6 +5548,10 @@
                         </div>
                     `;
                 }).join('');
+
+                if (typeof AOS !== 'undefined') {
+                    setTimeout(() => { AOS.refresh(); }, 50);
+                }
             }
         }
 
@@ -5584,8 +5609,10 @@
                 return;
             }
 
-            box.innerHTML = list.map(c => `
-                <div class="comp-full-card">
+            box.innerHTML = list.map((c, idx) => {
+                const delay = (idx % 2) * 120;
+                return `
+                <div class="comp-full-card" data-aos="fade-up" data-aos-delay="${delay}">
                     <div class="comp-full-img">
                         <img src="${c.img}" alt="${c.name}" width="600" height="480" loading="lazy" decoding="async">
                     </div>
@@ -5597,7 +5624,11 @@
                         ${c.specs.map(s => `<div><strong>${s[0]}:</strong> ${s[1]}</div>`).join('')}
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
+            if (typeof AOS !== 'undefined') {
+                setTimeout(() => { AOS.refresh(); }, 50);
+            }
         }
 
         /* DRAWER SCHEDA TECNICA CON LENTE ZOOM MATERICA & SELETTORE VARIANTI */
@@ -6072,8 +6103,9 @@
                 return;
             }
 
-            container.innerHTML = items.map(it => {
+            container.innerHTML = items.map((it, idx) => {
                 if (it.brand !== 'equora') return '';
+                const delay = (idx % 3) * 100;
                 const variants = it.variants || [];
                 const firstVar = variants[0] || {};
                 const heroImg = it.img || firstVar.img || 'cat_imbottiti.webp';
@@ -6087,9 +6119,9 @@
                 if (visibleVars.length > 0) {
                     swatchesHtml = `
                         <div class="eq-swatches-strip" onclick="event.stopPropagation()">
-                            ${visibleVars.map((v, idx) => `
+                            ${visibleVars.map((v, sIdx) => `
                                 <button type="button" 
-                                        class="eq-swatch-dot ${idx === 0 ? 'active' : ''}" 
+                                        class="eq-swatch-dot ${sIdx === 0 ? 'active' : ''}" 
                                         data-var="${v.code || ''}" 
                                         title="${v.name || ('Col. ' + v.code)}" 
                                         style="background-image: url('${v.img || heroImg}')"
@@ -6102,7 +6134,7 @@
                 }
 
                 return `
-                    <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
+                    <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" data-aos="fade-up" data-aos-delay="${delay}" onclick="openItemDrawer('${it.code}', null, 'equora')">
                         <div class="eq-card-media">
                             <img src="${heroImg}" alt="${it.name}" class="eq-card-img" width="400" height="400" loading="lazy" decoding="async" onerror="this.src='cat_imbottiti.webp'">
                             <div class="eq-card-hover-overlay">
@@ -6129,6 +6161,9 @@
                     </div>
                 `;
             }).join('');
+            if (typeof AOS !== 'undefined') {
+                setTimeout(() => { AOS.refresh(); }, 50);
+            }
         }
 
         /* BACK TO TOP */
@@ -6243,6 +6278,17 @@
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             setupSearchListeners();
         }
+    </script>
+
+    <!-- AOS (Animate On Scroll) JS & Setup Globale -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800, 
+            easing: 'ease-out-cubic', 
+            once: true, // L'animazione avviene solo la prima volta che si fa scroll
+            offset: 50
+        });
     </script>
 </body>
 </html>
