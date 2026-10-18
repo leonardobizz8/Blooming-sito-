@@ -8,3 +8,19 @@
     transform: translateY(0%) !important;
     opacity: 1 !important;
 }
+
+/* --- High Performance Product Grid Scroll Optimization --- */
+.fisch-product-grid,
+.equora-catalog-grid {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+.fisch-card,
+.equora-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 320px;
+}
+.fisch-card:hover .fisch-thumb-rect img,
+.equora-card:hover .eq-card-media img {
+    will-change: transform;
+}

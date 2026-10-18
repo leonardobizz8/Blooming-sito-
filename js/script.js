@@ -267,7 +267,7 @@
 
             try {
                 lenisInstance = new Lenis({
-                    lerp: 0.07,
+                    lerp: 0.095,
                     smoothWheel: true,
                     wheelMultiplier: 1,
                     smoothTouch: false
@@ -281,12 +281,7 @@
                 }
                 requestAnimationFrame(raf);
 
-                lenisInstance.on('scroll', () => {
-                    if (typeof AOS !== 'undefined') {
-                        AOS.refresh();
-                    }
-                });
-            } catch(e) {
+                } catch(e) {
                 console.warn('Inizializzazione Lenis fallback:', e);
             }
         }
@@ -1001,7 +996,7 @@
                     }
 
                     return `
-                        <div class="fisch-card" id="card-${item.code}" data-brand="blooming" data-aos="fade-up" data-aos-delay="${delay}" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
+                        <div class="fisch-card" id="card-${item.code}" data-brand="blooming"  data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
                             <div class="fisch-thumb-rect">
                                 ${imgMarkup}
                             </div>
@@ -1013,9 +1008,7 @@
                     `;
                 }).join('');
 
-                if (typeof AOS !== 'undefined') {
-                    setTimeout(() => { AOS.refresh(); }, 50);
-                }
+                
             }
         }
 
@@ -1076,7 +1069,7 @@
             box.innerHTML = list.map((c, idx) => {
                 const delay = (idx % 2) * 120;
                 return `
-                <div class="comp-full-card" data-aos="fade-up" data-aos-delay="${delay}">
+                <div class="comp-full-card" >
                     <div class="comp-full-img">
                         <img src="${c.img}" alt="Complemento d'arredo Blooming ${c.name}" width="600" height="480" loading="lazy" decoding="async">
                     </div>
@@ -1090,9 +1083,7 @@
                 </div>
             `;
             }).join('');
-            if (typeof AOS !== 'undefined') {
-                setTimeout(() => { AOS.refresh(); }, 50);
-            }
+            
         }
 
         /* DRAWER SCHEDA TECNICA CON LENTE ZOOM MATERICA & SELETTORE VARIANTI */
@@ -1629,7 +1620,7 @@
                 }
 
                 return `
-                    <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" data-aos="fade-up" data-aos-delay="${delay}" onclick="openItemDrawer('${it.code}', null, 'equora')">
+                    <div class="equora-card" id="eq-card-${it.code}" data-brand="equora"  onclick="openItemDrawer('${it.code}', null, 'equora')">
                         <div class="eq-card-media">
                             <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
                             <div class="eq-card-hover-overlay">
@@ -1656,9 +1647,7 @@
                     </div>
                 `;
             }).join('');
-            if (typeof AOS !== 'undefined') {
-                setTimeout(() => { AOS.refresh(); }, 50);
-            }
+            
         }
 
         /* BACK TO TOP */
