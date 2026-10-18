@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Home Page -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <!-- Catalogo Prodotti e Tessuti -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/#prodotti</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <!-- Marchio e Collezione EQUORA -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/#equora</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <!-- Complementi d'Arredo -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/#complementi</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <!-- L'Azienda & Made in Italy -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/#azienda</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <!-- Incontra un Funzionario Commerciale -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/#appuntamento</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <!-- Contatti & Sede Castelfranco Veneto -->
+    <url>
+        <loc>https://leonardobizz8.github.io/Blooming-sito-/#contatti</loc>
+        <lastmod>2026-10-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+</urlset>

@@ -843,7 +843,7 @@
                     const isFirst = idx === 0;
 
                     const imgMarkup = hasImg
-                        ? `<img src="${item.img}" id="card-img-${item.code}" alt="${item.name}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
+                        ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
                         : `<div class="fisch-woven-fallback" id="card-img-${item.code}">BLOOMING ${item.code}</div>`;
 
                     const variantsList = item.variants || [];
@@ -945,7 +945,7 @@
                 return `
                 <div class="comp-full-card" data-aos="fade-up" data-aos-delay="${delay}">
                     <div class="comp-full-img">
-                        <img src="${c.img}" alt="${c.name}" width="600" height="480" loading="lazy" decoding="async">
+                        <img src="${c.img}" alt="Complemento d'arredo Blooming ${c.name}" width="600" height="480" loading="lazy" decoding="async">
                     </div>
                     <div class="comp-full-top">
                         <h2>${c.name}</h2>
@@ -985,7 +985,7 @@
 
             const imgHtml = mainImg
                 ? `<div class="drawer-sample-container" id="drawer-zoom-container">
-                       <img src="${mainImg}" id="drawer-main-preview" class="drawer-sample-img" alt="${item.name}" width="600" height="600" loading="lazy" decoding="async">
+                       <img src="${mainImg}" id="drawer-main-preview" class="drawer-sample-img" alt="Dettaglio texture tessuto ${item.name} Art. ${item.code}" width="600" height="600" loading="lazy" decoding="async">
                    </div>`
                 : `<div class="fisch-woven-fallback drawer-sample-img">Art. ${item.code}</div>`;
 
@@ -1123,6 +1123,13 @@
         function handleDedicatedAppointmentSubmit(e) {
             e.preventDefault();
             const form = e.target;
+
+            // Protezione Anti-Spam: Campo Honeypot invisibile
+            if (form._gotcha_honey && form._gotcha_honey.value.trim() !== '') {
+                console.warn('Spam rilevato via honeypot.');
+                return;
+            }
+
             const fullname = form.fullname.value.trim();
             const company = (form.company ? form.company.value.trim() : '') || '-';
             const email = form.email.value.trim();
@@ -1135,6 +1142,14 @@
 
             if (!fullname || !email || !phone) {
                 alert('Compila tutti i campi obbligatori contrassegnati con *');
+                return;
+            }
+
+            // Validazione rigorosa formato email
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('Inserisci un indirizzo email valido (es. nome@dominio.it)');
+                if (form.email) form.email.focus();
                 return;
             }
 
@@ -1191,6 +1206,13 @@
         function handleDirectContactSubmit(e) {
             e.preventDefault();
             const form = e.target;
+
+            // Protezione Anti-Spam: Campo Honeypot invisibile
+            if (form._gotcha_honey && form._gotcha_honey.value.trim() !== '') {
+                console.warn('Spam rilevato via honeypot.');
+                return;
+            }
+
             const fullname = form.fullname.value.trim();
             const email = form.email.value.trim();
             const phone = (form.phone ? form.phone.value.trim() : '') || '-';
@@ -1199,6 +1221,14 @@
 
             if (!fullname || !email || !msg) {
                 alert('Compila tutti i campi obbligatori contrassegnati con *');
+                return;
+            }
+
+            // Validazione rigorosa formato email
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert('Inserisci un indirizzo email valido (es. nome@dominio.it)');
+                if (form.email) form.email.focus();
                 return;
             }
 
@@ -1468,7 +1498,7 @@
                 return `
                     <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" data-aos="fade-up" data-aos-delay="${delay}" onclick="openItemDrawer('${it.code}', null, 'equora')">
                         <div class="eq-card-media">
-                            <img src="${heroImg}" alt="${it.name}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
+                            <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
                             <div class="eq-card-hover-overlay">
                                 <span>Richiedi Scheda & Tirelle →</span>
                             </div>

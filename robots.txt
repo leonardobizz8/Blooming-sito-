@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap ufficiale del sito web
+Sitemap: https://leonardobizz8.github.io/Blooming-sito-/sitemap.xml
