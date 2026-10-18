@@ -1530,13 +1530,16 @@
 
         .fisch-product-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 32px 24px;
+            align-items: start;
             margin-bottom: 48px;
         }
 
         .fisch-card {
             cursor: pointer;
+            min-width: 0;
+            width: 100%;
         }
 
         .fisch-thumb-rect {
@@ -1546,14 +1549,18 @@
             overflow: hidden;
             margin-bottom: 12px;
             position: relative;
+            display: block;
             border: 1px solid var(--line);
             border-radius: 4px;
         }
 
         .fisch-thumb-rect img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            position: absolute;
+            top: 0;
+            left: 0;
             display: block;
             transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -1563,8 +1570,11 @@
         }
 
         .fisch-woven-fallback {
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute;
+            top: 0;
+            left: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -3442,8 +3452,9 @@
         /* Griglia Articoli Equora */
         .equora-cards-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 28px;
+            align-items: start;
         }
         .equora-card {
             background: #FFFFFF;
@@ -3453,6 +3464,8 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
+            min-width: 0;
+            width: 100%;
             transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
         .equora-card:hover {
@@ -3465,12 +3478,17 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             overflow: hidden;
+            display: block;
             background: #f3f3f3;
         }
         .eq-card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
             transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .equora-card:hover .eq-card-img {
@@ -3797,50 +3815,65 @@
    PERFORMANCE & RENDERING ARCHITECTURE (PRODUCT GRIDS)
    ========================================================= */
 
-/* 1. Hardware Accelerated Grid Containers */
-.fisch-product-grid,
-.equora-cards-grid,
-.equora-catalog-grid,
-.complements-page-grid {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-/* 2. Strict Zero-CLS Container Aspect Ratios & #f3f3f3 Elegant Placeholder */
+/* 1. BLOCCO DEL CONTENITORE IMMAGINE (Aspect Ratio) */
 .fisch-thumb-rect,
-.eq-card-media {
-    width: 100%;
-    aspect-ratio: 1 / 1 !important;
-    background-color: #f3f3f3 !important;
-    overflow: hidden !important;
-    position: relative;
-    display: block;
-}
-
-.fisch-thumb-rect img,
-.eq-card-media img,
-.eq-card-img {
+.eq-card-media,
+.product-image-wrapper {
     width: 100% !important;
-    height: 100% !important;
     aspect-ratio: 1 / 1 !important;
-    object-fit: cover !important;
+    overflow: hidden !important;
+    position: relative !important;
     display: block !important;
     background-color: #f3f3f3 !important;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 2. BLOCCO DELL'IMMAGINE O PLACEHOLDER (Lock Assoluto) */
+.fisch-thumb-rect img,
+.eq-card-media img,
+.eq-card-img,
+.product-image-wrapper img,
+.fisch-woven-fallback,
+.product-image-wrapper div {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    background-color: #f3f3f3 !important;
 }
 
 .fisch-woven-fallback {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1 !important;
-    background-color: #f3f3f3 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
 }
 
-/* 3. GPU-Accelerated Hover Interactions Only */
+/* 3. BLOCCO DELLA GRIGLIA PADRE */
+.fisch-product-grid,
+.equora-cards-grid,
+.equora-catalog-grid,
+.products-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    align-items: start !important;
+    gap: 32px 24px !important;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.fisch-card,
+.equora-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    overflow: hidden;
+}
+
+/* 4. GPU-Accelerated Micro-Interactions Only */
 .fisch-card:hover .fisch-thumb-rect img,
 .equora-card:hover .eq-card-media img,
 .equora-card:hover .eq-card-img {

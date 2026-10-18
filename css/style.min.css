@@ -1,4 +1,4 @@
-        
+        /* Regola di supporto luxury per fade-in ad opacità pura */
         [data-aos="fade-in"] {
             opacity: 0;
             transition-property: opacity;
@@ -15,7 +15,7 @@
             --text: #141414;
             --text-muted: #5C5A55;
             --line: #E2DFD7;
-            
+            /* Accento Terracotta Caldo & Distintivo */
             --accent: #D96B27;
             --accent-hover: #BF5A1B;
             --accent-soft: rgba(217, 107, 39, 0.08);
@@ -51,7 +51,7 @@
             flex-direction: column;
             overflow-x: hidden;
             overflow-y: visible;
-            padding-top: 96px; 
+            padding-top: 96px; /* Spazio per header fisso a scomparsa */
         }
 
         a, button, input, select, textarea {
@@ -166,7 +166,7 @@
             gap: 20px;
         }
 
-        
+        /* LOGO BLOOMING DEDICATO E FISSO (ZERO SOVRAPPOSIZIONI) */
         .header-logo-box {
             flex: 0 0 auto;
             display: flex;
@@ -206,7 +206,7 @@
             background: none;
             border: none;
             font-size: 11.5px;
-            font-weight: 500; 
+            font-weight: 500; /* Peso tipografico deciso */
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-muted);
@@ -226,7 +226,7 @@
             font-weight: 600;
         }
 
-        
+        /* Sottolineatura fluida della navigazione (Header) */
         .nav-btn::after {
             content: '';
             display: block;
@@ -319,7 +319,7 @@
             text-underline-offset: 4px;
         }
 
-        
+        /* Hamburger per mobile e tablet */
         .mobile-hamburger-btn {
             display: none;
             background: none;
@@ -344,7 +344,7 @@
             transform-origin: center;
         }
 
-        
+        /* Animazione Hamburger in 'X' attiva */
         .mobile-hamburger-btn.active .hamburger-bar:nth-child(1) {
             transform: translateY(7.5px) rotate(45deg);
             background: var(--accent);
@@ -611,7 +611,7 @@
             object-position: center center;
         }
 
-        
+        /* Copertura 100% full-width simmetrica e calibrata: nessuna metà tagliata */
         .hero-slide-overlay {
             position: absolute;
             inset: 0;
@@ -635,13 +635,13 @@
             letter-spacing: 0.24em;
             text-transform: uppercase;
             margin-bottom: 12px;
-            color: #FFAA73; 
+            color: #FFAA73; /* Tocco caldo luminoso */
             font-weight: 600;
         }
 
         .hero-slide-title {
             font-size: clamp(34px, 4.4vw, 56px);
-            font-weight: 600; 
+            font-weight: 600; /* Look deciso e non fragile */
             letter-spacing: 0.06em;
             text-transform: uppercase;
             line-height: 1.15;
@@ -659,7 +659,7 @@
             text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
         }
 
-        
+        /* Tasto Terracotta Accento Hero */
         .btn-accent, .hero-slide-btn {
             display: inline-flex;
             align-items: center;
@@ -705,7 +705,7 @@
             width: 54px;
         }
 
-        
+        /* Indicatori verdi dedicati quando la slide attiva è EQUORA */
         .hero-dots-nav.equora-active .hero-dot-pill {
             background: rgba(200, 225, 205, 0.45);
         }
@@ -714,7 +714,7 @@
             width: 54px;
         }
 
-        
+        /* Frecce laterali discrete per navigazione manuale Hero Slider */
         .hero-slider-arrow {
             position: absolute;
             top: 50%;
@@ -1371,7 +1371,7 @@
             gap: 2px;
         }
 
-        
+        /* CUSTOM PURE CSS CHECKBOXES */
         .fisch-check-row {
             display: flex;
             align-items: center;
@@ -1479,7 +1479,7 @@
             box-shadow: 0 2px 8px rgba(154, 123, 86, 0.25);
         }
 
-        
+        /* RESTYLING SELECT MODERNO & EDITORIALE */
         .fisch-sort-wrap {
             display: flex;
             align-items: center;
@@ -1530,13 +1530,16 @@
 
         .fisch-product-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 32px 24px;
+            align-items: start;
             margin-bottom: 48px;
         }
 
         .fisch-card {
             cursor: pointer;
+            min-width: 0;
+            width: 100%;
         }
 
         .fisch-thumb-rect {
@@ -1546,14 +1549,18 @@
             overflow: hidden;
             margin-bottom: 12px;
             position: relative;
+            display: block;
             border: 1px solid var(--line);
             border-radius: 4px;
         }
 
         .fisch-thumb-rect img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            position: absolute;
+            top: 0;
+            left: 0;
             display: block;
             transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -1563,8 +1570,11 @@
         }
 
         .fisch-woven-fallback {
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute;
+            top: 0;
+            left: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1623,7 +1633,7 @@
             border-color: var(--accent);
         }
 
-        
+        /* High-Performance Client-Side Load More Button */
         .load-more-wrap {
             display: flex;
             justify-content: center;
@@ -1780,7 +1790,7 @@
             line-height: 1.35;
         }
 
-        
+        /* Lead Paragraph: proporzionato, elegante e confortevole */
         .company-lead-p {
             font-size: 17.5px !important;
             font-weight: 400 !important;
@@ -1803,7 +1813,7 @@
             font-weight: 600;
         }
 
-        
+        /* COMPOSIZIONE OVERLAPPING MASONRY */
         .company-photo-composition {
             position: relative;
             width: 100%;
@@ -1829,12 +1839,12 @@
             will-change: transform;
         }
 
-        
+        /* Micro-interazione hover zoom interno */
         .company-img-frame:hover img {
             transform: scale(1.05);
         }
 
-        
+        /* Immagine Primaria: Grande, Verticale (Portrait) */
         .company-img-primary {
             width: 82%;
             margin-left: auto;
@@ -1844,7 +1854,7 @@
             will-change: transform;
         }
 
-        
+        /* Immagine Secondaria: Più piccola, sovrapposta in basso a sinistra (senza bordo bianco) */
         .company-img-secondary {
             position: absolute;
             bottom: 12px;
@@ -1857,7 +1867,7 @@
             will-change: transform;
         }
 
-        
+        /* SCROLL REVEAL STAGGERED & FADE-IN UP (1s, cubic-bezier) */
         .company-reveal-item {
             opacity: 0;
             transform: translateY(30px);
@@ -2840,7 +2850,7 @@
             white-space: nowrap;
         }
 
-        
+        /* Toggle Switch UI */
         .switch-toggle {
             position: relative;
             display: inline-block;
@@ -2892,7 +2902,7 @@
             background: var(--bg-soft);
         }
 
-        
+        /* Footer Legal Links */
         .footer-legal-links {
             display: flex;
             align-items: center;
@@ -3080,7 +3090,7 @@
             margin-bottom: 3px;
         }
 
-        
+        /* Swatches interattivi nelle card */
         .fisch-card-swatches {
             display: flex;
             align-items: center;
@@ -3116,7 +3126,7 @@
             margin-left: 2px;
         }
 
-        
+        /* Micro-interazioni complementi & destinazioni */
         .comp-mini-card {
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -3218,7 +3228,7 @@
             --eq-border: #C8D8CB;
         }
 
-        
+        /* Voce EQUORA: colore verde salvia dedicato e sottolineatura fluida */
         .nav-btn-equora {
             color: var(--text-muted);
             transition: color 0.3s ease;
@@ -3259,7 +3269,7 @@
             display: none !important;
         }
 
-        
+        /* Banner d'entrata Equora */
         .equora-hero-banner {
             background: var(--bg-soft, #F9F8F5);
             border-bottom: 1px solid var(--line);
@@ -3267,7 +3277,7 @@
             text-align: center;
         }
 
-        
+        /* Sezione di confronto a due colonne */
         .equora-dual-section {
             padding: 60px 48px;
             max-width: 1440px;
@@ -3306,7 +3316,7 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 28px rgba(123, 158, 126, 0.16);
         }
-        
+        /* Sede speculare perfettamente bilanciata per i loghi ufficiali nelle due card */
         .eq-brand-card-header {
             display: flex;
             align-items: center;
@@ -3371,7 +3381,7 @@
             color: var(--bullet-color, #7B9E7E);
         }
 
-        
+        /* Catalogo Equora */
         .equora-catalog-wrap {
             padding: 60px 48px;
             max-width: 1440px;
@@ -3439,11 +3449,12 @@
             pointer-events: none;
         }
 
-        
+        /* Griglia Articoli Equora */
         .equora-cards-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 28px;
+            align-items: start;
         }
         .equora-card {
             background: #FFFFFF;
@@ -3453,6 +3464,8 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
+            min-width: 0;
+            width: 100%;
             transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
         .equora-card:hover {
@@ -3465,12 +3478,17 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             overflow: hidden;
+            display: block;
             background: #f3f3f3;
         }
         .eq-card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
             transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         .equora-card:hover .eq-card-img {
@@ -3641,7 +3659,7 @@
            MICRO-INTERAZIONI CSS DI LUSSO & MOTION LAYER
            ========================================================= */
 
-        
+        /* 1. HOVER SULLE IMMAGINI PRODOTTO (Effetto Materico) */
         .fisch-thumb-rect,
         .eq-card-media,
         .comp-full-img,
@@ -3662,7 +3680,7 @@
             transform: scale(1.03) !important;
         }
 
-        
+        /* 2. SOTTOLINEATURA FLUIDA DELLA NAVIGAZIONE (Header) */
         .nav-btn,
         .nav-btn-equora {
             transition: color 0.3s ease !important;
@@ -3689,7 +3707,7 @@
             transform: scaleX(1) !important;
         }
 
-        
+        /* 3. TRANSIZIONI DEI BOTTONI (Feedback Tattile) */
         .btn-accent,
         .hero-slide-btn,
         .btn-equora-cta,
@@ -3714,13 +3732,13 @@
            AWWARDS MOTION DESIGN SUITE
            ========================================================= */
 
-        
+        /* 1. NATIVE HARDWARE-ACCELERATED SCROLLING */
         html, body {
             height: auto;
             min-height: 100%;
         }
 
-        
+        /* 2. EFFETTO REVEAL A SIPARIO SULLE FOTO PRINCIPALI (.reveal-image) */
         .reveal-image {
             position: relative;
             overflow: hidden !important;
@@ -3757,7 +3775,7 @@
             transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
         }
 
-        
+        /* 3. TITOLI CON EFFETTO SPLIT-LINE (.split-reveal) */
         .split-reveal {
             overflow: hidden;
         }
@@ -3783,7 +3801,7 @@
         }
 
 
-
+/* --- Visual Integrity Safeguard --- */
 .hero-slide.active { opacity: 1 !important; pointer-events: auto; }
 .hero-slide img { opacity: 1 !important; }
 .hero-slide.active .split-line-word,
@@ -3797,50 +3815,65 @@
    PERFORMANCE & RENDERING ARCHITECTURE (PRODUCT GRIDS)
    ========================================================= */
 
-
-.fisch-product-grid,
-.equora-cards-grid,
-.equora-catalog-grid,
-.complements-page-grid {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-
+/* 1. BLOCCO DEL CONTENITORE IMMAGINE (Aspect Ratio) */
 .fisch-thumb-rect,
-.eq-card-media {
-    width: 100%;
-    aspect-ratio: 1 / 1 !important;
-    background-color: #f3f3f3 !important;
-    overflow: hidden !important;
-    position: relative;
-    display: block;
-}
-
-.fisch-thumb-rect img,
-.eq-card-media img,
-.eq-card-img {
+.eq-card-media,
+.product-image-wrapper {
     width: 100% !important;
-    height: 100% !important;
     aspect-ratio: 1 / 1 !important;
-    object-fit: cover !important;
+    overflow: hidden !important;
+    position: relative !important;
     display: block !important;
     background-color: #f3f3f3 !important;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 2. BLOCCO DELL'IMMAGINE O PLACEHOLDER (Lock Assoluto) */
+.fisch-thumb-rect img,
+.eq-card-media img,
+.eq-card-img,
+.product-image-wrapper img,
+.fisch-woven-fallback,
+.product-image-wrapper div {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    background-color: #f3f3f3 !important;
 }
 
 .fisch-woven-fallback {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1 !important;
-    background-color: #f3f3f3 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
 }
 
+/* 3. BLOCCO DELLA GRIGLIA PADRE */
+.fisch-product-grid,
+.equora-cards-grid,
+.equora-catalog-grid,
+.products-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    align-items: start !important;
+    gap: 32px 24px !important;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
 
+.fisch-card,
+.equora-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    overflow: hidden;
+}
+
+/* 4. GPU-Accelerated Micro-Interactions Only */
 .fisch-card:hover .fisch-thumb-rect img,
 .equora-card:hover .eq-card-media img,
 .equora-card:hover .eq-card-img {
