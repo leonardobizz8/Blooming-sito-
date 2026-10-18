@@ -359,48 +359,57 @@
             }, 150);
         }
 
-        window.addEventListener('DOMContentLoaded', async () => {
+        async function initBloomingApp() {
             // Dismiss preloader immediately to minimize FCP & LCP latency
             const preloader = document.getElementById('site-preloader');
             if (preloader) preloader.classList.add('loaded');
 
-            // Inizializzazione Motion Suite Awwwards
-            initSmoothScroll();
-            initCurtainReveal();
-            initSplitTitles();
+            // Inizializzazione Motion Suite Awwwards con fallback difensivo
+            try { initSmoothScroll(); } catch(e) { console.warn('Lenis init:', e); }
+            try { initCurtainReveal(); } catch(e) { console.warn('Curtain init:', e); }
+            try { initSplitTitles(); } catch(e) { console.warn('Split titles init:', e); }
 
             // Caricamento dinamico asincrono del database JSON prodotti.json tramite fetch()
-            const loaded = await loadProductsData();
-            if (loaded) {
-                // Inizializzazione cataloghi: APERTURA DI DEFAULT SULL'ULTIMA COLLEZIONE
-                populateDynamicFilterBoxes();
-                filterBloomingCollection('NEW');
-                filterEquoraGrid('Autunno 2026');
+            try {
+                const loaded = await loadProductsData();
+                if (loaded) {
+                    populateDynamicFilterBoxes();
+                    filterBloomingCollection('NEW');
+                    filterEquoraGrid('Autunno 2026');
+                }
+            } catch(e) {
+                console.error('Errore caricamento prodotti:', e);
             }
 
             // Render complementi d'arredo
-            renderFullComplementsPage();
+            try { renderFullComplementsPage(); } catch(e) { console.warn(e); }
 
             // Setup real-time search listeners on all inputs (global, catalog, complements, equora, mobile)
-            setupSearchListeners();
+            try { setupSearchListeners(); } catch(e) { console.warn(e); }
 
-            // Setup hero slider interval
-            startSlideShow();
+            // Setup hero slider
+            try { setHeroSlide(0); startSlideShow(); } catch(e) { console.warn(e); }
 
             // Setup scroll reveal animation
-            setupScrollReveal();
+            try { setupScrollReveal(); } catch(e) { console.warn(e); }
 
             // Setup Back to top listener
-            setupBackToTop();
+            try { setupBackToTop(); } catch(e) { console.warn(e); }
 
             // Setup Cookie Banner
-            setupCookieBanner();
+            try { setupCookieBanner(); } catch(e) { console.warn(e); }
 
             // Refresh globale animazioni AOS dopo rendering iniziale
             if (typeof AOS !== 'undefined') {
-                setTimeout(() => { AOS.refresh(); }, 250);
+                setTimeout(() => { try { AOS.refresh(); } catch(e) {} }, 300);
             }
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBloomingApp);
+        } else {
+            initBloomingApp();
+        }
 
         /* HERO SLIDER 3 SLIDE */
         function setHeroSlide(idx) {
@@ -816,8 +825,8 @@
 
             configs.forEach(({ id, onVal }) => {
                 const el = document.getElementById(id);
-                if (!el || el.dataset.searchBound) return;
-                el.dataset.searchBound = 'true';
+                if (!el || (el.dataset && el.dataset.searchBound)) return;
+                if (el.dataset) el.dataset.searchBound = 'true';
 
                 ['input', 'keyup'].forEach(evtType => {
                     el.addEventListener(evtType, (e) => {

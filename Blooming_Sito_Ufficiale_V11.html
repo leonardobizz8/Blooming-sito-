@@ -204,8 +204,8 @@
             <!-- 1. HERO SLIDER — COPERTURA UNIFORME, NESSUN TAGLIO ASIMMETRICO -->
             <section class="hero-slider-section">
                 <!-- Slide 1: Nuova Collezione (Ambientazione_03_A.webp - Critical LCP Element) -->
-                <div class="hero-slide active reveal-image" id="h-slide-0">
-                    <img src="Ambientazione_03_A.webp" alt="Nuova Collezione Blooming — Tessuti d'arredo per interni contemporanei" width="1920" height="1071" loading="eager" fetchpriority="high" decoding="async" data-aos="fade-in" data-aos-duration="1200">
+                <div class="hero-slide active" id="h-slide-0">
+                    <img src="Ambientazione_03_A.webp" alt="Nuova Collezione Blooming — Tessuti d'arredo per interni contemporanei" width="1920" height="1071" loading="eager" fetchpriority="high" decoding="async" >
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content">
                             <div class="hero-slide-kicker" data-i18n="s1_kicker">Novità Tessile 2026</div>
@@ -217,8 +217,8 @@
                 </div>
 
                 <!-- Slide 2: Complementi d'Arredo (hero_slide_complementi.webp) -->
-                <div class="hero-slide reveal-image" id="h-slide-1">
-                    <img src="hero_slide_complementi.webp" alt="Complementi d'Arredo Blooming — Sedute e imbottiti scultura" width="1600" height="2002" loading="lazy" decoding="async" data-aos="fade-in" data-aos-duration="1200">
+                <div class="hero-slide" id="h-slide-1">
+                    <img src="hero_slide_complementi.webp" alt="Complementi d'Arredo Blooming — Sedute e imbottiti scultura" width="1600" height="2002" loading="lazy" decoding="async" >
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content">
                             <div class="hero-slide-kicker" data-i18n="s3_kicker">Produzione d'Eccellenza</div>
@@ -230,8 +230,8 @@
                 </div>
 
                 <!-- Slide 3: Equora (Garden Pavilion) -->
-                <div class="hero-slide reveal-image" id="h-slide-2">
-                    <img src="garden_pavilion_hero.webp" alt="EQUORA — Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async" data-aos="fade-in" data-aos-duration="1200">
+                <div class="hero-slide" id="h-slide-2">
+                    <img src="garden_pavilion_hero.webp" alt="EQUORA — Tessuti in Equilibrio" width="1920" height="1071" loading="lazy" decoding="async" >
                     <div class="hero-slide-overlay">
                         <div class="hero-slide-content" style="max-width: 680px;">
                             <div style="margin-bottom: 28px;" data-aos="fade-up">
@@ -1220,12 +1220,14 @@
 
     <!-- JavaScript Applicativo Minificato ad Alte Prestazioni con Cache-Busting -->
     <!-- Lenis Smooth Scrolling CDN (@studio-freight/lenis) -->
-    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js" defer></script>
+    <!-- Scripts at end of body -->
     <!-- JavaScript Applicativo Minificato ad Alte Prestazioni con Cache-Busting -->
-    <script src="js/script.min.js?v=1.2" defer></script>
+    
 
     <!-- AOS (Animate On Scroll) JS & Setup Globale -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script src="js/script.min.js?v=1.4"></script>
     <script>
         AOS.init({
             duration: 800, 

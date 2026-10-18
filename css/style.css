@@ -3627,3 +3627,13 @@
             opacity: 1;
         }
 
+
+/* --- Visual Integrity Safeguard --- */
+.hero-slide.active { opacity: 1 !important; pointer-events: auto; }
+.hero-slide img { opacity: 1 !important; }
+.hero-slide.active .split-line-word,
+.hero-slide-title .split-line-word,
+.split-reveal.is-revealed .split-line-word {
+    transform: translateY(0%) !important;
+    opacity: 1 !important;
+}
