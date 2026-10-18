@@ -3508,18 +3508,21 @@
         .eq-card-hover-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(45, 68, 48, 0.45);
+            background: transparent !important;
+            background-color: transparent !important;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: opacity 0.22s ease;
+            pointer-events: none;
+            z-index: 2;
         }
         .equora-card:hover .eq-card-hover-overlay {
             opacity: 1;
         }
         .eq-card-hover-overlay span {
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.95);
             color: #2D4430;
             font-size: 11px;
             font-weight: 600;
@@ -3527,6 +3530,14 @@
             text-transform: uppercase;
             padding: 8px 16px;
             border-radius: 20px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+            border: 1px solid rgba(123, 158, 126, 0.3);
+            pointer-events: auto;
+            transform: translateY(3px);
+            transition: transform 0.22s ease;
+        }
+        .equora-card:hover .eq-card-hover-overlay span {
+            transform: translateY(0);
         }
         .eq-card-badge {
             position: absolute;
@@ -3872,15 +3883,11 @@
 
 /* 2. BLOCCO DELL'IMMAGINE O PLACEHOLDER (Lock Assoluto) */
 .product-image-wrapper img,
-.product-image-wrapper div,
 .fisch-thumb-rect img,
-.fisch-thumb-rect div,
 .fisch-thumb-rect .fisch-woven-fallback,
 .eq-card-media img,
-.eq-card-media div,
 .eq-card-img,
 .product-thumb img,
-.product-thumb div,
 .product-placeholder,
 .card-placeholder,
 .fisch-woven-fallback {
@@ -3895,7 +3902,6 @@
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
-    background-color: #f3f3f3 !important;
     display: block !important;
 }
 
@@ -3906,6 +3912,71 @@
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
+    background-color: #f3f3f3 !important;
+}
+
+/* --- FIX HOVER: IMPEDISCI LA SCOMPARSA DELL'IMMAGINE --- */
+.fisch-thumb-rect img,
+.eq-card-media img,
+.eq-card-img,
+.product-image-wrapper img,
+.product-thumb img,
+.fisch-card:hover .fisch-thumb-rect img,
+.equora-card:hover .eq-card-media img,
+.equora-card:hover .eq-card-img,
+.product-card:hover img {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* --- FIX HOVER: RENDI TRASPARENTE L'OVERLAY DEL BOTTONE --- */
+.eq-card-hover-overlay,
+.image-overlay,
+.product-card-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0 !important;
+    transition: opacity 0.25s ease !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+}
+
+.equora-card:hover .eq-card-hover-overlay,
+.product-card:hover .image-overlay,
+.product-card:hover .product-card-overlay {
+    opacity: 1 !important;
+}
+
+.eq-card-hover-overlay span,
+.image-overlay span,
+.product-card-overlay span {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #2D4430 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(123, 158, 126, 0.3) !important;
+    pointer-events: auto !important;
+    transform: translateY(3px) !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.equora-card:hover .eq-card-hover-overlay span,
+.product-card:hover .image-overlay span,
+.product-card:hover .product-card-overlay span {
+    transform: translateY(0) !important;
 }
 
 /* 3. BLOCCO DELLA GRIGLIA PADRE */
@@ -3932,7 +4003,7 @@
     box-sizing: border-box !important;
 }
 
-/* 4. GPU-Accelerated Micro-Interactions Only */
+/* 4. GPU-Accelerated Micro-Interactions Only (Zoom Delicato 1.03) */
 .product-card:hover .product-image-wrapper img,
 .fisch-card:hover .fisch-thumb-rect img,
 .equora-card:hover .eq-card-media img,
