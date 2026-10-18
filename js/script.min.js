@@ -267,7 +267,7 @@
 
             try {
                 lenisInstance = new Lenis({
-                    lerp: 0.095,
+                    lerp: 0.12,
                     smoothWheel: true,
                     wheelMultiplier: 1,
                     smoothTouch: false
