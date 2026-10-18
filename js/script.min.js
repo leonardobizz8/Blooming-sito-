@@ -262,46 +262,18 @@
         });
 
         /* =========================================================
-           1. SCROLL INERZIALE LENIS (@studio-freight/lenis)
+           1. NATIVE GPU COMPOSITOR SCROLL (60/120Hz STABILE & FLUIDO)
+           Nessun virtual scroll interceptor: zero jank e zero scroll lock.
            ========================================================= */
         let lenisInstance = null;
 
         function refreshScrollHeights() {
-            if (typeof AOS !== 'undefined') {
-                try { AOS.refresh(); } catch (e) {}
-            }
-            if (lenisInstance) {
-                try { lenisInstance.resize(); } catch (e) {}
-            }
+            // No-op sicuro: previene forced reflows e layout thrashing durante il rendering asincrono
         }
         window.refreshScrollHeights = refreshScrollHeights;
 
         function initSmoothScroll() {
-            const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
-            if (isMobile || typeof Lenis === 'undefined') {
-                return;
-            }
-
-            try {
-                lenisInstance = new Lenis({
-                    lerp: 0.12,
-                    smoothWheel: true,
-                    wheelMultiplier: 1,
-                    smoothTouch: false
-                });
-
-                function raf(time) {
-                    if (lenisInstance) {
-                        lenisInstance.raf(time);
-                        requestAnimationFrame(raf);
-                    }
-                }
-                requestAnimationFrame(raf);
-
-                window.addEventListener('resize', refreshScrollHeights);
-            } catch(e) {
-                console.warn('Inizializzazione Lenis fallback:', e);
-            }
+            // Scroll nativo del browser accelerato via hardware (compositor thread)
         }
 
         /* =========================================================
@@ -415,9 +387,12 @@
             // Setup Cookie Banner
             try { setupCookieBanner(); } catch(e) { console.warn(e); }
 
-            // Refresh globale animazioni AOS e altezze Lenis dopo rendering iniziale
-            setTimeout(refreshScrollHeights, 150);
-            setTimeout(refreshScrollHeights, 500);
+            // Refresh animazioni AOS per la vista iniziale Home
+            setTimeout(() => {
+                if (typeof AOS !== 'undefined') {
+                    try { AOS.refresh(); } catch (e) {}
+                }
+            }, 300);
         }
 
         if (document.readyState === 'loading') {
@@ -520,18 +495,18 @@
                 }
             });
 
-            if (lenisInstance) {
-                lenisInstance.resize();
-                lenisInstance.scrollTo(0, { immediate: true });
-            } else {
-                window.scrollTo({ top: 0, behavior: 'instant' });
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            if (pageId === 'home' || pageId === 'azienda') {
+                setTimeout(() => {
+                    checkScrollReveal();
+                    initSplitTitles();
+                    initCurtainReveal();
+                    if (typeof AOS !== 'undefined') {
+                        try { AOS.refresh(); } catch (e) {}
+                    }
+                }, 80);
             }
-            setTimeout(() => {
-                checkScrollReveal();
-                initSplitTitles();
-                initCurtainReveal();
-                refreshScrollHeights();
-            }, 100);
 
             // GA4 Page View Tracking (rispetta il consenso GDPR)
             trackEvent('page_view', {
@@ -961,7 +936,7 @@
             const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
 
             const imgMarkup = hasImg
-                ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onload="if(window.refreshScrollHeights)window.refreshScrollHeights();" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
+                ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
                 : `<div class="fisch-woven-fallback" id="card-img-${item.code}">BLOOMING ${item.code}</div>`;
 
             const variantsList = item.variants || [];
@@ -1029,7 +1004,6 @@
                     </div>`;
                     if (loadMoreBtn) loadMoreBtn.style.display = 'none';
                     if (loadMoreWrap) loadMoreWrap.style.display = 'none';
-                    refreshScrollHeights();
                     return;
                 }
 
@@ -1040,11 +1014,6 @@
                 } else {
                     grid.innerHTML = cardsHtml;
                 }
-
-                // Sincronizzazione immediata altezze DOM per evitare scroll lock
-                refreshScrollHeights();
-                setTimeout(refreshScrollHeights, 80);
-                setTimeout(refreshScrollHeights, 250);
             }
 
             // Controllo visibilità pulsante Carica Altri
@@ -1500,6 +1469,12 @@
             let ticking = false;
 
             updateCompanyParallax = function() {
+                const viewAzienda = document.getElementById('view-azienda');
+                if (!viewAzienda || !viewAzienda.classList.contains('active')) {
+                    ticking = false;
+                    return;
+                }
+
                 // Su smartphone compatto manteniamo il flusso a schede senza offset di parallasse
                 if (window.innerWidth <= 640) {
                     primary.style.transform = '';
@@ -1511,10 +1486,7 @@
                 const rect = section.getBoundingClientRect();
                 const winH = window.innerHeight;
 
-                const viewAzienda = document.getElementById('view-azienda');
-                const isViewActive = viewAzienda && viewAzienda.classList.contains('active');
-
-                if (isViewActive && rect.top < winH && rect.bottom > 0) {
+                if (rect.top < winH && rect.bottom > 0) {
                     const centerOffset = (rect.top + rect.height / 2) - (winH / 2);
                     // Parallasse asimmetrico: la foto primaria slitta delicatamente verso il basso, la secondaria in opposizione verso l'alto
                     const primaryY = centerOffset * 0.04;
@@ -1622,7 +1594,7 @@
             return `
                 <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
                     <div class="eq-card-media">
-                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onload="if(window.refreshScrollHeights)window.refreshScrollHeights();" onerror="this.src='cat_imbottiti.webp'">
+                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
                         <div class="eq-card-hover-overlay">
                             <span>Richiedi Scheda & Tirelle →</span>
                         </div>
@@ -1709,7 +1681,6 @@
                 `;
                 if (loadMoreBtn) loadMoreBtn.style.display = 'none';
                 if (loadMoreWrap) loadMoreWrap.style.display = 'none';
-                refreshScrollHeights();
                 return;
             }
 
@@ -1724,11 +1695,6 @@
             } else {
                 container.innerHTML = cardsHtml;
             }
-
-            // Sincronizzazione immediata altezze DOM per evitare scroll lock
-            refreshScrollHeights();
-            setTimeout(refreshScrollHeights, 80);
-            setTimeout(refreshScrollHeights, 250);
 
             // Controllo visibilità pulsante Carica Altri Equora
             if (loadMoreBtn) {
