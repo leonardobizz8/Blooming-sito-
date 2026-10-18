@@ -217,32 +217,37 @@
             white-space: nowrap;
         }
 
-        .nav-btn:hover {
-            color: var(--text);
+        .nav-btn:hover,
+        .nav-link:hover {
+            color: var(--accent);
         }
 
-        .nav-btn.active {
+        .nav-btn.active,
+        .nav-link.active {
             color: var(--accent);
             font-weight: 600;
         }
 
-        /* Sottolineatura fluida della navigazione (Header) */
-        .nav-btn::after {
+        /* Sottolineatura fluida della navigazione (Header Globale - Arancione Blooming) */
+        .nav-btn::after,
+        .nav-link::after {
             content: '';
             display: block;
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 1px;
-            background: currentColor;
+            height: 1.5px;
+            background-color: var(--accent);
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.3s ease;
         }
 
         .nav-btn:hover::after,
-        .nav-btn.active::after {
+        .nav-btn.active::after,
+        .nav-link:hover::after,
+        .nav-link.active::after {
             transform: scaleX(1);
         }
 
@@ -3229,31 +3234,37 @@
         }
 
         /* Voce EQUORA: colore verde salvia dedicato e sottolineatura fluida */
-        .nav-btn-equora {
+        .nav-btn-equora,
+        .nav-equora {
             color: var(--text-muted);
             transition: color 0.3s ease;
             position: relative;
         }
         .nav-btn-equora:hover,
-        .nav-btn-equora.active {
+        .nav-btn-equora.active,
+        .nav-equora:hover,
+        .nav-equora.active {
             color: #3F5E42 !important;
             font-weight: 600;
         }
-        .nav-btn-equora::after {
+        .nav-btn-equora::after,
+        .nav-equora::after {
             content: '';
             display: block;
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 1px;
-            background: currentColor !important;
+            height: 1.5px;
+            background-color: #7B9E7E !important;
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.3s ease;
         }
         .nav-btn-equora:hover::after,
-        .nav-btn-equora.active::after {
+        .nav-btn-equora.active::after,
+        .nav-equora:hover::after,
+        .nav-equora.active::after {
             transform: scaleX(1);
         }
         .mob-link-equora {
@@ -3682,29 +3693,57 @@
 
         /* 2. SOTTOLINEATURA FLUIDA DELLA NAVIGAZIONE (Header) */
         .nav-btn,
-        .nav-btn-equora {
+        .nav-link {
             transition: color 0.3s ease !important;
             position: relative;
         }
+        .nav-btn:hover,
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+        .nav-btn.active,
+        .nav-link.active {
+            color: var(--accent) !important;
+        }
         .nav-btn::after,
-        .nav-btn-equora::after {
+        .nav-link::after {
             content: '' !important;
             display: block !important;
             position: absolute !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            height: 1px !important;
-            background: currentColor !important;
+            height: 1.5px !important;
+            background-color: var(--accent) !important;
             transform: scaleX(0) !important;
             transform-origin: left !important;
-            transition: transform 0.3s ease !important;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .nav-btn:hover::after,
         .nav-btn.active::after,
-        .nav-btn-equora:hover::after,
-        .nav-btn-equora.active::after {
+        .nav-link:hover::after,
+        .nav-link.active::after {
             transform: scaleX(1) !important;
+        }
+
+        /* Regola specifica verde Equora (#7B9E7E) */
+        .nav-equora,
+        .nav-btn-equora,
+        .nav-btn[data-page="equora"] {
+            transition: color 0.3s ease !important;
+        }
+        .nav-equora:hover,
+        .nav-equora.active,
+        .nav-btn-equora:hover,
+        .nav-btn-equora.active,
+        .nav-btn[data-page="equora"]:hover,
+        .nav-btn[data-page="equora"].active {
+            color: #3F5E42 !important;
+        }
+        .nav-equora::after,
+        .nav-btn-equora::after,
+        .nav-btn[data-page="equora"]::after {
+            background-color: #7B9E7E !important;
         }
 
         /* 3. TRANSIZIONI DEI BOTTONI (Feedback Tattile) */
