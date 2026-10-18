@@ -153,7 +153,8 @@
                 az_page_h: "L'Azienda",
                 az_sub_h: "Lo stile, il gusto e l'eccellenza tessile italiana",
                 foot_col_nav: "Collezioni & Pagine",
-                foot_col_cont: "Contatti & Sede"
+                foot_col_cont: "Contatti & Sede",
+                load_more_btn: "CARICA ALTRI PRODOTTI"
             },
             en: {
                 nav_home: "Home",
@@ -207,14 +208,20 @@
                 az_page_h: "The Company",
                 az_sub_h: "Italian Style, Taste and Textile Mastery",
                 foot_col_nav: "Collections & Pages",
-                foot_col_cont: "Contacts & Headquarters"
+                foot_col_cont: "Contacts & Headquarters",
+                load_more_btn: "LOAD MORE PRODUCTS"
             }
         };
 
         let curLang = 'it';
         let filteredItems = [];
         let currentPage = 1;
-        let itemsPerPage = 24;
+        let itemsPerPage = 12;
+
+        let equoraFilteredItems = [];
+        let equoraCurrentPage = 1;
+        let equoraItemsPerPage = 12;
+
         let activeSlide = 0;
         let slideTimer = null;
 
@@ -381,6 +388,9 @@
 
             // Setup real-time search listeners on all inputs (global, catalog, complements, equora, mobile)
             try { setupSearchListeners(); } catch(e) { console.warn(e); }
+
+            // Setup Load More buttons listeners
+            try { setupLoadMoreListeners(); } catch(e) { console.warn(e); }
 
             // Setup hero slider
             try { setHeroSlide(0); startSlideShow(); } catch(e) { console.warn(e); }
@@ -855,6 +865,26 @@
             });
         }
 
+        function setupLoadMoreListeners() {
+            const fischBtn = document.getElementById('fisch-load-more-btn');
+            if (fischBtn && !fischBtn.dataset.bound) {
+                fischBtn.dataset.bound = 'true';
+                fischBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadMoreBloomingProducts();
+                });
+            }
+
+            const eqBtn = document.getElementById('equora-load-more-btn');
+            if (eqBtn && !eqBtn.dataset.bound) {
+                eqBtn.dataset.bound = 'true';
+                eqBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadMoreEquoraProducts();
+                });
+            }
+        }
+
         function applyFischbacherCatalog() {
             const q = (document.getElementById('fisch-q-input') ? document.getElementById('fisch-q-input').value : '').trim();
             const selUses = getCheckedValues('filter-box-uses');
@@ -919,16 +949,60 @@
 
         function goToFischPage(p) {
             currentPage = p;
-            renderFischbacherPage();
+            renderFischbacherPage(false);
             window.scrollTo({ top: 120, behavior: 'smooth' });
         }
 
-        /* RENDERING GRIGLIA CATALOGO (1:1 ASPECT RATIO, SWATCHES INTERATTIVI E B2B TIRELLE) */
-        function renderFischbacherPage() {
+        /* RENDERING SINGOLA CARD BLOOMING (GPU-ACCELERATED, 0-CLS, LAZY & ASYNC DECODING) */
+        function renderBloomingCardHtml(item, isFirst) {
+            if (item.brand !== 'blooming') return '';
+            const hasImg = item.img && item.img.trim() !== '';
+            const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
+            const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
+
+            const imgMarkup = hasImg
+                ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
+                : `<div class="fisch-woven-fallback" id="card-img-${item.code}">BLOOMING ${item.code}</div>`;
+
+            const variantsList = item.variants || [];
+            let swatchesHtml = '';
+            if (variantsList.length > 0) {
+                const maxShow = 5;
+                const visibleVars = variantsList.slice(0, maxShow);
+                swatchesHtml = `
+                    <div class="fisch-card-swatches" onclick="event.stopPropagation()">
+                        ${visibleVars.map((v, vIdx) => `
+                            <button type="button" 
+                                    class="fisch-mini-swatch ${vIdx === 0 ? 'active' : ''}" 
+                                    style="background-image: url('${v.img || item.img}')"
+                                    title="Col. ${v.code}"
+                                    aria-label="Colore ${v.code}"
+                                    onclick="selectCardVariant(event, '${item.code}', '${v.code}', '${v.img || item.img}')">
+                            </button>
+                        `).join('')}
+                        ${variantsList.length > maxShow ? `<span class="fisch-more-swatches">+${variantsList.length - maxShow}</span>` : ''}
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="fisch-card" id="card-${item.code}" data-brand="blooming" data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
+                    <div class="fisch-thumb-rect">
+                        ${imgMarkup}
+                    </div>
+                    <div class="fisch-col-badge">${item.collection || 'BLOOMING'}</div>
+                    <div class="fisch-item-title">${item.name}</div>
+                    <div class="fisch-item-code" id="card-code-${item.code}">Art. ${item.code} · Col. ${defaultVar}</div>
+                    ${swatchesHtml}
+                </div>
+            `;
+        }
+
+        /* RENDERING A BLOCCHI PAGINAZIONE LATO CLIENT (LOAD MORE 12 ITEMS) */
+        function renderFischbacherPage(isAppend = false) {
             // STRICT BRAND SAFETY: sicurezza assoluta, elimina qualsiasi elemento non blooming
             filteredItems = filteredItems.filter(it => it.brand === 'blooming');
             const total = filteredItems.length;
-            const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
             const countLabel = document.getElementById('fisch-count-label');
             if (countLabel) {
                 countLabel.innerHTML = curLang === 'it'
@@ -936,91 +1010,54 @@
                     : `<strong style="color:var(--accent);">${total}</strong> items found`;
             }
 
+            const grid = document.getElementById('fisch-grid-container');
+            const loadMoreBtn = document.getElementById('fisch-load-more-btn');
+            const loadMoreWrap = document.getElementById('fisch-load-more-wrap');
+
+            if (!isAppend) {
+                currentPage = 1;
+            }
+
             const startIdx = (currentPage - 1) * itemsPerPage;
             const endIdx = Math.min(startIdx + itemsPerPage, total);
             const slice = filteredItems.slice(startIdx, endIdx);
 
-            // Paginazione
-            const pagBox = document.getElementById('fisch-pagination-controls');
-            if (pagBox) {
-                let pagHtml = '';
-                const maxBtns = Math.min(totalPages, 7);
-                let startP = Math.max(1, currentPage - 3);
-                let endP = Math.min(totalPages, startP + maxBtns - 1);
-                if (endP - startP + 1 < maxBtns) {
-                    startP = Math.max(1, endP - maxBtns + 1);
-                }
-
-                if (currentPage > 1) {
-                    pagHtml += `<button class="pag-btn" onclick="goToFischPage(${currentPage - 1})">‹</button>`;
-                }
-                for (let i = startP; i <= endP; i++) {
-                    pagHtml += `<button class="pag-btn ${i === currentPage ? 'active' : ''}" onclick="goToFischPage(${i})">${i}</button>`;
-                }
-                if (currentPage < totalPages) {
-                    pagHtml += `<button class="pag-btn" onclick="goToFischPage(${currentPage + 1})">›</button>`;
-                }
-                pagBox.innerHTML = totalPages > 1 ? pagHtml : '';
-            }
-
-            // Griglia articoli
-            const grid = document.getElementById('fisch-grid-container');
             if (grid) {
-                if (slice.length === 0) {
+                if (total === 0) {
                     grid.innerHTML = `<div style="grid-column: 1 / -1; padding: 48px 0; text-align: center; color: var(--text-muted);">
                         ${curLang === 'it' ? 'Nessun articolo corrisponde ai filtri selezionati.' : 'No items match selected filters.'}
                     </div>`;
+                    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                    if (loadMoreWrap) loadMoreWrap.style.display = 'none';
                     return;
                 }
 
-                grid.innerHTML = slice.map((item, idx) => {
-                    if (item.brand !== 'blooming') return '';
-                    const hasImg = item.img && item.img.trim() !== '';
-                    const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
-                    const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
-                    const delay = (idx % 4) * 100;
-                    const isFirst = idx === 0;
+                const cardsHtml = slice.map((item, idx) => renderBloomingCardHtml(item, !isAppend && idx === 0)).join('');
 
-                    const imgMarkup = hasImg
-                        ? `<img src="${item.img}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.outerHTML='<div class=\\'fisch-woven-fallback\\'>BLOOMING ${item.code}</div>'">`
-                        : `<div class="fisch-woven-fallback" id="card-img-${item.code}">BLOOMING ${item.code}</div>`;
-
-                    const variantsList = item.variants || [];
-                    let swatchesHtml = '';
-                    if (variantsList.length > 0) {
-                        const maxShow = 5;
-                        const visibleVars = variantsList.slice(0, maxShow);
-                        swatchesHtml = `
-                            <div class="fisch-card-swatches" onclick="event.stopPropagation()">
-                                ${visibleVars.map((v, vIdx) => `
-                                    <button type="button" 
-                                            class="fisch-mini-swatch ${vIdx === 0 ? 'active' : ''}" 
-                                            style="background-image: url('${v.img || item.img}')"
-                                            title="Col. ${v.code}"
-                                            aria-label="Colore ${v.code}"
-                                            onclick="selectCardVariant(event, '${item.code}', '${v.code}', '${v.img || item.img}')">
-                                    </button>
-                                `).join('')}
-                                ${variantsList.length > maxShow ? `<span class="fisch-more-swatches">+${variantsList.length - maxShow}</span>` : ''}
-                            </div>
-                        `;
-                    }
-
-                    return `
-                        <div class="fisch-card" id="card-${item.code}" data-brand="blooming"  data-current-var="${defaultVar}" data-current-img="${defaultImg}" onclick="openItemDrawer('${item.code}', this.getAttribute('data-current-var'), 'blooming')">
-                            <div class="fisch-thumb-rect">
-                                ${imgMarkup}
-                            </div>
-                            <div class="fisch-col-badge">${item.collection || 'BLOOMING'}</div>
-                            <div class="fisch-item-title">${item.name}</div>
-                            <div class="fisch-item-code" id="card-code-${item.code}">Art. ${item.code} · Col. ${defaultVar}</div>
-                            ${swatchesHtml}
-                        </div>
-                    `;
-                }).join('');
-
-                
+                if (isAppend) {
+                    grid.insertAdjacentHTML('beforeend', cardsHtml);
+                } else {
+                    grid.innerHTML = cardsHtml;
+                }
             }
+
+            // Controllo visibilità pulsante Carica Altri
+            if (loadMoreBtn) {
+                if (endIdx >= total) {
+                    loadMoreBtn.style.display = 'none';
+                    if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+                } else {
+                    loadMoreBtn.style.display = 'inline-flex';
+                    if (loadMoreWrap) loadMoreWrap.style.display = 'flex';
+                }
+            }
+        }
+
+        function loadMoreBloomingProducts() {
+            const total = filteredItems.length;
+            if (currentPage * itemsPerPage >= total) return;
+            currentPage++;
+            renderFischbacherPage(true);
         }
 
         /* SELEZIONE VARIANTE COLORE INTERATTIVA SULLA CARD */
@@ -1546,119 +1583,158 @@
             });
         }
 
-        function renderEquoraGrid() {
+        /* RENDERING SINGOLA CARD EQUORA (GPU-ACCELERATED, 0-CLS, LAZY & ASYNC DECODING) */
+        function renderEquoraCardHtml(it, isFirst) {
+            if (it.brand !== 'equora') return '';
+            const variants = it.variants || [];
+            const firstVar = variants[0] || {};
+            const heroImg = it.img || firstVar.img || 'cat_imbottiti.webp';
+            const comp = it.comp ? `<div class="eq-card-spec"><span>Comp.</span> <strong>${it.comp}</strong></div>` : '';
+            const h = it.height ? `<div class="eq-card-spec"><span>H.</span> <strong>${it.height}</strong></div>` : '';
+            const mart = it.martindale ? `<div class="eq-card-spec"><span>Mart.</span> <strong>${it.martindale}</strong></div>` : '';
+
+            let swatchesHtml = '';
+            const maxSwatches = 7;
+            const visibleVars = variants.slice(0, maxSwatches);
+            if (visibleVars.length > 0) {
+                swatchesHtml = `
+                    <div class="eq-swatches-strip" onclick="event.stopPropagation()">
+                        ${visibleVars.map((v, sIdx) => `
+                            <button type="button" 
+                                    class="eq-swatch-dot ${sIdx === 0 ? 'active' : ''}" 
+                                    data-var="${v.code || ''}" 
+                                    title="${v.name || ('Col. ' + v.code)}" 
+                                    style="background-image: url('${v.img || heroImg}')"
+                                    onclick="selectEquoraCardVariant(event, '${it.code}', '${v.code || ''}', '${v.img || heroImg}')">
+                            </button>
+                        `).join('')}
+                        ${variants.length > maxSwatches ? `<span class="eq-swatch-more">+${variants.length - maxSwatches}</span>` : ''}
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
+                    <div class="eq-card-media">
+                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
+                        <div class="eq-card-hover-overlay">
+                            <span>Richiedi Scheda & Tirelle →</span>
+                        </div>
+                        <span class="eq-card-badge">${it.collection || 'Equora'}</span>
+                    </div>
+                    <div class="eq-card-body">
+                        <div class="eq-card-code-row">
+                            <span class="eq-card-code">Art. ${it.code}</span>
+                            <span class="eq-card-variant-code">${firstVar.code ? 'Var. ' + firstVar.code : ''}</span>
+                        </div>
+                        <h3 class="eq-card-name">${it.name}</h3>
+                        <div class="eq-card-specs">
+                            ${comp}
+                            ${h}
+                            ${mart}
+                        </div>
+                        ${swatchesHtml}
+                        <div class="eq-card-action">
+                            <button type="button" class="eq-card-btn" onclick="openItemDrawer('${it.code}', null, 'equora'); event.stopPropagation();">Dettagli & Campionario B2B</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* RENDERING A BLOCCHI EQUORA (LOAD MORE 12 ITEMS) */
+        function renderEquoraGrid(isAppend = false) {
             const container = document.getElementById('equora-grid-container');
             const counter = document.getElementById('equora-counter-label');
+            const loadMoreBtn = document.getElementById('equora-load-more-btn');
+            const loadMoreWrap = document.getElementById('equora-load-more-wrap');
             if (!container) return;
 
-            // STRICT BRAND SAFETY: Solo ed esclusivamente articoli EQUORA
-            let items = getEquoraItems().filter(it => it.brand === 'equora');
+            if (!isAppend) {
+                equoraCurrentPage = 1;
+                // STRICT BRAND SAFETY: Solo ed esclusivamente articoli EQUORA
+                let items = getEquoraItems().filter(it => it.brand === 'equora');
 
-            if (currentEquoraFilter === 'Autunno 2026') {
-                items = items.filter(it => (it.collection || '').toLowerCase().includes('autunno') || it.is_new === true);
-            } else if (currentEquoraFilter === 'Evergreen') {
-                items = items.filter(it => !(it.collection || '').toLowerCase().includes('autunno'));
-            }
+                if (currentEquoraFilter === 'Autunno 2026') {
+                    items = items.filter(it => (it.collection || '').toLowerCase().includes('autunno') || it.is_new === true);
+                } else if (currentEquoraFilter === 'Evergreen') {
+                    items = items.filter(it => !(it.collection || '').toLowerCase().includes('autunno'));
+                }
 
-            if (currentEquoraSearch) {
-                const tokens = currentEquoraSearch.toLowerCase().split(/\s+/).filter(Boolean);
-                items = items.filter(it => {
-                    const varText = (it.variants || []).map(v => `${v.code || ''} ${v.name || ''}`).join(' ');
-                    const fullText = [
-                        it.name || '',
-                        it.code || '',
-                        it.collection || '',
-                        it.comp || '',
-                        it.martindale || '',
-                        it.height || '',
-                        varText
-                    ].join(' ').toLowerCase();
-                    return tokens.every(tok => fullText.includes(tok));
+                if (currentEquoraSearch) {
+                    const tokens = currentEquoraSearch.toLowerCase().split(/\s+/).filter(Boolean);
+                    items = items.filter(it => {
+                        const varText = (it.variants || []).map(v => `${v.code || ''} ${v.name || ''}`).join(' ');
+                        const fullText = [
+                            it.name || '',
+                            it.code || '',
+                            it.collection || '',
+                            it.comp || '',
+                            it.martindale || '',
+                            it.height || '',
+                            varText
+                        ].join(' ').toLowerCase();
+                        return tokens.every(tok => fullText.includes(tok));
+                    });
+                }
+
+                // Logica di ordinamento "Newest First" su array JSON Equora
+                items.sort((a, b) => {
+                    const dateA = a.release_date || (a.is_new ? '2026-09-01' : '2020-01-01');
+                    const dateB = b.release_date || (b.is_new ? '2026-09-01' : '2020-01-01');
+                    if (dateA !== dateB) return dateB.localeCompare(dateA);
+                    return (a.name || '').localeCompare(b.name || '');
                 });
+
+                equoraFilteredItems = items;
             }
 
-            // Logica di ordinamento "Newest First" su array JSON Equora
-            items.sort((a, b) => {
-                const dateA = a.release_date || (a.is_new ? '2026-09-01' : '2020-01-01');
-                const dateB = b.release_date || (b.is_new ? '2026-09-01' : '2020-01-01');
-                if (dateA !== dateB) return dateB.localeCompare(dateA); // Dal più recente al meno recente
-                return (a.name || '').localeCompare(b.name || '');
-            });
-
+            const total = equoraFilteredItems.length;
             if (counter) {
-                counter.innerHTML = `<strong style="color:#7B9E7E;">${items.length}</strong> articoli disponibili`;
+                counter.innerHTML = `<strong style="color:#7B9E7E;">${total}</strong> articoli disponibili`;
             }
 
-            if (items.length === 0) {
+            if (total === 0) {
                 container.innerHTML = `
                     <div style="grid-column: 1 / -1; padding: 48px; text-align: center; color: #6D7F75;">
                         <p style="font-size: 16px; margin-bottom: 12px;">Nessun tessuto Equora trovato per i criteri specificati.</p>
                         <button class="eq-pill-btn" onclick="document.getElementById('equora-search-input').value=''; currentEquoraSearch=''; filterEquoraGrid('Autunno 2026');">Mostra ultima collezione Equora</button>
                     </div>
                 `;
+                if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                if (loadMoreWrap) loadMoreWrap.style.display = 'none';
                 return;
             }
 
-            container.innerHTML = items.map((it, idx) => {
-                if (it.brand !== 'equora') return '';
-                const delay = (idx % 3) * 100;
-                const isFirst = idx === 0;
-                const variants = it.variants || [];
-                const firstVar = variants[0] || {};
-                const heroImg = it.img || firstVar.img || 'cat_imbottiti.webp';
-                const comp = it.comp ? `<div class="eq-card-spec"><span>Comp.</span> <strong>${it.comp}</strong></div>` : '';
-                const h = it.height ? `<div class="eq-card-spec"><span>H.</span> <strong>${it.height}</strong></div>` : '';
-                const mart = it.martindale ? `<div class="eq-card-spec"><span>Mart.</span> <strong>${it.martindale}</strong></div>` : '';
+            const startIdx = (equoraCurrentPage - 1) * equoraItemsPerPage;
+            const endIdx = Math.min(startIdx + equoraItemsPerPage, total);
+            const slice = equoraFilteredItems.slice(startIdx, endIdx);
 
-                let swatchesHtml = '';
-                const maxSwatches = 7;
-                const visibleVars = variants.slice(0, maxSwatches);
-                if (visibleVars.length > 0) {
-                    swatchesHtml = `
-                        <div class="eq-swatches-strip" onclick="event.stopPropagation()">
-                            ${visibleVars.map((v, sIdx) => `
-                                <button type="button" 
-                                        class="eq-swatch-dot ${sIdx === 0 ? 'active' : ''}" 
-                                        data-var="${v.code || ''}" 
-                                        title="${v.name || ('Col. ' + v.code)}" 
-                                        style="background-image: url('${v.img || heroImg}')"
-                                        onclick="selectEquoraCardVariant(event, '${it.code}', '${v.code || ''}', '${v.img || heroImg}')">
-                                </button>
-                            `).join('')}
-                            ${variants.length > maxSwatches ? `<span class="eq-swatch-more">+${variants.length - maxSwatches}</span>` : ''}
-                        </div>
-                    `;
+            const cardsHtml = slice.map((it, idx) => renderEquoraCardHtml(it, !isAppend && idx === 0)).join('');
+
+            if (isAppend) {
+                container.insertAdjacentHTML('beforeend', cardsHtml);
+            } else {
+                container.innerHTML = cardsHtml;
+            }
+
+            // Controllo visibilità pulsante Carica Altri Equora
+            if (loadMoreBtn) {
+                if (endIdx >= total) {
+                    loadMoreBtn.style.display = 'none';
+                    if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+                } else {
+                    loadMoreBtn.style.display = 'inline-flex';
+                    if (loadMoreWrap) loadMoreWrap.style.display = 'flex';
                 }
+            }
+        }
 
-                return `
-                    <div class="equora-card" id="eq-card-${it.code}" data-brand="equora"  onclick="openItemDrawer('${it.code}', null, 'equora')">
-                        <div class="eq-card-media">
-                            <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.src='cat_imbottiti.webp'">
-                            <div class="eq-card-hover-overlay">
-                                <span>Richiedi Scheda & Tirelle →</span>
-                            </div>
-                            <span class="eq-card-badge">${it.collection || 'Equora'}</span>
-                        </div>
-                        <div class="eq-card-body">
-                            <div class="eq-card-code-row">
-                                <span class="eq-card-code">Art. ${it.code}</span>
-                                <span class="eq-card-variant-code">${firstVar.code ? 'Var. ' + firstVar.code : ''}</span>
-                            </div>
-                            <h3 class="eq-card-name">${it.name}</h3>
-                            <div class="eq-card-specs">
-                                ${comp}
-                                ${h}
-                                ${mart}
-                            </div>
-                            ${swatchesHtml}
-                            <div class="eq-card-action">
-                                <button type="button" class="eq-card-btn" onclick="openItemDrawer('${it.code}', null, 'equora'); event.stopPropagation();">Dettagli & Campionario B2B</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
+        function loadMoreEquoraProducts() {
+            const total = equoraFilteredItems.length;
+            if (equoraCurrentPage * equoraItemsPerPage >= total) return;
+            equoraCurrentPage++;
+            renderEquoraGrid(true);
         }
 
         /* BACK TO TOP */

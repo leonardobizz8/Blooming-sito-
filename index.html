@@ -99,7 +99,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
     <!-- CSS Minificato ad Alte Prestazioni con Cache-Busting -->
-    <link rel="stylesheet" href="css/style.min.css?v=1.8">
+    <link rel="stylesheet" href="css/style.min.css?v=2.0">
 </head>
 <body>
 
@@ -517,17 +517,19 @@
                                 <option value="code_asc">Codice Articolo</option>
                             </select>
 
-                            <select id="fisch-perpage-select" onchange="changePerPage()">
-                                <option value="24" selected>24</option>
-                                <option value="48">48</option>
-                                <option value="96">96</option>
-                            </select>
-                            <span data-i18n="per_page_label">per pagina</span>
                         </div>
                     </div>
 
                     <div class="fisch-product-grid" id="fisch-grid-container" data-lenis-prevent></div>
-                    <div class="fisch-pagination" id="fisch-pagination-controls"></div>
+                    <div class="load-more-wrap" id="fisch-load-more-wrap">
+                        <button type="button" class="btn-load-more" id="fisch-load-more-btn" onclick="loadMoreBloomingProducts()">
+                            <span data-i18n="load_more_btn">CARICA ALTRI PRODOTTI</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                        </button>
+                    </div>
                 </section>
             </div>
         </div>
@@ -665,6 +667,15 @@
                 <!-- Griglia Articoli Equora -->
                 <div class="equora-cards-grid" id="equora-grid-container" data-lenis-prevent>
                     <!-- Popolato dinamicamente da renderEquoraGrid() -->
+                </div>
+                <div class="load-more-wrap" id="equora-load-more-wrap">
+                    <button type="button" class="btn-load-more btn-load-more-equora" id="equora-load-more-btn" onclick="loadMoreEquoraProducts()">
+                        <span data-i18n="load_more_btn">CARICA ALTRI PRODOTTI</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                    </button>
                 </div>
             </section>
         </div>
@@ -1227,7 +1238,7 @@
     <!-- AOS (Animate On Scroll) JS & Setup Globale -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script src="js/script.min.js?v=1.8"></script>
+    <script src="js/script.min.js?v=2.0"></script>
     <script>
         AOS.init({
             duration: 800, 
