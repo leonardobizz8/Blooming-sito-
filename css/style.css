@@ -3633,18 +3633,53 @@
     opacity: 1 !important;
 }
 
-/* --- High Performance Product Grid Scroll Optimization --- */
+/* =========================================================
+   PERFORMANCE & RENDERING ARCHITECTURE (PRODUCT GRIDS)
+   ========================================================= */
+
+/* 1. Hardware Accelerated Grid Containers */
 .fisch-product-grid,
-.equora-catalog-grid {
+.equora-cards-grid,
+.equora-catalog-grid,
+.complements-page-grid {
     transform: translateZ(0);
     backface-visibility: hidden;
+    perspective: 1000px;
 }
+
+/* 2. Strict Zero-CLS Container Aspect Ratios */
+.fisch-thumb-rect,
+.eq-card-media {
+    width: 100%;
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+    position: relative;
+    contain: paint;
+}
+
+.fisch-thumb-rect img,
+.eq-card-media img,
+.eq-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 2. Off-Screen Rendering Prevention (content-visibility: auto) */
 .fisch-card,
-.equora-card {
+.equora-card,
+.comp-full-card {
     content-visibility: auto;
-    contain-intrinsic-size: 320px;
+    contain-intrinsic-size: 500px;
+    contain: layout style paint;
 }
+
+/* 3. GPU-Accelerated Hover Interactions Only */
 .fisch-card:hover .fisch-thumb-rect img,
-.equora-card:hover .eq-card-media img {
+.equora-card:hover .eq-card-media img,
+.equora-card:hover .eq-card-img {
+    transform: scale(1.03) !important;
     will-change: transform;
 }
