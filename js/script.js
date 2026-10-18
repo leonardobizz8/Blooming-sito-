@@ -971,6 +971,7 @@
                     if (item.brand !== 'blooming') return '';
                     const hasImg = item.img && item.img.trim() !== '';
                     const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
+                    const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (item.img || '');
                     const delay = (idx % 4) * 100;
                     const isFirst = idx === 0;
 
