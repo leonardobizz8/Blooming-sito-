@@ -254,10 +254,120 @@
             }
         });
 
+        /* =========================================================
+           1. SCROLL INERZIALE LENIS (@studio-freight/lenis)
+           ========================================================= */
+        let lenisInstance = null;
+
+        function initSmoothScroll() {
+            const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+            if (isMobile || typeof Lenis === 'undefined') {
+                return;
+            }
+
+            try {
+                lenisInstance = new Lenis({
+                    lerp: 0.07,
+                    smoothWheel: true,
+                    wheelMultiplier: 1,
+                    smoothTouch: false
+                });
+
+                function raf(time) {
+                    if (lenisInstance) {
+                        lenisInstance.raf(time);
+                        requestAnimationFrame(raf);
+                    }
+                }
+                requestAnimationFrame(raf);
+
+                lenisInstance.on('scroll', () => {
+                    if (typeof AOS !== 'undefined') {
+                        AOS.refresh();
+                    }
+                });
+            } catch(e) {
+                console.warn('Inizializzazione Lenis fallback:', e);
+            }
+        }
+
+        /* =========================================================
+           2. EFFETTO REVEAL A SIPARIO SULLE FOTO PRINCIPALI (Curtain Reveal)
+           ========================================================= */
+        function initCurtainReveal() {
+            const curtainImages = document.querySelectorAll('.reveal-image');
+            if (!curtainImages.length) return;
+
+            const curtainObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-revealed');
+                        curtainObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.12,
+                rootMargin: '0px 0px -30px 0px'
+            });
+
+            curtainImages.forEach(img => curtainObserver.observe(img));
+
+            // Per la Hero Slide 1 (above the fold), trigger immediato
+            setTimeout(() => {
+                const initialHero = document.querySelector('.hero-slide.active.reveal-image');
+                if (initialHero) initialHero.classList.add('is-revealed');
+            }, 100);
+        }
+
+        /* =========================================================
+           3. TITOLI CON EFFETTO SPLIT-LINE (.split-reveal)
+           ========================================================= */
+        function initSplitTitles() {
+            const splitElements = document.querySelectorAll('.split-reveal');
+            if (!splitElements.length) return;
+
+            splitElements.forEach(el => {
+                if (el.getAttribute('data-split-done')) return;
+                el.setAttribute('data-split-done', 'true');
+
+                const text = el.textContent.trim();
+                const words = text.split(/\s+/);
+                el.innerHTML = words.map((w, idx) => {
+                    const delay = (idx * 0.08).toFixed(2);
+                    return `<span class="split-line-mask"><span class="split-line-word" style="transition-delay: ${delay}s;">${w}</span></span>`;
+                }).join(' ');
+            });
+
+            const titleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-revealed');
+                        titleObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            splitElements.forEach(el => titleObserver.observe(el));
+
+            // Trigger immediato per titolo hero visibile
+            setTimeout(() => {
+                const initialSplit = document.querySelector('.hero-slide.active .split-reveal');
+                if (initialSplit) initialSplit.classList.add('is-revealed');
+            }, 150);
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             // Dismiss preloader immediately to minimize FCP & LCP latency
             const preloader = document.getElementById('site-preloader');
             if (preloader) preloader.classList.add('loaded');
+
+            // Inizializzazione Motion Suite Awwwards
+            initSmoothScroll();
+            initCurtainReveal();
+            initSplitTitles();
 
             // Caricamento dinamico asincrono del database JSON prodotti.json tramite fetch()
             const loaded = await loadProductsData();
@@ -297,7 +407,14 @@
             activeSlide = idx;
             for (let i = 0; i < 3; i++) {
                 const sl = document.getElementById('h-slide-' + i);
-                if (sl) sl.classList.toggle('active', i === idx);
+                if (sl) {
+                    sl.classList.toggle('active', i === idx);
+                    if (i === idx) {
+                        sl.classList.add('is-revealed');
+                        const sp = sl.querySelector('.split-reveal');
+                        if (sp) sp.classList.add('is-revealed');
+                    }
+                }
             }
             document.querySelectorAll('.hero-dot-pill').forEach((dot, i) => {
                 dot.classList.toggle('active', i === idx);
@@ -379,9 +496,15 @@
                 }
             });
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (lenisInstance) {
+                lenisInstance.scrollTo(0, { immediate: true });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             setTimeout(() => {
                 checkScrollReveal();
+                initSplitTitles();
+                initCurtainReveal();
                 if (typeof AOS !== 'undefined') AOS.refresh();
             }, 100);
 
