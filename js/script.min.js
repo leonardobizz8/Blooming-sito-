@@ -500,16 +500,27 @@
                 }
             });
 
+            const isGridHeavyPage = (pageId === 'prodotti' || pageId === 'equora');
             if (lenisInstance) {
-                lenisInstance.scrollTo(0, { immediate: true });
+                if (isGridHeavyPage) {
+                    lenisInstance.stop();
+                    document.documentElement.classList.remove('lenis', 'lenis-smooth');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                } else {
+                    document.documentElement.classList.add('lenis', 'lenis-smooth');
+                    lenisInstance.start();
+                    lenisInstance.scrollTo(0, { immediate: true });
+                }
             } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({ top: 0, behavior: 'instant' });
             }
             setTimeout(() => {
-                checkScrollReveal();
-                initSplitTitles();
-                initCurtainReveal();
-                if (typeof AOS !== 'undefined') AOS.refresh();
+                if (!isGridHeavyPage) {
+                    checkScrollReveal();
+                    initSplitTitles();
+                    initCurtainReveal();
+                    if (typeof AOS !== 'undefined') AOS.refresh();
+                }
             }, 100);
 
             // GA4 Page View Tracking (rispetta il consenso GDPR)

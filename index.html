@@ -99,7 +99,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
     <!-- CSS Minificato ad Alte Prestazioni con Cache-Busting -->
-    <link rel="stylesheet" href="css/style.min.css?v=1.7">
+    <link rel="stylesheet" href="css/style.min.css?v=1.8">
 </head>
 <body>
 
@@ -405,7 +405,7 @@
              PAGINA 2: PRODOTTI (LAYOUT FISCHBACHER 1819)
              ========================================================= -->
         <div class="page-view" id="view-prodotti">
-            <div class="fischbacher-top-tabs" data-aos="fade-up">
+            <div class="fischbacher-top-tabs">
                 <button class="fisch-tab" data-topcat="Tende" onclick="selectTopMacroTab('Tende')">1. TENDE</button>
                 <button class="fisch-tab" data-topcat="Tessuti" onclick="selectTopMacroTab('Tessuti')" data-i18n="tab_imbottiti">2. TESSUTI</button>
                 <button class="fisch-tab" data-topcat="COMPLEMENTI_LINK" onclick="switchPage('complementi')">3. COMPLEMENTI</button>
@@ -414,7 +414,7 @@
 
             <div class="fischbacher-container">
                 <!-- SIDEBAR FILTRI -->
-                <aside class="fisch-sidebar" data-aos="fade">
+                <aside class="fisch-sidebar">
                     <div class="fisch-sidebar-head">
                         <span data-i18n="filter_heading">FILTRO PRODOTTI</span>
                         <button class="fisch-reset-btn" onclick="resetAllFischFilters()" data-i18n="filter_reset">Reset</button>
@@ -499,7 +499,7 @@
 
                 <!-- CATALOGO PRINCIPALE -->
                 <section>
-                    <div class="fisch-Utility-bar" data-aos="fade-up">
+                    <div class="fisch-Utility-bar">
                         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                             <span id="fisch-count-label" style="font-weight: 500;">Caricamento tessuti...</span>
                             <div class="blooming-col-pills" id="blooming-col-pills">
@@ -526,7 +526,7 @@
                         </div>
                     </div>
 
-                    <div class="fisch-product-grid" id="fisch-grid-container"></div>
+                    <div class="fisch-product-grid" id="fisch-grid-container" data-lenis-prevent></div>
                     <div class="fisch-pagination" id="fisch-pagination-controls"></div>
                 </section>
             </div>
@@ -641,7 +641,7 @@
 
             <!-- 4. SUBITO SOTTO: CATALOGO TESSUTI EQUORA -->
             <section class="equora-catalog-wrap" id="equora-catalog-start" style="padding-top: 20px;">
-                <div class="equora-catalog-controls" data-aos="fade-up">
+                <div class="equora-catalog-controls">
                     <div>
                         <div style="font-size: 11px; letter-spacing: 0.15em; color: #4F6D5E; text-transform: uppercase; font-weight: 600;">Collezione Attiva</div>
                         <h2 style="font-family:'Cinzel',serif; font-size: 26px; color: #2D463A; margin: 4px 0;">Catalogo Tessuti EQUORA</h2>
@@ -663,7 +663,7 @@
                 </div>
 
                 <!-- Griglia Articoli Equora -->
-                <div class="equora-cards-grid" id="equora-grid-container">
+                <div class="equora-cards-grid" id="equora-grid-container" data-lenis-prevent>
                     <!-- Popolato dinamicamente da renderEquoraGrid() -->
                 </div>
             </section>
@@ -1227,7 +1227,7 @@
     <!-- AOS (Animate On Scroll) JS & Setup Globale -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script src="js/script.min.js?v=1.7"></script>
+    <script src="js/script.min.js?v=1.8"></script>
     <script>
         AOS.init({
             duration: 800, 
