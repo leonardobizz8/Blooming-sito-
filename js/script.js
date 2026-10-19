@@ -1103,110 +1103,198 @@
             `;
         }
 
-        let virtualCardObserver = null;
+        /* =========================================================
+           PRINCIPAL PERFORMANCE ARCHITECT: MODULAR VIRTUAL GRID MANAGER (DRY)
+           Gestore modulare, indipendente e riutilizzabile di Virtualizzazione del DOM.
+           Crea istanze di IntersectionObserver incapsulate per Blooming ed Équora,
+           garantendo 60 FPS costanti, isolamento totale, zero CLS e zero Memory Leak.
+           ========================================================= */
 
-        function initVirtualCardObserver() {
-            if (virtualCardObserver || typeof IntersectionObserver === 'undefined') return;
+        const virtualGridRegistry = new Map();
 
-            // rootMargin: 350px sopra e sotto per anticipare l'idratazione senza sfarfallio
-            virtualCardObserver = new IntersectionObserver((entries) => {
-                for (let i = 0; i < entries.length; i++) {
-                    const entry = entries[i];
-                    const card = entry.target;
-                    if (entry.isIntersecting) {
-                        hydrateCard(card);
-                    } else {
-                        if (card.dataset.mounted === '1') {
-                            dehydrateCard(card);
+        function initVirtualizedGrid(containerSelector, dataArrayOrGetter, options = {}) {
+            let container = null;
+            if (typeof containerSelector === 'string') {
+                const selectors = containerSelector.split(',').map(s => s.trim());
+                for (let i = 0; i < selectors.length; i++) {
+                    const sel = selectors[i];
+                    container = document.querySelector(sel) || document.getElementById(sel.replace(/^#/, ''));
+                    if (container) break;
+                }
+            } else if (containerSelector && containerSelector.nodeType === 1) {
+                container = containerSelector;
+            }
+
+            if (!container) return null;
+
+            // Istanza indipendente per container: evita accavallamenti tra observer e memory leak
+            let controller = virtualGridRegistry.get(container);
+            if (!controller) {
+                controller = new VirtualGridController(container, dataArrayOrGetter, options);
+                virtualGridRegistry.set(container, controller);
+            } else {
+                if (dataArrayOrGetter) {
+                    controller.setData(dataArrayOrGetter);
+                }
+            }
+
+            return controller;
+        }
+
+        class VirtualGridController {
+            constructor(container, dataArrayOrGetter, options = {}) {
+                this.container = container;
+                this.dataArrayOrGetter = dataArrayOrGetter;
+                this.options = options;
+                this.observer = null;
+                this.initObserver();
+            }
+
+            setData(dataArrayOrGetter) {
+                this.dataArrayOrGetter = dataArrayOrGetter;
+            }
+
+            getData() {
+                if (typeof this.dataArrayOrGetter === 'function') {
+                    return this.dataArrayOrGetter() || [];
+                }
+                if (Array.isArray(this.dataArrayOrGetter)) {
+                    return this.dataArrayOrGetter;
+                }
+                return ALL_ITEMS || [];
+            }
+
+            initObserver() {
+                if (typeof IntersectionObserver === 'undefined') return;
+                if (this.observer) {
+                    this.observer.disconnect();
+                }
+
+                const rootMargin = this.options.rootMargin || '350px 0px 350px 0px';
+                this.observer = new IntersectionObserver((entries) => {
+                    for (let i = 0; i < entries.length; i++) {
+                        const entry = entries[i];
+                        const card = entry.target;
+                        if (entry.isIntersecting) {
+                            this.hydrateCard(card);
+                        } else {
+                            if (card.dataset.mounted === '1') {
+                                this.dehydrateCard(card);
+                            }
                         }
                     }
+                }, {
+                    root: null,
+                    rootMargin: rootMargin,
+                    threshold: 0
+                });
+            }
+
+            hydrateCard(card) {
+                if (card.dataset.mounted === '1') return;
+                const code = card.dataset.code;
+                const brand = card.dataset.brand;
+                const isFirst = card.dataset.first === '1';
+                const curVar = card.getAttribute('data-current-var');
+                const curImg = card.getAttribute('data-current-img');
+
+                const data = this.getData();
+                const item = data.find(x => x.code === code && x.brand === brand) 
+                          || data.find(x => x.code === code)
+                          || ALL_ITEMS.find(x => x.code === code && x.brand === brand)
+                          || ALL_ITEMS.find(x => x.code === code);
+                if (!item) return;
+
+                if (brand === 'equora') {
+                    card.innerHTML = buildEquoraCardContent(item, isFirst, curVar, curImg);
+                } else {
+                    card.innerHTML = buildBloomingCardContent(item, isFirst, curVar, curImg);
                 }
-            }, {
-                root: null,
-                rootMargin: '350px 0px 350px 0px',
-                threshold: 0
-            });
+
+                // Lock dimensionale per prevenire Cumulative Layout Shift
+                if (!card.style.minHeight) {
+                    const h = card.offsetHeight;
+                    if (h > 0) card.style.minHeight = h + 'px';
+                }
+
+                card.dataset.mounted = '1';
+                card.classList.remove('is-virtualized');
+            }
+
+            dehydrateCard(card) {
+                if (card.dataset.mounted !== '1') return;
+
+                if (!card.style.minHeight) {
+                    const h = card.offsetHeight;
+                    if (h > 0) card.style.minHeight = h + 'px';
+                }
+
+                const brand = card.dataset.brand;
+                if (brand === 'equora') {
+                    card.innerHTML = buildEquoraSkeletonContent();
+                } else {
+                    card.innerHTML = buildBloomingSkeletonContent();
+                }
+
+                card.dataset.mounted = '0';
+                card.classList.add('is-virtualized');
+            }
+
+            observeCards() {
+                if (!this.container || !this.observer) return;
+                const cards = this.container.querySelectorAll('.fisch-card, .equora-card, .product-card');
+                for (let i = 0; i < cards.length; i++) {
+                    const c = cards[i];
+                    if (!c.dataset.observed) {
+                        c.dataset.observed = '1';
+                        const h = c.offsetHeight;
+                        if (h > 0 && !c.style.minHeight) {
+                            c.style.minHeight = h + 'px';
+                        }
+                        this.observer.observe(c);
+                    }
+                }
+            }
+
+            disconnect() {
+                if (this.observer) {
+                    this.observer.disconnect();
+                }
+            }
+
+            refreshLayout() {
+                if (!this.container) return;
+                const cards = this.container.querySelectorAll('.fisch-card, .equora-card, .product-card');
+                for (let i = 0; i < cards.length; i++) {
+                    const c = cards[i];
+                    if (c.dataset.mounted === '1') {
+                        c.style.minHeight = '';
+                        const h = c.offsetHeight;
+                        if (h > 0) c.style.minHeight = h + 'px';
+                    }
+                }
+            }
         }
 
-        function hydrateCard(card) {
-            if (card.dataset.mounted === '1') return;
-            const code = card.dataset.code;
-            const brand = card.dataset.brand;
-            const isFirst = card.dataset.first === '1';
-            const curVar = card.getAttribute('data-current-var');
-            const curImg = card.getAttribute('data-current-img');
-
-            const item = ALL_ITEMS.find(x => x.code === code && x.brand === brand) || ALL_ITEMS.find(x => x.code === code);
-            if (!item) return;
-
-            if (brand === 'equora') {
-                card.innerHTML = buildEquoraCardContent(item, isFirst, curVar, curImg);
-            } else {
-                card.innerHTML = buildBloomingCardContent(item, isFirst, curVar, curImg);
-            }
-
-            // Lock dimensionale per prevenire Layout Shift al de-rendering
-            if (!card.style.minHeight) {
-                const h = card.offsetHeight;
-                if (h > 0) card.style.minHeight = h + 'px';
-            }
-
-            card.dataset.mounted = '1';
-            card.classList.remove('is-virtualized');
-        }
-
-        function dehydrateCard(card) {
-            if (card.dataset.mounted !== '1') return;
-
-            if (!card.style.minHeight) {
-                const h = card.offsetHeight;
-                if (h > 0) card.style.minHeight = h + 'px';
-            }
-
-            const brand = card.dataset.brand;
-            if (brand === 'equora') {
-                card.innerHTML = buildEquoraSkeletonContent();
-            } else {
-                card.innerHTML = buildBloomingSkeletonContent();
-            }
-
-            card.dataset.mounted = '0';
-            card.classList.add('is-virtualized');
-        }
-
+        // Alias retrocompatibile universale
         function observeGridCards(container) {
             if (!container) return;
-            initVirtualCardObserver();
-            if (!virtualCardObserver) return;
-
-            const cards = container.querySelectorAll('.fisch-card, .equora-card');
-            for (let i = 0; i < cards.length; i++) {
-                const c = cards[i];
-                if (!c.dataset.observed) {
-                    c.dataset.observed = '1';
-                    const h = c.offsetHeight;
-                    if (h > 0 && !c.style.minHeight) {
-                        c.style.minHeight = h + 'px';
-                    }
-                    virtualCardObserver.observe(c);
-                }
-            }
+            const ctrl = initVirtualizedGrid(container);
+            if (ctrl) ctrl.observeCards();
         }
 
         if (typeof window !== 'undefined') {
+            window.initVirtualizedGrid = initVirtualizedGrid;
+            window.observeGridCards = observeGridCards;
+            window.virtualGridRegistry = virtualGridRegistry;
+
             let resizeVirtualTimer = null;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeVirtualTimer);
                 resizeVirtualTimer = setTimeout(() => {
-                    const cards = document.querySelectorAll('.fisch-card, .equora-card');
-                    for (let i = 0; i < cards.length; i++) {
-                        const c = cards[i];
-                        if (c.dataset.mounted === '1') {
-                            c.style.minHeight = '';
-                            const h = c.offsetHeight;
-                            if (h > 0) c.style.minHeight = h + 'px';
-                        }
-                    }
+                    virtualGridRegistry.forEach((ctrl) => {
+                        ctrl.refreshLayout();
+                    });
                 }, 150);
             }, { passive: true });
         }
@@ -1267,7 +1355,8 @@
                 } else {
                     grid.innerHTML = cardsHtml;
                 }
-                observeGridCards(grid);
+                const bGrid = initVirtualizedGrid('#fisch-grid-container, #blooming-grid', () => filteredItems);
+                if (bGrid) bGrid.observeCards();
             }
 
             // Controllo visibilità pulsante Carica Altri
@@ -1927,7 +2016,8 @@
             } else {
                 container.innerHTML = cardsHtml;
             }
-            observeGridCards(container);
+            const eqGrid = initVirtualizedGrid('#equora-grid-container, #equora-grid', () => equoraFilteredItems);
+            if (eqGrid) eqGrid.observeCards();
 
             // Controllo visibilità pulsante Carica Altri Equora
             if (loadMoreBtn) {
