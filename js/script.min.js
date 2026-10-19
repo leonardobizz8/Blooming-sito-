@@ -19,7 +19,13 @@
             }
 
             try {
-                const res = await fetch('prodotti.json');
+                let res;
+            try {
+                res = await fetch('data/prodotti.json');
+                if (!res || !res.ok) res = await fetch('prodotti.json');
+            } catch(e) {
+                res = await fetch('prodotti.json');
+            }
                 if (!res.ok) throw new Error(`HTTP error ${res.status}`);
                 ALL_ITEMS = await res.json();
             } catch (err) {
@@ -55,7 +61,7 @@
         const COMPLEMENTS_LIST = [
             {
                 name: "Panchina Rocco",
-                img: "panchina_rocco.webp",
+                img: "img/panchina_rocco.webp",
                 specs: [
                     ["Altezza", "40 cm"],
                     ["Lunghezza", "120 cm"],
@@ -66,7 +72,7 @@
             },
             {
                 name: "Jabba The Hutt",
-                img: "poltrona_jabba.webp",
+                img: "img/poltrona_jabba.webp",
                 specs: [
                     ["Larghezza", "73 cm"],
                     ["Altezza", "80 cm"],
@@ -78,7 +84,7 @@
             },
             {
                 name: "Pouf Gemon",
-                img: "pouf_gemon.webp",
+                img: "img/pouf_gemon.webp",
                 specs: [
                     ["Altezza", "46 cm"],
                     ["Diametro", "35 cm"],
@@ -88,7 +94,7 @@
             },
             {
                 name: "Poltrona Pucci",
-                img: "poltrona_pucci.webp",
+                img: "img/poltrona_pucci.webp",
                 specs: [
                     ["Larghezza", "75 cm"],
                     ["Altezza", "88 cm"],
@@ -931,7 +937,7 @@
         /* RENDERING SINGOLA CARD BLOOMING (GPU-ACCELERATED, 0-CLS, LAZY & ASYNC DECODING) */
         function renderBloomingCardHtml(item, isFirst) {
             if (item.brand !== 'blooming') return '';
-            const fallbackSrc = 'placeholder.jpg';
+            const fallbackSrc = 'img/placeholder.jpg';
             const hasImg = item.img && item.img.trim() !== '';
             const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
             const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (hasImg ? item.img : fallbackSrc);
@@ -1040,7 +1046,7 @@
             if (e) e.stopPropagation();
             const card = document.getElementById('card-' + code);
             if (!card) return;
-            const fallbackSrc = 'placeholder.jpg';
+            const fallbackSrc = 'img/placeholder.jpg';
             const targetImg = (imgSrc && imgSrc.trim() !== '') ? imgSrc : fallbackSrc;
             card.setAttribute('data-current-var', varCode);
             card.setAttribute('data-current-img', targetImg);
@@ -1100,7 +1106,7 @@
                 return `
                 <div class="comp-full-card" >
                     <div class="comp-full-img">
-                        <img src="${c.img || 'placeholder.jpg'}" alt="Complemento d'arredo Blooming ${c.name}" width="600" height="480" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='placeholder.jpg';">
+                        <img src="${c.img || 'img/placeholder.jpg'}" alt="Complemento d'arredo Blooming ${c.name}" width="600" height="480" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='img/placeholder.jpg';">
                     </div>
                     <div class="comp-full-top">
                         <h2>${c.name}</h2>
@@ -1133,7 +1139,7 @@
                 ? item.variants.find(v => v.code === varCode) || item.variants[0]
                 : (item.variants[0] || { code: 'Master', img: item.img });
 
-            const fallbackSrc = 'placeholder.jpg';
+            const fallbackSrc = 'img/placeholder.jpg';
             const mainImg = (selVar && selVar.img) ? selVar.img : (item.img || fallbackSrc);
             const activeVarCode = selVar ? selVar.code : 'Master';
 
@@ -1557,7 +1563,7 @@
             e.stopPropagation();
             const card = document.getElementById('eq-card-' + itemCode);
             if (!card) return;
-            const fallbackSrc = 'placeholder.jpg';
+            const fallbackSrc = 'img/placeholder.jpg';
             const targetImg = (imgSrc && imgSrc.trim() !== '') ? imgSrc : fallbackSrc;
             const img = card.querySelector('.eq-card-img');
             if (img) {
@@ -1579,7 +1585,7 @@
             if (it.brand !== 'equora') return '';
             const variants = it.variants || [];
             const firstVar = variants[0] || {};
-            const fallbackSrc = 'placeholder.jpg';
+            const fallbackSrc = 'img/placeholder.jpg';
             const heroImg = (it.img && it.img.trim() !== '') ? it.img : ((firstVar && firstVar.img) ? firstVar.img : fallbackSrc);
             const comp = it.comp ? `<div class="eq-card-spec"><span>Comp.</span> <strong>${it.comp}</strong></div>` : '';
             const h = it.height ? `<div class="eq-card-spec"><span>H.</span> <strong>${it.height}</strong></div>` : '';
