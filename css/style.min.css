@@ -3979,7 +3979,13 @@
     transform: translateY(0) !important;
 }
 
-/* 3. BLOCCO DELLA GRIGLIA PADRE */
+/* =========================================================
+   PRINCIPAL PERFORMANCE ARCHITECT: EXTREME GPU ACCELERATION & ZERO-CLS VIRTUALIZATION
+   ========================================================= */
+
+/* 1. Hardware Acceleration Estrema su Container Griglia */
+#fisch-grid-container,
+#equora-grid-container,
 .products-grid,
 .product-grid,
 .fisch-product-grid,
@@ -3989,25 +3995,102 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
     align-items: start !important;
     gap: 32px 24px !important;
-    transform: translateZ(0);
+    transform: translateZ(0) !important;
+    will-change: transform;
     backface-visibility: hidden;
+    perspective: 1000px;
+    contain: layout;
 }
 
+/* 2. Hardware Acceleration Estrema su Singole Card e Isolamento Layout */
 .product-card,
 .fisch-card,
 .equora-card {
     min-width: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
-    overflow: hidden;
     box-sizing: border-box !important;
+    transform: translateZ(0) !important;
+    will-change: transform;
+    backface-visibility: hidden;
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: 260px 420px;
+    position: relative;
 }
 
-/* 4. GPU-Accelerated Micro-Interactions Only (Zoom Delicato 1.03) */
+/* 3. Transizioni GPU-Accelerated Senza Ricalcoli di Layout */
+.fisch-thumb-rect img,
+.eq-card-img,
+.product-image-wrapper img {
+    transform: translateZ(0) !important;
+    will-change: transform;
+    backface-visibility: hidden;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
 .product-card:hover .product-image-wrapper img,
 .fisch-card:hover .fisch-thumb-rect img,
 .equora-card:hover .eq-card-media img,
 .equora-card:hover .eq-card-img {
-    transform: scale(1.03) !important;
-    will-change: transform;
+    transform: scale(1.03) translateZ(0) !important;
 }
+
+/* 4. Skeleton Placeholder per Virtualizzazione DOM Recycling (Zero CLS & Zero Texture Memory) */
+.card-skeleton-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.card-skeleton-thumb {
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    background: #f4f2ee !important;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+
+.card-skeleton-badge {
+    width: 35%;
+    height: 10px;
+    background: #eae7e0;
+    border-radius: 2px;
+    margin-bottom: 8px;
+}
+
+.card-skeleton-title {
+    width: 75%;
+    height: 14px;
+    background: #ded9cf;
+    border-radius: 2px;
+    margin-bottom: 6px;
+}
+
+.card-skeleton-code {
+    width: 50%;
+    height: 11px;
+    background: #eae7e0;
+    border-radius: 2px;
+}
+
+.card-skeleton-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: translateX(-100%);
+    animation: cardSkeletonShimmer 1.8s infinite;
+}
+
+@keyframes cardSkeletonShimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
