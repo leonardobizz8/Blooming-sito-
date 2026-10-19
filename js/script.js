@@ -4,6 +4,31 @@
            ========================================================= */
         let ALL_ITEMS = [];
 
+        /* =========================================================
+           SENIOR DEVOPS FIX: SANITIZZAZIONE RIGOROSA DEI PERCORSI RELATIVI
+           Rimuove categoricamente qualsiasi slash iniziale ('/') e forza il percorso 
+           a essere relativo alla cartella corrente ('./'), preservando URL esterni.
+           ========================================================= */
+        function toSafeRelativeUrl(rawPath) {
+            if (!rawPath || typeof rawPath !== 'string') return '';
+            const trimmed = rawPath.trim();
+            if (!trimmed) return '';
+            // Preserva URL esterni assoluti (https://, http://, protocol-relative //domain, data:, blob:)
+            if (/^(?:https?:|\/\/[a-z0-9]|data:|blob:)/i.test(trimmed)) {
+                return trimmed;
+            }
+            // Rimuove categoricamente qualsiasi slash iniziale e forza './'
+            let safeImagePath = trimmed.replace(/^[\\/]+/, './');
+            if (!safeImagePath.startsWith('./') && !safeImagePath.startsWith('../')) {
+                safeImagePath = './' + safeImagePath;
+            }
+            return safeImagePath;
+        }
+        if (typeof window !== 'undefined') {
+            window.toSafeRelativeUrl = toSafeRelativeUrl;
+        }
+
+
         async function loadProductsData() {
             const grid = document.getElementById('fisch-grid-container');
             const eqGrid = document.getElementById('equora-grid-container');
@@ -39,13 +64,22 @@
                 return false;
             }
 
-            // Normalizzazione preventiva di sicurezza dei brand (separazione stagna)
+            // Normalizzazione preventiva di sicurezza dei brand e sanitizzazione percorsi JSON per GitHub Pages
             ALL_ITEMS.forEach(it => {
                 const col = (it.collection || '').toLowerCase();
                 const br = (it.brand || '').toLowerCase();
                 it.brand = (col.includes('equora') || br.includes('equora')) ? 'equora' : 'blooming';
                 if (typeof it.variants_count === 'undefined' && Array.isArray(it.variants)) {
                     it.variants_count = it.variants.length;
+                }
+                if (it.img) it.img = toSafeRelativeUrl(it.img);
+                if (it.pdf) it.pdf = toSafeRelativeUrl(it.pdf);
+                if (it.scheda_pdf) it.scheda_pdf = toSafeRelativeUrl(it.scheda_pdf);
+                if (Array.isArray(it.variants)) {
+                    it.variants.forEach(v => {
+                        if (v.img) v.img = toSafeRelativeUrl(v.img);
+                        if (v.pdf) v.pdf = toSafeRelativeUrl(v.pdf);
+                    });
                 }
             });
 
@@ -937,13 +971,16 @@
         /* RENDERING SINGOLA CARD BLOOMING (GPU-ACCELERATED, 0-CLS, LAZY & ASYNC DECODING) */
         function renderBloomingCardHtml(item, isFirst) {
             if (item.brand !== 'blooming') return '';
-            const fallbackSrc = 'img/placeholder.jpg';
+            const fallbackSrc = toSafeRelativeUrl('img/placeholder.jpg');
             const hasImg = item.img && item.img.trim() !== '';
             const defaultVar = (item.variants && item.variants[0]) ? item.variants[0].code : 'Master';
-            const defaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (hasImg ? item.img : fallbackSrc);
-            const initialImg = hasImg ? item.img : fallbackSrc;
+            const rawDefaultImg = (item.variants && item.variants[0] && item.variants[0].img) ? item.variants[0].img : (hasImg ? item.img : fallbackSrc);
+            const defaultImg = toSafeRelativeUrl(rawDefaultImg) || fallbackSrc;
+            
+            // SENIOR DEVOPS FIX: sanitizzazione percorsi relativi per GitHub Pages
+            let safeImagePath = toSafeRelativeUrl(hasImg ? item.img : fallbackSrc) || fallbackSrc;
 
-            const imgMarkup = `<img src="${initialImg}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">`;
+            const imgMarkup = `<img src="${safeImagePath}" id="card-img-${item.code}" alt="Tessuto d'arredo Blooming ${item.name} Art. ${item.code}" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">`;
 
             const variantsList = item.variants || [];
             let swatchesHtml = '';
@@ -952,15 +989,18 @@
                 const visibleVars = variantsList.slice(0, maxShow);
                 swatchesHtml = `
                     <div class="fisch-card-swatches" onclick="event.stopPropagation()">
-                        ${visibleVars.map((v, vIdx) => `
+                        ${visibleVars.map((v, vIdx) => {
+                            const rawVImg = v.img || item.img || fallbackSrc;
+                            const safeVImg = toSafeRelativeUrl(rawVImg) || fallbackSrc;
+                            return `
                             <button type="button" 
                                     class="fisch-mini-swatch ${vIdx === 0 ? 'active' : ''}" 
-                                    style="background-image: url('${v.img || item.img || fallbackSrc}')"
+                                    style="background-image: url('${safeVImg}')"
                                     title="Col. ${v.code}"
                                     aria-label="Colore ${v.code}"
-                                    onclick="selectCardVariant(event, '${item.code}', '${v.code}', '${v.img || item.img || fallbackSrc}')">
+                                    onclick="selectCardVariant(event, '${item.code}', '${v.code}', '${safeVImg}')">
                             </button>
-                        `).join('')}
+                        `}).join('')}
                         ${variantsList.length > maxShow ? `<span class="fisch-more-swatches">+${variantsList.length - maxShow}</span>` : ''}
                     </div>
                 `;
@@ -1046,8 +1086,9 @@
             if (e) e.stopPropagation();
             const card = document.getElementById('card-' + code);
             if (!card) return;
-            const fallbackSrc = 'img/placeholder.jpg';
-            const targetImg = (imgSrc && imgSrc.trim() !== '') ? imgSrc : fallbackSrc;
+            const fallbackSrc = toSafeRelativeUrl('img/placeholder.jpg');
+            const safeImg = toSafeRelativeUrl(imgSrc);
+            const targetImg = (safeImg && safeImg.trim() !== '') ? safeImg : fallbackSrc;
             card.setAttribute('data-current-var', varCode);
             card.setAttribute('data-current-img', targetImg);
             const img = document.getElementById('card-img-' + code);
@@ -1139,20 +1180,24 @@
                 ? item.variants.find(v => v.code === varCode) || item.variants[0]
                 : (item.variants[0] || { code: 'Master', img: item.img });
 
-            const fallbackSrc = 'img/placeholder.jpg';
-            const mainImg = (selVar && selVar.img) ? selVar.img : (item.img || fallbackSrc);
+            const fallbackSrc = toSafeRelativeUrl('img/placeholder.jpg');
+            const rawMainImg = (selVar && selVar.img) ? selVar.img : (item.img || fallbackSrc);
+            const mainImg = toSafeRelativeUrl(rawMainImg) || fallbackSrc;
             const activeVarCode = selVar ? selVar.code : 'Master';
 
             const imgHtml = `<div class="drawer-sample-container" id="drawer-zoom-container">
                        <img src="${mainImg}" id="drawer-main-preview" class="drawer-sample-img" alt="Dettaglio texture tessuto ${item.name} Art. ${item.code}" width="600" height="600" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                    </div>`;
 
-            const swatchesHtml = (item.variants || []).map(v => `
+            const swatchesHtml = (item.variants || []).map(v => {
+                const rawVImg = v.img || item.img || fallbackSrc;
+                const safeVImg = toSafeRelativeUrl(rawVImg) || fallbackSrc;
+                return `
                 <div class="drawer-swatch-cell ${v.code === activeVarCode ? 'active' : ''}" onclick="openItemDrawer('${item.code}', '${v.code}', '${item.brand}')">
-                    <img src="${v.img || item.img || fallbackSrc}" width="64" height="64" loading="lazy" decoding="async" alt="Variante ${v.code}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                    <img src="${safeVImg}" width="64" height="64" loading="lazy" decoding="async" alt="Variante ${v.code}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                     <span>${v.code}</span>
                 </div>
-            `).join('');
+            `}).join('');
 
             document.getElementById('item-drawer-content').innerHTML = `
                 <div style="font-size:11.5px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:4px;">${item.collection}</div>
@@ -1209,7 +1254,8 @@
                 lens.className = 'drawer-magnifier-lens';
                 containerEl.appendChild(lens);
             }
-            lens.style.backgroundImage = `url('${imgSrc}')`;
+            const safeLensImg = toSafeRelativeUrl(imgSrc);
+            lens.style.backgroundImage = `url('${safeLensImg}')`;
 
             containerEl.onmousemove = function(e) {
                 const rect = containerEl.getBoundingClientRect();
@@ -1563,8 +1609,9 @@
             e.stopPropagation();
             const card = document.getElementById('eq-card-' + itemCode);
             if (!card) return;
-            const fallbackSrc = 'img/placeholder.jpg';
-            const targetImg = (imgSrc && imgSrc.trim() !== '') ? imgSrc : fallbackSrc;
+            const fallbackSrc = toSafeRelativeUrl('img/placeholder.jpg');
+            const safeImg = toSafeRelativeUrl(imgSrc);
+            const targetImg = (safeImg && safeImg.trim() !== '') ? safeImg : fallbackSrc;
             const img = card.querySelector('.eq-card-img');
             if (img) {
                 img.onerror = function() {
@@ -1585,8 +1632,12 @@
             if (it.brand !== 'equora') return '';
             const variants = it.variants || [];
             const firstVar = variants[0] || {};
-            const fallbackSrc = 'img/placeholder.jpg';
-            const heroImg = (it.img && it.img.trim() !== '') ? it.img : ((firstVar && firstVar.img) ? firstVar.img : fallbackSrc);
+            const fallbackSrc = toSafeRelativeUrl('img/placeholder.jpg');
+            const rawHeroImg = (it.img && it.img.trim() !== '') ? it.img : ((firstVar && firstVar.img) ? firstVar.img : fallbackSrc);
+            
+            // SENIOR DEVOPS FIX: sanitizzazione percorsi relativi per GitHub Pages
+            let safeImagePath = toSafeRelativeUrl(rawHeroImg) || fallbackSrc;
+
             const comp = it.comp ? `<div class="eq-card-spec"><span>Comp.</span> <strong>${it.comp}</strong></div>` : '';
             const h = it.height ? `<div class="eq-card-spec"><span>H.</span> <strong>${it.height}</strong></div>` : '';
             const mart = it.martindale ? `<div class="eq-card-spec"><span>Mart.</span> <strong>${it.martindale}</strong></div>` : '';
@@ -1597,15 +1648,18 @@
             if (visibleVars.length > 0) {
                 swatchesHtml = `
                     <div class="eq-swatches-strip" onclick="event.stopPropagation()">
-                        ${visibleVars.map((v, sIdx) => `
+                        ${visibleVars.map((v, sIdx) => {
+                            const rawVImg = v.img || rawHeroImg || fallbackSrc;
+                            const safeVImg = toSafeRelativeUrl(rawVImg) || fallbackSrc;
+                            return `
                             <button type="button" 
                                     class="eq-swatch-dot ${sIdx === 0 ? 'active' : ''}" 
                                     data-var="${v.code || ''}" 
                                     title="${v.name || ('Col. ' + v.code)}" 
-                                    style="background-image: url('${v.img || heroImg || fallbackSrc}')"
-                                    onclick="selectEquoraCardVariant(event, '${it.code}', '${v.code || ''}', '${v.img || heroImg || fallbackSrc}')">
+                                    style="background-image: url('${safeVImg}')"
+                                    onclick="selectEquoraCardVariant(event, '${it.code}', '${v.code || ''}', '${safeVImg}')">
                             </button>
-                        `).join('')}
+                        `}).join('')}
                         ${variants.length > maxSwatches ? `<span class="eq-swatch-more">+${variants.length - maxSwatches}</span>` : ''}
                     </div>
                 `;
@@ -1614,7 +1668,7 @@
             return `
                 <div class="equora-card" id="eq-card-${it.code}" data-brand="equora" onclick="openItemDrawer('${it.code}', null, 'equora')">
                     <div class="eq-card-media">
-                        <img src="${heroImg}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                        <img src="${safeImagePath}" alt="Tessuto d'arredo Equora ${it.name} Art. ${it.code}" class="eq-card-img" width="400" height="400" loading="${isFirst ? 'eager' : 'lazy'}" fetchpriority="${isFirst ? 'high' : 'auto'}" decoding="async" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                         <div class="eq-card-hover-overlay">
                             <span>Richiedi Scheda & Tirelle →</span>
                         </div>
